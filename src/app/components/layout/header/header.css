@@ -4,7 +4,7 @@
   left: var(--sidebar-width, 240px);
   right: 0;
   top: 0;
-  height: 72px;
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;

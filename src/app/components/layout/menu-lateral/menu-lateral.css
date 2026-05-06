@@ -1,6 +1,8 @@
 /* Estilos para la barra lateral de navegación */
 .barra-lateral{
 	position: fixed;
+	left: 0;
+	top: 0;
 	width: var(--sidebar-width);
 	height: 100dvh;
 	display: flex;

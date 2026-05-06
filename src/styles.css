@@ -1,12 +1,19 @@
 /* Global CSS variables and responsive sidebar width */
 :root{
 	--sidebar-width: 15dvw;
+	--header-height: 5dvh; /* default header height for desktop */
+
+	--background: '#f8f9ff';
 }
 
 @media (max-width: 900px){
 	:root{
-		--sidebar-width: 20dvw; /* keep proportional on small screens */
+		--sidebar-width: 15dvw; /* keep proportional on small screens */
+		--header-height: 5dvh; /* adjust header height for mobile */
 	}
 }
 
 /* You can add global styles to this file, and also import other style files */
+html{
+	background: var(--background);
+}
