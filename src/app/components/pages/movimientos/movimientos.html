@@ -3,9 +3,10 @@
 <div class="container">
   <app-header-movimientos></app-header-movimientos>
 
-  <app-filtros></app-filtros>
 
-  <app-tabla></app-tabla>
+<app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" (limpiar)="limpiarFiltros()"></app-filtros>
+
+<app-tabla [movimientos]="movimientosFiltrados"></app-tabla>
 </div>
 
 

@@ -12,10 +12,16 @@
   <tbody>
     <tr *ngFor="let m of movimientosPaginados">
       <td>{{ m.fecha }}</td>
+
       <td>{{ m.categoria }}</td>
+
       <td>{{ m.descripcion }}</td>
-      <td [class.ingreso]="m.tipo === 'ingreso'" [class.gasto]="m.tipo === 'gasto'">
-        {{ m.monto > 0 ? '+' + m.monto : m.monto }} </td>
+
+      <td [class.ingreso]="m.tipo === 'ingreso'"
+          [class.gasto]="m.tipo === 'gasto'">
+        {{ m.monto > 0 ? '+' + m.monto : m.monto }}
+      </td>
+
       <td class="acciones">
         <button class="btn-icon">
           <span class="material-symbols-outlined">edit</span>
@@ -28,35 +34,35 @@
     </tr>
   </tbody>
 </table>
+
+<!-- PAGINACIÓN -->
 <div class="paginacion">
   <button (click)="anterior()" [disabled]="pagina === 1">Anterior</button>
 
-  <button *ngFor="let p of paginas" (click)="irAPagina(p)" [class.activa]="pagina === p">
-
+  <button *ngFor="let p of paginas"
+          (click)="irAPagina(p)"
+          [class.activa]="pagina === p">
     {{ p }}
   </button>
 
   <button (click)="siguiente()" [disabled]="pagina === totalPaginas">Siguiente</button>
 </div>
 
+<!-- INSIGHTS -->
 <div class="insights">
-  <!-- Tendencia mensual -->
+
   <div class="card">
     <p class="label">TENDENCIA MENSUAL</p>
     <h4>+12.5%</h4>
-    <p class="sub">
-      📈 vs. mes anterior
-    </p>
+    <p class="sub">📈 vs. mes anterior</p>
   </div>
 
-  <!-- Categoría principal -->
   <div class="card">
     <p class="label">CATEGORÍA PRINCIPAL</p>
     <h4>Vivienda</h4>
     <p class="sub">32% de los gastos totales</p>
   </div>
 
-  <!-- Meta ahorro -->
   <div class="card primary">
     <p class="label">META DE AHORRO</p>
     <h4>$12,000.00</h4>
@@ -67,3 +73,5 @@
 
     <p class="sub">65% de la meta alcanzada</p>
   </div>
+
+</div>

@@ -1,12 +1,29 @@
 <div class="filtros">
-  <input type="text" placeholder="Rango de fechas" />
 
+  <!-- RANGO FECHAS -->
+  <mat-form-field appearance="outline">
+    <mat-label>Rango de fechas</mat-label>
+
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate [(ngModel)]="fechaInicio" (dateChange)="emitirFiltro()" placeholder="Inicio" readonly>
+      <input matEndDate [(ngModel)]="fechaFin" (dateChange)="emitirFiltro()" placeholder="Fin" readonly>
+    </mat-date-range-input>
+
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker (closed)="emitirFiltro()"></mat-date-range-picker>
+  </mat-form-field>
+
+  <!-- BOTÓN LIMPIAR (FUERA del form-field) -->
+  <button (click)="limpiarFiltro()">Limpiar</button>
+
+  <!-- SELECT -->
   <select>
     <option>Todas las categorías</option>
     <option>Vivienda</option>
     <option>Salario</option>
   </select>
 
+  <!-- TIPO -->
   <div class="tipo">
     <button>Todos</button>
     <button>Ingreso</button>
@@ -14,4 +31,5 @@
   </div>
 
   <button>Más filtros</button>
+
 </div>
