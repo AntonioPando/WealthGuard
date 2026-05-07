@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-filtros',
-  imports: [    
+  imports: [
     FormsModule,
     MatDatepickerModule,
     MatInputModule,
@@ -15,7 +15,9 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './filtros.css',
 })
 export class Filtros {
-    fechaInicio: Date | null = null;
+
+  // FILTRO FECHAS
+  fechaInicio: Date | null = null;
   fechaFin: Date | null = null;
 
   @Output() rangoSeleccionado =
@@ -35,4 +37,8 @@ export class Filtros {
     this.fechaFin = null;
     this.limpiar.emit();
   }
+
+  // FILTRO TIPO
+  @Output() tipoSeleccionado = new EventEmitter<'todos' | 'ingreso' | 'gasto'>();
+
 }

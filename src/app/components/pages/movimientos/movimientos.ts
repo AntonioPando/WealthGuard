@@ -15,7 +15,7 @@ import { HeaderMovimientos } from './header-movimientos/header-movimientos';
   styleUrls: ['./movimientos.css'],
 })
 export class Movimientos {
- 
+
   movimientos = [
     { fecha: '2026-10-24', categoria: 'Minorista', descripcion: 'Compra Apple Store', monto: -1299, tipo: 'gasto' },
     { fecha: '2026-10-22', categoria: 'Salario', descripcion: 'Honorarios', monto: 8500, tipo: 'ingreso' },
@@ -51,5 +51,24 @@ export class Movimientos {
   // LIMPIAR FILTRO
   limpiarFiltros() {
     this.movimientosFiltrados = [...this.movimientos];
+  }
+
+  // FILTRO TIPO
+  filtroTipo: 'todos' | 'ingreso' | 'gasto' = 'todos';
+
+  filtrarPorTipo(tipo: 'todos' | 'ingreso' | 'gasto') {
+    this.filtroTipo = tipo;
+
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    let data = [...this.movimientos];
+
+    if (this.filtroTipo !== 'todos') {
+      data = data.filter(m => m.tipo === this.filtroTipo);
+    }
+
+    this.movimientosFiltrados = data;
   }
 }

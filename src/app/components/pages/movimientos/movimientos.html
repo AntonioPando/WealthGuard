@@ -4,7 +4,9 @@
   <app-header-movimientos></app-header-movimientos>
 
 
-<app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" (limpiar)="limpiarFiltros()"></app-filtros>
+<app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" 
+(limpiar)="limpiarFiltros()" 
+(tipoSeleccionado)="filtrarPorTipo($event)"></app-filtros>
 
 <app-tabla [movimientos]="movimientosFiltrados"></app-tabla>
 </div>

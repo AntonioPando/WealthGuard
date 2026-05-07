@@ -25,9 +25,9 @@
 
   <!-- TIPO -->
   <div class="tipo">
-    <button>Todos</button>
-    <button>Ingreso</button>
-    <button>Gasto</button>
+  <button (click)="tipoSeleccionado.emit('todos')">Todos</button>
+  <button (click)="tipoSeleccionado.emit('ingreso')">Ingreso</button>
+  <button (click)="tipoSeleccionado.emit('gasto')">Gasto</button>
   </div>
 
   <button>Más filtros</button>
