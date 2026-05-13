@@ -1,9 +1,7 @@
 <!-- Área de Contenido Principal -->
 <main class="contenedor-principal">
-
   <!-- Sección: Indicadores Clave de Rendimiento (KPIs) -->
   <section class="rejilla-kpi" aria-label="Resumen financiero rápido">
-    
     <!-- Tarjeta KPI: Saldo -->
     <article class="tarjeta-kpi">
       <header class="tarjeta-kpi__encabezado">
@@ -30,8 +28,14 @@
       <div class="tarjeta-kpi__contenido">
         <h3 class="tarjeta-kpi__titulo">Gastos Mensuales</h3>
         <p class="tarjeta-kpi__valor">$3,240.50</p>
-        <div class="barra-progreso" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-          <div class="barra-progreso__relleno" style="width: 65%;"></div>
+        <div
+          class="barra-progreso"
+          role="progressbar"
+          aria-valuenow="65"
+          aria-valuemin="0"
+          aria-valuemax="100"
+         >
+          <div class="barra-progreso__relleno" style="width: 65%"></div>
         </div>
       </div>
     </article>
@@ -54,7 +58,6 @@
 
   <!-- Sección: Análisis Visual -->
   <section class="rejilla-analisis">
-    
     <!-- Gráfico de Evolución -->
     <div class="panel-grafico panel-grafico--principal">
       <header class="panel-grafico__encabezado">
@@ -72,16 +75,16 @@
         <div class="visualizacion-barras__contenedor">
           <div class="barra barra--secundaria" style="height: 85%"></div>
           <div class="barra barra--primaria" style="height: 50%"></div>
-            <div class="barra barra--primaria" style="height: 60%"></div>
-            <div class="barra barra--primaria" style="height: 70%"></div>
-            <div class="barra barra--secundaria" style="height: 100%"></div>
-            <div class="barra barra--primaria" style="height: 40%"></div>
-            <div class="barra barra--primaria" style="height: 50%"></div>
-            <div class="barra barra--primaria" style="height: 80%"></div>
-            <div class="barra barra--secundaria" style="height: 20%"></div>
-            <div class="barra barra--primaria" style="height: 60%"></div>
-            <div class="barra barra--primaria" style="height: 40%"></div>
-            <div class="barra barra--primaria" style="height: 60%"></div>
+          <div class="barra barra--primaria" style="height: 60%"></div>
+          <div class="barra barra--primaria" style="height: 70%"></div>
+          <div class="barra barra--secundaria" style="height: 100%"></div>
+          <div class="barra barra--primaria" style="height: 40%"></div>
+          <div class="barra barra--primaria" style="height: 50%"></div>
+          <div class="barra barra--primaria" style="height: 80%"></div>
+          <div class="barra barra--secundaria" style="height: 20%"></div>
+          <div class="barra barra--primaria" style="height: 60%"></div>
+          <div class="barra barra--primaria" style="height: 40%"></div>
+          <div class="barra barra--primaria" style="height: 60%"></div>
 
           <!-- ... resto de barras -->
         </div>
@@ -95,20 +98,61 @@
     <div class="panel-grafico panel-grafico--secundario">
       <h3 class="panel-grafico__titulo">Por Categoría</h3>
       <div class="grafico-circular">
-        <svg class="grafico-circular__svg" viewbox="0 0 36 36">
+        <svg class="grafico-circular__svg" viewBox="0 0 36 36" aria-hidden="true">
           <circle class="grafico-circular__fondo" cx="18" cy="18" r="16"></circle>
-          <circle class="grafico-circular__segmento grafico-circular__segmento--1" cx="18" cy="18" r="16"></circle>
+          <!-- Segmentos: 45%, 25%, 30% (circumference ≈ 100.53) -->
+          <circle
+            class="grafico-circular__segmento grafico-circular__segmento--1"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray="45.24 55.29"
+            stroke-dashoffset="0"
+          ></circle>
+          <circle
+            class="grafico-circular__segmento grafico-circular__segmento--2"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray="25.13 75.40"
+            stroke-dashoffset="-45.24"
+          ></circle>
+          <circle
+            class="grafico-circular__segmento grafico-circular__segmento--3"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray="30.16 70.37"
+            stroke-dashoffset="-70.37"
+          ></circle>
         </svg>
-        <div class="grafico-circular__leyenda-central">
-          <span class="leyenda-titulo">Total</span>
+        <div class="grafico-circular__leyenda-central" aria-label="Total">
+          <span class="leyenda-titulo">TOTAL</span>
           <span class="leyenda-valor">$3.2k</span>
         </div>
       </div>
       <ul class="lista-leyendas">
         <li class="lista-leyendas__item">
-          <span class="punto-color punto-color--basico"></span> Básicos <b>45%</b>
+          <div class="lista-leyendas__item-left">
+            <span class="punto-color punto-color--basico"></span>
+            <span>Básicos</span>
+          </div>
+          <b>45%</b>
         </li>
-        <!-- ... más items -->
+        <li class="lista-leyendas__item">
+          <div class="lista-leyendas__item-left">
+            <span class="punto-color punto-color--estilo"></span>
+            <span>Estilo de Vida</span>
+          </div>
+          <b>25%</b>
+        </li>
+        <li class="lista-leyendas__item">
+          <div class="lista-leyendas__item-left">
+            <span class="punto-color punto-color--otros"></span>
+            <span>Otros</span>
+          </div>
+          <b>30%</b>
+        </li>
       </ul>
     </div>
   </section>
@@ -120,7 +164,6 @@
       <button class="boton-enlace">Ver todas</button>
     </header>
     <div class="tabla-actividad__cuerpo">
-      
       <!-- Fila de Transacción -->
       <article class="transaccion-item">
         <div class="transaccion-item__perfil">
@@ -139,11 +182,6 @@
       </article>
 
       <!-- ... más transacciones -->
-
     </div>
   </section>
-
-  <!-- Botón de acción flotante -->
-  <button class="fab" aria-label="Nueva transacción">+
-  </button>
 </main>

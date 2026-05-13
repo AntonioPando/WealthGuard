@@ -70,3 +70,7 @@ Movimientos
     public Transaccion editarTransaccion (int idTransaccion){
         
     }
+
+Dashboard
+
+    
