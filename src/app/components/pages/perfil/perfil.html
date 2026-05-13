@@ -1,163 +1,71 @@
-<main class="contenedor-principal">
+<app-header></app-header>
+<app-menu-lateral></app-menu-lateral>
 
-  <!-- PERFIL -->
-  <section class="tarjeta-perfil">
-    <div class="contenido-perfil">
+<div class="container">
+  <main class="contenedor-principal">
 
-      <div class="contenedor-avatar">
-        <img src="user.svg" class="imagen-perfil" alt="Perfil">
-        <button class="boton-editar-avatar">✎</button>
-      </div>
+    <section class="tarjeta-perfil">
+      <div class="contenido-perfil">
+        <div class="contenedor-avatar">
+        
+          <img src="/usuario.png" class="imagen-perfil" alt="Foto de perfil">
+           
+          <button class="boton-editar-avatar" title="Editar foto">✎</button>
+        </div>
 
-      <div class="datos-usuario">
-        <h2>Julian Alexander</h2>
-        <p>julian.alexander@wealthguard.com</p>
+        <div class="datos-usuario">
+          <h2>Julian Alexander</h2>
+          <p>julian.alexander@wealthguard.com</p>
+          <div class="etiquetas-usuario">
+            <span class="etiqueta-fecha-registro">UNIDO EN OCT 2023</span>
+          </div>
+        </div>
 
-        <div class="etiquetas-usuario">
-          <span class="etiqueta-premium">MIEMBRO PREMIUM</span>
-          <span class="etiqueta-fecha-registro">UNIDO EN OCT 2023</span>
+        <div class="acciones-usuario">
+          <button class="boton-exportar-datos">Exportar Datos</button>
+          <button class="boton-editar-perfil">Editar Perfil</button>
         </div>
       </div>
+    </section>
 
-      <div class="acciones-usuario">
-        <button class="boton-editar-perfil">Editar Perfil</button>
-        <button class="boton-exportar-datos">Exportar Datos</button>
+    <aside class="tarjeta-plan tarjeta-proximamente">
+      <div class="cabecera-plan">
+        <div class="badge-nuevo">NUEVO</div>
+        <h3>Nuevas Funciones</h3>
+        <p>Estamos preparando herramientas de análisis predictivo para tu cartera.</p>
       </div>
-
-    </div>
-  </section>
-
-  <!-- PLAN -->
-  <article class="tarjeta-plan">
-
-    <div class="cabecera-plan">
-      <h3>Plan Pro</h3>
-      <p>Próxima facturación: 14 nov 2024</p>
-    </div>
-
-    <div class="contenido-plan">
-
-      <div class="precio-plan">
-        <span class="cantidad-plan">
-          19.99€ <small>/mes</small>
-        </span>
-
-        <span class="estado-plan-activo">
-          ACTIVO
-        </span>
-      </div>
-
-      <button class="boton-gestionar-suscripcion">
-        Gestionar Suscripción
+      <button class="boton-proximamente">
+        PRÓXIMAMENTE
       </button>
+    </aside>
+
+   
+    <div class="grid-configuracion">
+      
+      <section class="seccion-ajustes">
+        <div class="cabecera-seccion">
+          <h3>Seguridad de la cuenta</h3>
+        </div>
+        
+        <div class="item-ajuste">
+          <div class="texto-item">
+            <strong>Contraseña</strong>
+            <p>Tu última actualización fue hace 3 meses</p>
+          </div>
+          <button class="boton-flecha">Actualizar ›</button>
+        </div>
+      </section>
+
+      <section class="seccion-desactivar-cuenta">
+        <div class="texto-desactivar-cuenta">
+          <h3>Eliminar Cuenta</h3>
+          <p>La eliminación de la cuenta es permanente y borrará todo tu historial financiero.</p>
+        </div>
+        <button class="boton-eliminar-cuenta">
+          Eliminar Cuenta
+        </button>
+      </section>
 
     </div>
-
-  </article>
-
-  <!-- SEGURIDAD -->
-  <section class="seccion-seguridad">
-
-    <div class="cabecera-seccion">
-      <span class="icono-seccion">seguridad</span>
-      <h3>Seguridad</h3>
-    </div>
-
-    <div class="item-seguridad">
-      <div class="texto-item-seguridad">
-        <strong>Contraseña</strong>
-        <p>Cambiada hace 3 meses</p>
-      </div>
-
-      <span>›</span>
-    </div>
-
-    <div class="item-seguridad">
-      <div class="texto-item-seguridad">
-        <strong>Autenticación de Dos Factores</strong>
-        <p>Activada vía Authenticator</p>
-      </div>
-
-      <input type="checkbox" checked>
-    </div>
-
-  </section>
-
-  <!-- PREFERENCIAS -->
-  <section class="seccion-preferencias">
-
-    <div class="cabecera-seccion">
-      <span class="icono-seccion">preferencias</span>
-      <h3>Preferencias</h3>
-    </div>
-
-    <div class="campo-formulario">
-      <label>MONEDA PRINCIPAL</label>
-
-      <select>
-        <option>EUR - Euro</option>
-        <option>USD - Dólar Estadounidense</option>
-
-      </select>
-    </div>
-
-    <div class="campo-formulario">
-      <label>CATEGORÍA POR DEFECTO</label>
-
-      <select>
-        <option>Inversión General</option>
-        <option>Gastos Personales</option>
-         <option>Ingresos Generales</option>
-      </select>
-    </div>
-
-  </section>
-
-  <!-- NOTIFICACIONES -->
-  <section class="seccion-notificaciones">
-
-    <div class="cabecera-seccion">
-      <span class="icono-seccion">notificaciones</span>
-      <h3>Notificaciones</h3>
-    </div>
-
-    <div class="item-notificacion">
-      <span>Notificaciones Push</span>
-      <input type="checkbox" checked>
-    </div>
-
-    <div class="item-notificacion">
-      <span>Resúmenes por Email</span>
-      <input type="checkbox">
-    </div>
-
-    <div class="item-notificacion">
-      <span>Alertas de Presupuesto</span>
-      <input type="checkbox" checked>
-    </div>
-
-     <div class="item-notificacion">
-      <span>Alertas de Objetivos</span>
-      <input type="checkbox" checked>
-    </div>
-
-  </section>
-
-  <!-- DESACTIVAR CUENTA -->
-  <section class="seccion-desactivar-cuenta">
-
-    <div class="texto-desactivar-cuenta">
-      <h3>Desactivación de Cuenta</h3>
-
-      <p>
-        Una vez eliminada, tus datos financieros no podrán recuperarse.
-      </p>
-    </div>
-
-    <button class="boton-eliminar-cuenta">
-      Eliminar Cuenta
-    </button>
-
-  </section>
-
-</main>
+  </main> 
+</div>
