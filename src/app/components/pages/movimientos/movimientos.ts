@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Filtros } from './filtros/filtros';
 import { Tabla } from './tabla/tabla';
 import { HeaderMovimientos } from './header-movimientos/header-movimientos';
+import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
+import { Header } from "../../layout/header/header";
 
 @Component({
   selector: 'app-movimientos',
@@ -9,8 +11,10 @@ import { HeaderMovimientos } from './header-movimientos/header-movimientos';
   imports: [
     HeaderMovimientos,
     Filtros,
-    Tabla
-  ],
+    Tabla,
+    MenuLateral,
+    Header
+],
   templateUrl: './movimientos.html',
   styleUrls: ['./movimientos.css'],
 })
