@@ -88,6 +88,12 @@ Movimientos
         
     }
 
+    public Transaccion crearTransaccion (double cantidad, LocalDateTime fecha, String descripcion, Integer idCategoria, Integer idUsuario, Boolean tipoTransaccion){
+
+    }
+
+    public
+
 Dashboard
 
     public double saldoTotal(int idUsuario){
@@ -119,3 +125,19 @@ Dashboard
         }
     )
 
+Presupuestos
+
+    public List<Categoria> listarCategorias(int idUsuario, LocalDateTime fechaInicio,
+            LocalDateTime fechaFin, Integer idCategoria, Double limite){
+        
+    }
+
+    public String[] obtenerCategoria(int idUsuario){
+        devuelve en pos 0 la categoria, en pos 1 el porcentaje, en pos 2 cantidad gastada, pos 3 limite
+    }
+
+    public Double[] obtenerResumen (int idUsuario){
+        devuelve en pos 0 el total gastado y en pos 1 el porcentaje
+    }
+
+    public void crearPresupuesto
