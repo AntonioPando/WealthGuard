@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Filtros } from './filtros/filtros';
 import { Tabla } from './tabla/tabla';
 import { HeaderMovimientos } from './header-movimientos/header-movimientos';
@@ -16,7 +16,7 @@ import { TransaccionService } from '../../../services/transaccion.service';
     Tabla,
     MenuLateral,
     Header
-],
+  ],
   templateUrl: './movimientos.html',
   styleUrls: ['./movimientos.css'],
 })
@@ -33,66 +33,81 @@ export class Movimientos implements OnInit {
   categoriaPrincipal: string[] = ['sin datos', '0,0'];
   meta: number[] = [0.0, 0.0];
 
-  constructor(private transaccionService: TransaccionService) { }
+  constructor(private transaccionService: TransaccionService, private cdr: ChangeDetectorRef) { }
 
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  } 
+    this.cargarDatos();
+  }
 
-  // movimientos = [
-  //   { fecha: '2026-10-24', categoria: 'Minorista', descripcion: 'Compra Apple Store', monto: -1299, tipo: 'gasto' },
-  //   { fecha: '2026-10-22', categoria: 'Salario', descripcion: 'Honorarios', monto: 8500, tipo: 'ingreso' },
-  //   { fecha: '2026-10-20', categoria: 'Entretenimiento', descripcion: 'Netflix', monto: -15, tipo: 'gasto' },
-  //   { fecha: '2026-10-18', categoria: 'Transporte', descripcion: 'Uber', monto: -25, tipo: 'gasto' },
-  //   { fecha: '2026-10-15', categoria: 'Inversiones', descripcion: 'Dividendos', monto: 200, tipo: 'ingreso' },
-  //   { fecha: '2026-10-12', categoria: 'Comida', descripcion: 'Restaurante', monto: -45, tipo: 'gasto' },
-  //   { fecha: '2026-10-10', categoria: 'Salario', descripcion: 'Honorarios', monto: 8500, tipo: 'ingreso' },
-  //   { fecha: '2026-10-08', categoria: 'Entretenimiento', descripcion: 'Spotify', monto: -10, tipo: 'gasto' },
-  //   { fecha: '2026-10-05', categoria: 'Transporte', descripcion: 'Gasolina', monto: -60, tipo: 'gasto' },
-  //   { fecha: '2026-10-02', categoria: 'Inversiones', descripcion: 'Venta de acciones', monto: 1500, tipo: 'ingreso' },
-  // ];
+  cargarDatos() {
+    // Primero cargamos el historial completo de las transacciones
+    this.transaccionService.ListarTransacciones(this.idUsuario).subscribe({
+      next: (data) => {
+        this.movimientos = data;
 
-  // movimientosFiltrados = [...this.movimientos];
+        this.limpiarFiltros(); // Inicialmente mostramos todos los movimientos sin filtros
+        this.cdr.detectChanges(); // Forzamos la detección de cambios para actualizar la vista con los datos cargados
+      },
+      error: (e) => console.error(e)
+    });
 
-  // // FILTRO FECHAS
-  // aplicarFiltroFechas(rango: { inicio: Date | null, fin: Date | null }) {
+    // luego cargamos la tendencia, categoria principal y meta para los insights
+    this.transaccionService.obtenerTendencia(this.idUsuario).subscribe(resultado => {
+      this.tendencia = resultado;
+      this.cdr.detectChanges();
+    });
 
-  //   if (!rango.inicio || !rango.fin) {
-  //     this.movimientosFiltrados = [...this.movimientos];
-  //     return;
-  //   }
+    this.transaccionService.obtenerCategoriaPrincipal(this.idUsuario).subscribe(resultado => {
+      this.categoriaPrincipal = resultado;
+      this.cdr.detectChanges();
+    });
 
-  //   const inicio = new Date(rango.inicio).getTime();
-  //   const fin = new Date(rango.fin).getTime();
+    this.transaccionService.obtenerMeta(this.idUsuario).subscribe(resultado => {
+      this.meta = resultado;
+      this.cdr.detectChanges();
+    })
+  }
 
-  //   this.movimientosFiltrados = this.movimientos.filter(m => {
-  //     const fecha = new Date(m.fecha).getTime();
-  //     return fecha >= inicio && fecha <= fin;
-  //   });
-  // }
+  // Filtro de fechas
+  aplicarFiltroFechas(rango: { inicio: Date | null, fin: Date | null }) {
 
-  // // LIMPIAR FILTRO
-  // limpiarFiltros() {
-  //   this.movimientosFiltrados = [...this.movimientos];
-  // }
+    if (!rango.inicio || !rango.fin) {
+      this.movimientosFiltrados = [...this.movimientos];
+      return;
+    }
 
-  // // FILTRO TIPO
-  // filtroTipo: 'todos' | 'ingreso' | 'gasto' = 'todos';
+    const inicio = new Date(rango.inicio).getTime();
+    const fin = new Date(rango.fin).getTime();
 
-  // filtrarPorTipo(tipo: 'todos' | 'ingreso' | 'gasto') {
-  //   this.filtroTipo = tipo;
+    this.movimientosFiltrados = this.movimientos.filter(m => {
+      const fecha = new Date(m.fecha).getTime();
+      return fecha >= inicio && fecha <= fin;
+    });
+  }
 
-  //   this.aplicarFiltros();
-  // }
+  // Limpiar filtros
+  limpiarFiltros() {
+    this.movimientosFiltrados = [...this.movimientos];
+  }
 
-  // aplicarFiltros() {
-  //   let data = [...this.movimientos];
+  // Filtro tipo
+  filtroTipo: 'todos' | 'ingreso' | 'gasto' = 'todos';
 
-  //   if (this.filtroTipo !== 'todos') {
-  //     data = data.filter(m => m.tipo === this.filtroTipo);
-  //   }
+  filtrarPorTipo(tipo: 'todos' | 'ingreso' | 'gasto') {
+    this.filtroTipo = tipo;
+    this.aplicarFiltros();
+  }
 
-  //   this.movimientosFiltrados = data;
-  // }
+  aplicarFiltros() {
+    let data = [...this.movimientos];
+
+    if (this.filtroTipo === 'ingreso') {
+      data = data.filter(m => m.tipoTransaccion === true);
+    } else if (this.filtroTipo === 'gasto') {
+      data = data.filter(m => m.tipoTransaccion === false);
+    }
+
+    this.movimientosFiltrados = data;
+  }
 }
