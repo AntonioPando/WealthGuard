@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Filtros } from './filtros/filtros';
 import { Tabla } from './tabla/tabla';
 import { HeaderMovimientos } from './header-movimientos/header-movimientos';
 import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
 import { Header } from "../../layout/header/header";
+import { TransaccionResponse } from '../../../models/transaccion.model';
+import { TransaccionService } from '../../../services/transaccion.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -18,7 +20,25 @@ import { Header } from "../../layout/header/header";
   templateUrl: './movimientos.html',
   styleUrls: ['./movimientos.css'],
 })
-export class Movimientos {
+export class Movimientos implements OnInit {
+
+
+  idUsuario: number = 1; // ID de usuario fijo para pruebas!!!!!!!!!!!!!!!!!!!
+
+  movimientos: TransaccionResponse[] = [];
+  movimientosFiltrados: TransaccionResponse[] = [];
+
+  // variables para los insigths
+  tendencia: number = 0;
+  categoriaPrincipal: string[] = ['sin datos', '0,0'];
+  meta: number[] = [0.0, 0.0];
+
+  constructor(private transaccionService: TransaccionService) { }
+
+
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   movimientos = [
     { fecha: '2026-10-24', categoria: 'Minorista', descripcion: 'Compra Apple Store', monto: -1299, tipo: 'gasto' },
