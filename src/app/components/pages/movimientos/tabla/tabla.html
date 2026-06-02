@@ -11,15 +11,15 @@
 
   <tbody>
     <tr *ngFor="let m of movimientosPaginados">
-      <td>{{ m.fecha }}</td>
+      <td>{{ m.fecha |date: 'dd/MM/yyyy' }}</td>
 
-      <td>{{ m.categoria }}</td>
+      <td>{{ m.nombreCategoria }}</td>
 
       <td>{{ m.descripcion }}</td>
 
-      <td [class.ingreso]="m.tipo === 'ingreso'"
-          [class.gasto]="m.tipo === 'gasto'">
-        {{ m.monto > 0 ? '+' + m.monto : m.monto }}
+      <td [class.ingreso]="m.tipoTransaccion === true"
+          [class.gasto]="m.tipoTransaccion === false">
+        {{ m.tipoTransaccion ? '+' : '-' }}{{ m.cantidad | number: '1.2-2' }}€
       </td>
 
       <td class="acciones">
@@ -35,7 +35,6 @@
   </tbody>
 </table>
 
-<!-- PAGINACIÓN -->
 <div class="paginacion">
   <button (click)="anterior()" [disabled]="pagina === 1">Anterior</button>
 
@@ -48,30 +47,29 @@
   <button (click)="siguiente()" [disabled]="pagina === totalPaginas">Siguiente</button>
 </div>
 
-<!-- INSIGHTS -->
 <div class="insights">
 
   <div class="card">
     <p class="label">TENDENCIA MENSUAL</p>
-    <h4>+12.5%</h4>
-    <p class="sub">📈 vs. mes anterior</p>
+    <h4>{{ tendencia > 0 ? '+ ' : '' }}{{ tendencia |number: '1.0-0'}}%</h4>
+    <p class="sub">{{ tendencia >= 0 ? '📈' : '📉' }} vs. mes anterior</p>
   </div>
 
   <div class="card">
     <p class="label">CATEGORÍA PRINCIPAL</p>
-    <h4>Vivienda</h4>
-    <p class="sub">32% de los gastos totales</p>
+    <h4>{{categoriaPrincipal[0]}}</h4>
+    <p class="sub">{{categoriaPrincipal[1]}}% de los gastos totales</p>
   </div>
 
   <div class="card primary">
-    <p class="label">META DE AHORRO</p>
-    <h4>$12,000.00</h4>
+    <p class="label">META DE AHORRO: {{ totalMeta | number: '1.0-0' }} €</p>
+    <h4>{{meta[0] | number:'1.2-2'}} €</h4>
 
     <div class="progress">
-      <div class="bar" style="width: 65%"></div>
+      <div class="bar" [style.width.%]="meta[1]"></div>
     </div>
 
-    <p class="sub">65% de la meta alcanzada</p>
+    <p class="sub">{{meta[1] | number: '1.0-1'}}% de la meta alcanzada</p>
   </div>
 
 </div>

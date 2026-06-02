@@ -10,7 +10,12 @@
 (limpiar)="limpiarFiltros()" 
 (tipoSeleccionado)="filtrarPorTipo($event)"></app-filtros>
 
-<app-tabla [movimientos]="movimientosFiltrados"></app-tabla>
+<app-tabla 
+[movimientos]="movimientosFiltrados"
+[tendencia]="tendencia"
+[categoriaPrincipal]="categoriaPrincipal"
+[meta]="meta">
+</app-tabla>
 </div>
 
 
