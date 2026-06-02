@@ -1,6 +1,5 @@
 <div class="filtros">
 
-  <!-- RANGO FECHAS -->
   <mat-form-field appearance="outline">
     <mat-label>Rango de fechas</mat-label>
 
@@ -13,17 +12,14 @@
     <mat-date-range-picker #picker (closed)="emitirFiltro()"></mat-date-range-picker>
   </mat-form-field>
 
-  <!-- BOTÓN LIMPIAR (FUERA del form-field) -->
   <button (click)="limpiarFiltro()">Limpiar</button>
 
-  <!-- SELECT -->
   <select>
     <option>Todas las categorías</option>
     <option>Vivienda</option>
     <option>Salario</option>
   </select>
 
-  <!-- TIPO -->
   <div class="tipo">
   <button (click)="tipoSeleccionado.emit('todos')">Todos</button>
   <button (click)="tipoSeleccionado.emit('ingreso')">Ingreso</button>

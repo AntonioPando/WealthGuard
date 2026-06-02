@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class Filtros {
 
-  // FILTRO FECHAS
+  // filtro fechas
   fechaInicio: Date | null = null;
   fechaFin: Date | null = null;
 
@@ -38,7 +38,7 @@ export class Filtros {
     this.limpiar.emit();
   }
 
-  // FILTRO TIPO
+  // filtro tipo
   @Output() tipoSeleccionado = new EventEmitter<'todos' | 'ingreso' | 'gasto'>();
 
 }
