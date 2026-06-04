@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { A11yModule } from "@angular/cdk/a11y";
 
 @Component({
@@ -17,6 +17,9 @@ export class Tabla {
   @Input() categoriaPrincipal: string[] = ['sin datos', '0,0'];
   @Input() meta: number[] = [0.0, 0.0];
   
+  @Output() abrirEditar = new EventEmitter<any>();
+  @Output() eliminar = new EventEmitter<number>();
+
   // Calculamos el porcentaje de la meta alcanzada
   get totalMeta(): number {
     // Evitamos división por cero

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -10,16 +11,27 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     MatDatepickerModule,
     MatInputModule,
-    MatNativeDateModule],
+    MatNativeDateModule,
+    CommonModule,
+  ],
   templateUrl: './filtros.html',
   styleUrl: './filtros.css',
 })
 export class Filtros {
 
-  // filtro fechas
   fechaInicio: Date | null = null;
   fechaFin: Date | null = null;
 
+  // filtro tipo
+  @Input() categorias: string[] = [];
+  @Input() categoriaSeleccionadaVisual: string = 'todas';
+  @Output() categoriaSeleccionada = new EventEmitter<string>();
+
+  onCategoriaChange(event: any) {
+    this.categoriaSeleccionada.emit(event.target.value);
+  }
+
+  // filtro fechas
   @Output() rangoSeleccionado =
     new EventEmitter<{ inicio: Date | null, fin: Date | null }>();
 

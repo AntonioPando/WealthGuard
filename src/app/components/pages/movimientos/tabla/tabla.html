@@ -19,15 +19,15 @@
 
       <td [class.ingreso]="m.tipoTransaccion === true"
           [class.gasto]="m.tipoTransaccion === false">
-        {{ m.tipoTransaccion ? '+' : '-' }}{{ m.cantidad | number: '1.2-2' }}€
+        {{ m.tipoTransaccion ? '+ ' : '- ' }}{{ m.cantidad | number: '1.2-2' }} €
       </td>
 
       <td class="acciones">
-        <button class="btn-icon">
+        <button class="btn-icon" (click)="abrirEditar.emit(m)">
           <span class="material-symbols-outlined">edit</span>
         </button>
 
-        <button class="btn-icon delete">
+        <button class="btn-icon delete" (click)="eliminar.emit(m.id)">
           <span class="material-symbols-outlined">delete</span>
         </button>
       </td>

@@ -14,10 +14,11 @@
 
   <button (click)="limpiarFiltro()">Limpiar</button>
 
-  <select>
-    <option>Todas las categorías</option>
-    <option>Vivienda</option>
-    <option>Salario</option>
+  <select [value]="categoriaSeleccionadaVisual" (change)="onCategoriaChange($event)">
+    <option value="todas">Todas las categorías</option>
+    <option *ngFor="let cat of categorias" [value]="cat">
+      {{ cat }}
+    </option>
   </select>
 
   <div class="tipo">
@@ -25,7 +26,5 @@
   <button (click)="tipoSeleccionado.emit('ingreso')">Ingreso</button>
   <button (click)="tipoSeleccionado.emit('gasto')">Gasto</button>
   </div>
-
-  <button>Más filtros</button>
 
 </div>
