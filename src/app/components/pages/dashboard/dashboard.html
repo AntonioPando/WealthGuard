@@ -186,5 +186,13 @@
       <!-- ... más transacciones -->
     </div>
   </section>
+
+  <section class="contenedor-categoria">
+    <p>Añadir Categoria</p>
+    <form [formGroup]="formularioCategoria" class="formulario-categoria"">
+      <input type="text" placeholder="Nombre de la categoría" aria-label="Nombre de la categoría">
+      <button type="button" (click)="onSave()">Agregar</button>
+    </form>
+  </section>
   </main>
 </div>
