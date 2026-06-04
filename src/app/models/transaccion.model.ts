@@ -18,4 +18,5 @@ export interface TransaccionResponse {
     descripcion: string;
     fecha: string;
     tipoTransaccion: boolean;
+    nombreCategoria?: string;
 }

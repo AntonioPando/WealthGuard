@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-header-movimientos',
@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './header-movimientos.html',
   styleUrl: './header-movimientos.css',
 })
-export class HeaderMovimientos {}
+export class HeaderMovimientos {
+
+  @Output() abrirCrear = new EventEmitter<void>();
+}
