@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormsModule } from '@angular/forms';
-import { CategoriaRequest, categoriaRequestInicial } from '../../../models/categoria.model';
-
+import { Categoria, categoriaRequestInicial } from '../../../models/categoria.model';
+import { isOkResponse, loadResponseData } from '../../../services/utils.service';
+import { DashboardService } from '../../../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,24 +12,43 @@ import { CategoriaRequest, categoriaRequestInicial } from '../../../models/categ
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit {
+export class Dashboard {
+  CategoriaRequest: Categoria = categoriaRequestInicial;
 
-  CategoriaRequest: CategoriaRequest = categoriaRequestInicial;
+  formularioCategoria: FormGroup;
+  // Inyectamos el servicio correctamente
 
-  fomularioCategoria: FormGroup | undefined;
-  
-  constructor(private fb: FormBuilder) {}
-
-  setForm(categoriaRequest: CategoriaRequest) {
-    this.formularioCategoria.patchValue({
-      nombre: CategoriaRequest.nombre
+  constructor(private fb: FormBuilder, private dashboardService: DashboardService) {
+    this.formularioCategoria = this.fb.group({
+      nombre: [''],
     });
   }
-    
 
-}
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+  setForm(categoriaRequest: Categoria) {
+    this.formularioCategoria.patchValue({
+      nombre: categoriaRequest.nombre,
+    });
   }
 
+  getForm(): Categoria {
+    const formData = this.formularioCategoria.value;
+    const categoriaFinal: Categoria = {
+      nombre: formData.nombre,
+    };
+    return categoriaFinal;
+  }
 
+  async onSave() {
+    const categoriaFinal = this.getForm();
+
+    let response;
+    response = await this.dashboardService.crearCategoria(categoriaFinal);
+
+    if (isOkResponse(response)) {
+      const categoriaCreada = loadResponseData(response);
+      console.log('Categoría creada:', categoriaCreada);
+    } else {
+      console.error('Error al crear la categoría');
+    }
+  }
+}
