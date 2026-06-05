@@ -14,7 +14,7 @@ export class TransaccionService {
 
   // Metodo para listar con filtros dinamicos (ultimos 7 dias)
 
-  ListarTransaccionesConFiltros(idUsuario: number, filtros?: any): Observable<TransaccionResponse[]> {
+  listarTransaccionesConFiltros(idUsuario: number, filtros?: any): Observable<TransaccionResponse[]> {
     let params = new HttpParams();
 
     if (filtros) {
@@ -42,12 +42,12 @@ export class TransaccionService {
   }
 
   // Metodo para listar todas las transacciones de un usuario
-  ListarTransacciones(idUsuario: number): Observable<TransaccionResponse[]> {
+  listarTransacciones(idUsuario: number): Observable<TransaccionResponse[]> {
     return this.http.get<TransaccionResponse[]>(`${this.apiUrl}/listar-todas/${idUsuario}`);
   }
 
   // Metodo para crear una  transaccion
-  CrearTransaccion(transaccion: TransaccionRequest): Observable<TransaccionResponse> {
+  crearTransaccion(transaccion: TransaccionRequest): Observable<TransaccionResponse> {
     return this.http.post<TransaccionResponse>(`${this.apiUrl}/crear`, transaccion);
   }
 
