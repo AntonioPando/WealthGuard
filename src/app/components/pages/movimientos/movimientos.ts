@@ -55,7 +55,7 @@ export class Movimientos implements OnInit {
 
   cargarDatos() {
     // Primero cargamos el historial completo de las transacciones
-    this.transaccionService.ListarTransacciones(this.idUsuario).subscribe({
+    this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
       next: (data) => {
         // Ordenamos las transacciones por fecha (de más reciente a más antigua)
         this.movimientos = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
@@ -193,8 +193,7 @@ export class Movimientos implements OnInit {
     } else {
 
       // Para el modo crear
-      // Llamamos a CrearTransaccion (con C mayúscula, como está en tu servicio)
-      this.transaccionService.CrearTransaccion(transaccionParaJava).subscribe({
+      this.transaccionService.crearTransaccion(transaccionParaJava).subscribe({
         next: () => {
           this.cargarDatos();
           this.cerrarFormulario();
@@ -205,10 +204,9 @@ export class Movimientos implements OnInit {
   }
 
   eliminarMovimiento(idTransaccion: number) {
-    // Ponemos una pequeña alerta de confirmación para evitar sustos
     if (confirm('¿Estás seguro de que deseas eliminar este movimiento?')) {
       
-      // Llamamos al método eliminarTransaccion de tu servicio
+      // Llamamos al método eliminarTransaccion
       this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
         next: (eliminado) => {
           if (eliminado) {
