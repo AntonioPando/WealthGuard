@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 @Component({
   selector: 'app-presupuesto-form',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './presupuesto-form.html',
   styleUrl: './presupuesto-form.css',
@@ -11,8 +12,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class PresupuestoForm implements OnInit {
 
   @Input() presupuestoEditar: any;
-  @Input() categoriasLista: { id: number, nombre: string } [] = [];
-  
+  @Input() categoriasLista: { id: number, nombre: string }[] = [];
+
 
   @Output() guardar = new EventEmitter<any>();
   @Output() cancelar = new EventEmitter<void>();
@@ -28,12 +29,12 @@ export class PresupuestoForm implements OnInit {
   }
 
 
-ngOnInit(): void {
+  ngOnInit(): void {
     if (this.presupuestoEditar) {
       this.esEdicion = true;
       // Patch de datos existentes
       this.form.patchValue({
-        idCategoria: this.presupuestoEditar.categoria?.id,
+        idCategoria: this.presupuestoEditar.idCategoria, // 👈 Apuntamos al ID plano corregido
         limite: this.presupuestoEditar.limite,
       });
     }
