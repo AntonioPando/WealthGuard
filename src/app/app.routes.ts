@@ -22,23 +22,23 @@ export const routes: Routes = [
     component: Registro
   },
   {
+    path: 'dashboard',
+    component: Dashboard
+  },
+  {
     path: 'movimientos',
     component: Movimientos
   },
-  { 
+  {
     path: 'perfil',
     component: Perfil
   },
   {
-    path: 'dashboard',
-    component: Dashboard
-  },
-  { 
-    path: 'presupuestos', 
+    path: 'presupuestos',
     component: Presupuestos
   },
-  { 
-    path: '**', 
-    component: NotFound 
+  {
+    path: '**',
+    component: NotFound
   }
 ];
