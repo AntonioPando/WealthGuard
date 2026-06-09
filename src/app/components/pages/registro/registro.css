@@ -11,7 +11,6 @@
     --color-white: #ffffff;
     --color-text-main: #1e293b;
     --color-text-muted: #64748b;
-    --color-danger: #ef4444;
     --color-danger-bg: #fef2f2;
     --color-success-bg: #f0fdf4;
     --color-success: #15803d;
@@ -91,7 +90,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow-y: auto;
 }
 
 .registro-panel h2 {
@@ -102,12 +100,75 @@
 }
 
 .credenciales {
-    margin: 0.78125vw 0 1.5625vw;
+    margin: 0.78125vw 0 1.25vw;
     color: var(--color-text-muted);
     font-size: 1.09375vw;
 }
 
+.stepper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5625vw;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 0.625vw;
+}
+
+.step-numero {
+    width: 1.875vw;
+    height: 1.875vw;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.859375vw;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    background-color: #fff;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.step.activo .step-numero,
+.step.completo .step-numero {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: #fff;
+}
+
+.step-label {
+    font-size: 0.859375vw;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+}
+
+.step.activo .step-label,
+.step.completo .step-label {
+    color: var(--color-text-main);
+}
+
+.step-linea {
+    flex: 1;
+    height: 2px;
+    background-color: var(--color-border);
+    margin: 0 0.625vw;
+    transition: background-color 0.3s ease;
+}
+
+.step-linea.completo {
+    background-color: var(--color-accent);
+}
+
 .formulario {
+    display: grid;
+}
+
+.paso-contenido {
     display: grid;
     gap: 1.09375vw;
 }
@@ -148,7 +209,7 @@ label {
     border: 1px solid var(--color-border);
     border-radius: 0.78125vw;
     padding: 0.78125vw 2.96875vw 0.78125vw 0.9375vw;
-    font-size: 1.171875vw;
+    font-size: 1.09375vw;
     color: var(--color-text-main);
     background-color: #ffffff;
     box-sizing: border-box;
@@ -178,7 +239,7 @@ label {
     top: 50%;
     transform: translateY(-50%);
     color: #64748b;
-    font-size: 1.171875vw;
+    font-size: 1.09375vw;
     pointer-events: none;
 }
 
@@ -191,7 +252,7 @@ label {
     display: grid;
     gap: 0.3125vw;
     margin-top: 0.3125vw;
-    font-size: 1.015625vw;
+    font-size: 0.9375vw;
 }
 
 .requisitos-password .cumplido {
@@ -203,12 +264,12 @@ label {
 }
 
 .campo-error {
-    font-size: 1.015625vw;
+    font-size: 0.9375vw;
     color: #b91c1c;
 }
 
 .campo-exito {
-    font-size: 1.015625vw;
+    font-size: 0.9375vw;
     color: #15803d;
 }
 
@@ -232,6 +293,7 @@ label {
     font-size: 1.09375vw;
 }
 
+.btn-siguiente,
 .registrarse {
     min-height: 3.75vw;
     border: 0;
@@ -245,6 +307,7 @@ label {
     font-family: inherit;
 }
 
+.btn-siguiente:hover,
 .registrarse:hover:not(:disabled) {
     filter: brightness(0.97);
     transform: translateY(-1px);
@@ -256,7 +319,38 @@ label {
     transform: none;
 }
 
+.btn-siguiente:focus-visible,
 .registrarse:focus-visible {
+    outline: 0.234375vw solid rgb(16 185 129 / 35%);
+    outline-offset: 0.234375vw;
+}
+
+.fila-botones {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9375vw;
+}
+
+.btn-volver {
+    min-height: 3.75vw;
+    padding: 0 1.5625vw;
+    border: 1px solid var(--color-border);
+    border-radius: 0.859375vw;
+    background: transparent;
+    color: var(--color-text-main);
+    font-weight: 600;
+    font-size: 1.09375vw;
+    cursor: pointer;
+    transition: background-color 0.18s ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn-volver:hover {
+    background-color: #f8fafc;
+}
+
+.btn-volver:focus-visible {
     outline: 0.234375vw solid rgb(16 185 129 / 35%);
     outline-offset: 0.234375vw;
 }
@@ -282,9 +376,6 @@ label {
     text-decoration: underline;
 }
 
-/* ============================
-   RESPONSIVE
-   ============================ */
 @media (max-width: 920px) {
     .registro-shell {
         padding: 3.73vw;
@@ -328,7 +419,25 @@ label {
         margin-bottom: 5vw;
     }
 
-    .formulario {
+    .stepper {
+        margin-bottom: 6vw;
+    }
+
+    .step-numero {
+        width: 7vw;
+        height: 7vw;
+        font-size: 3vw;
+    }
+
+    .step-label {
+        font-size: 3vw;
+    }
+
+    .step-linea {
+        margin: 0 2vw;
+    }
+
+    .paso-contenido {
         gap: 4vw;
     }
 
@@ -375,10 +484,22 @@ label {
         border-radius: 3vw;
     }
 
+    .btn-siguiente,
     .registrarse {
         min-height: 13vw;
         font-size: 4.5vw;
         border-radius: 3vw;
+    }
+
+    .fila-botones {
+        gap: 3vw;
+    }
+
+    .btn-volver {
+        min-height: 13vw;
+        font-size: 4vw;
+        border-radius: 3vw;
+        padding: 0 5vw;
     }
 
     .login {
@@ -388,167 +509,5 @@ label {
 
     .login-link {
         font-size: 3.5vw;
-    }
-}
-
-.stepper {
-    display: flex;
-    align-items: center;
-    gap: 0vw;
-    margin-bottom: 1.875vw;
-}
-
-.step {
-    display: flex;
-    align-items: center;
-    gap: 0.625vw;
-}
-
-.step-numero {
-    width: 1.875vw;
-    height: 1.875vw;
-    border-radius: 50%;
-    border: 2px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.859375vw;
-    font-weight: 700;
-    color: var(--color-text-muted);
-    background-color: #fff;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.step.activo .step-numero {
-    border-color: var(--color-accent);
-    background-color: var(--color-accent);
-    color: #fff;
-}
-
-.step.completo .step-numero {
-    border-color: var(--color-accent);
-    background-color: var(--color-accent);
-    color: #fff;
-}
-
-.step-label {
-    font-size: 0.859375vw;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    transition: color 0.2s ease;
-}
-
-.step.activo .step-label,
-.step.completo .step-label {
-    color: var(--color-text-main);
-}
-
-.step-linea {
-    flex: 1;
-    height: 2px;
-    background-color: var(--color-border);
-    margin: 0 0.625vw;
-    transition: background-color 0.3s ease;
-}
-
-.step-linea.completo {
-    background-color: var(--color-accent);
-}
-
-.paso-contenido {
-    display: grid;
-    gap: 1.09375vw;
-}
-
-.btn-siguiente {
-    min-height: 3.75vw;
-    border: 0;
-    border-radius: 0.859375vw;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #fff;
-    font-weight: 700;
-    font-size: 1.25vw;
-    cursor: pointer;
-    transition: transform 0.18s ease, filter 0.18s ease;
-    font-family: inherit;
-    margin-top: 0.3125vw;
-}
-
-.btn-siguiente:hover {
-    filter: brightness(0.97);
-    transform: translateY(-1px);
-}
-
-.btn-siguiente:focus-visible {
-    outline: 0.234375vw solid rgb(16 185 129 / 35%);
-    outline-offset: 0.234375vw;
-}
-
-.fila-botones {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.9375vw;
-    margin-top: 0.3125vw;
-}
-
-.btn-volver {
-    min-height: 3.75vw;
-    padding: 0 1.5625vw;
-    border: 1px solid var(--color-border);
-    border-radius: 0.859375vw;
-    background: transparent;
-    color: var(--color-text-main);
-    font-weight: 600;
-    font-size: 1.09375vw;
-    cursor: pointer;
-    transition: background-color 0.18s ease;
-    font-family: inherit;
-    white-space: nowrap;
-}
-
-.btn-volver:hover {
-    background-color: #f8fafc;
-}
-
-@media (max-width: 920px) {
-    .stepper {
-        margin-bottom: 6vw;
-    }
-
-    .step-numero {
-        width: 7vw;
-        height: 7vw;
-        font-size: 3vw;
-    }
-
-    .step-label {
-        font-size: 3vw;
-    }
-
-    .step-linea {
-        margin: 0 2vw;
-    }
-
-    .paso-contenido {
-        gap: 4vw;
-    }
-
-    .btn-siguiente {
-        min-height: 13vw;
-        font-size: 4.5vw;
-        border-radius: 3vw;
-    }
-
-    .fila-botones {
-        grid-template-columns: auto 1fr;
-        gap: 3vw;
-    }
-
-    .btn-volver {
-        min-height: 13vw;
-        font-size: 4vw;
-        border-radius: 3vw;
-        padding: 0 5vw;
     }
 }
