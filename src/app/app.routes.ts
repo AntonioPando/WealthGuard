@@ -13,33 +13,32 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full'
   },
-  { path: '**', 
-    component: NotFound },
   {
-    path: 'movimientos',
-    component: Movimientos
+    path: 'login',
+    component: Login
   },
-  { 
-    path: 'perfil',
-    component: Perfil
+  {
+    path: 'registro',
+    component: Registro
   },
   {
     path: 'dashboard',
     component: Dashboard
   },
   {
-    path: 'login',
-    component: Login
+    path: 'movimientos',
+    component: Movimientos
   },
-   {
-    path: 'registro',
-    component: Registro
+  {
+    path: 'perfil',
+    component: Perfil
   },
-  { path: 'presupuestos', 
+  {
+    path: 'presupuestos',
     component: Presupuestos
   },
   {
     path: '**',
-    redirectTo: 'login'
+    component: NotFound
   }
 ];
