@@ -7,26 +7,37 @@ import { Registro } from './components/pages/registro/registro';
 import { Presupuestos } from './components/pages/presupuestos/presupuestos';
 
 export const routes: Routes = [
-      {
-    path: 'movimientos',
-    component: Movimientos
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
-  { 
-    path: 'perfil',
-    component: Perfil
+  {
+    path: 'login',
+    component: Login
+  },
+  {
+    path: 'registro',
+    component: Registro
   },
   {
     path: 'dashboard',
     component: Dashboard
   },
   {
-    path: 'login',
-    component: Login
+    path: 'movimientos',
+    component: Movimientos
   },
-   {
-    path: 'registro',
-    component: Registro
+  {
+    path: 'perfil',
+    component: Perfil
   },
-  { path: 'presupuestos', 
-    component: Presupuestos }
+  {
+    path: 'presupuestos',
+    component: Presupuestos
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
 ];
