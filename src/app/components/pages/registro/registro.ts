@@ -1,147 +1,83 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './registro.html',
-  styleUrl: './registro.css'
+  styleUrls: ['./registro.css'],
 })
 export class Registro {
+
+  paso: number = 1;
 
   nickUsuario: string = '';
   nombre: string = '';
   primerApellido: string = '';
   segundoApellido: string = '';
   email: string = '';
+
   password: string = '';
   confirmarPassword: string = '';
+  mostrarPassword: boolean = false;
   preguntaSeguridad: string = '';
   respuestaSeguridad: string = '';
 
+  formularioEnviado: boolean = false;
+  cargando: boolean = false;
   errorMensaje: string = '';
   exitoMensaje: string = '';
-  cargando: boolean = false;
-  mostrarPassword: boolean = false;
-  formularioEnviado: boolean = false;
 
-  private apiUrl = 'http://localhost:8080/usuarios/crear';
-  private apiCheckNick = 'http://localhost:8080/usuarios/existe-nick';
+  constructor(private router: Router) { }
 
-  private regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+  get nickValido() { return this.nickUsuario.trim().length >= 3; }
+  get nombreValido() { return this.nombre.trim().length > 0; }
+  get apellidoValido() { return this.primerApellido.trim().length > 0; }
+  get emailValido() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email); }
+  get preguntaValida() { return this.preguntaSeguridad !== ''; }
+  get respuestaValida() { return this.respuestaSeguridad.trim().length > 0; }
 
-  constructor(private http: HttpClient, private router: Router) { }
+  get tieneMinCaracteres() { return this.password.length >= 6; }
+  get tieneMayuscula() { return /[A-Z]/.test(this.password); }
+  get tieneMinuscula() { return /[a-z]/.test(this.password); }
+  get tieneNumero() { return /[0-9]/.test(this.password); }
+  get passwordsCoinciden() { return this.password === this.confirmarPassword; }
 
-
-  get nickValido(): boolean {
-    return this.nickUsuario.trim().length >= 3;
+  irAlPaso2(): void {
+    this.formularioEnviado = true;
+    if (!this.nickValido || !this.nombreValido || !this.apellidoValido || !this.emailValido) {
+      return;
+    }
+    this.formularioEnviado = false;
+    this.paso = 2;
   }
 
-  get nombreValido(): boolean {
-    return this.nombre.trim().length > 0;
+  irAlPaso1(): void {
+    this.paso = 1;
   }
-
-  get apellidoValido(): boolean {
-    return this.primerApellido.trim().length > 0;
-  }
-
-  get emailValido(): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(this.email);
-  }
-
-  get passwordValida(): boolean {
-    return this.regexPassword.test(this.password);
-  }
-
-  get passwordsCoinciden(): boolean {
-    return this.password === this.confirmarPassword && this.confirmarPassword.length > 0;
-  }
-
-  get preguntaValida(): boolean {
-    return this.preguntaSeguridad.trim().length > 0;
-  }
-
-  get respuestaValida(): boolean {
-    return this.respuestaSeguridad.trim().length > 0;
-  }
-
-  get formularioValido(): boolean {
-    return this.nickValido &&
-      this.nombreValido &&
-      this.apellidoValido &&
-      this.emailValido &&
-      this.passwordValida &&
-      this.passwordsCoinciden &&
-      this.preguntaValida &&
-      this.respuestaValida;
-  }
-
-
-  get tieneMinCaracteres(): boolean {
-    return this.password.length >= 6;
-  }
-
-  get tieneMayuscula(): boolean {
-    return /[A-Z]/.test(this.password);
-  }
-
-  get tieneMinuscula(): boolean {
-    return /[a-z]/.test(this.password);
-  }
-
-  get tieneNumero(): boolean {
-    return /\d/.test(this.password);
-  }
-
 
   togglePassword(): void {
     this.mostrarPassword = !this.mostrarPassword;
   }
 
-  onIrAlLogin(): void {
-    this.router.navigate(['/login']);
-  }
-
   onSubmit(): void {
     this.formularioEnviado = true;
     this.errorMensaje = '';
-    this.exitoMensaje = '';
 
-    if (!this.formularioValido) return;
+    if (!this.preguntaValida || !this.respuestaValida ||
+      !this.tieneMinCaracteres || !this.tieneMayuscula ||
+      !this.tieneMinuscula || !this.tieneNumero || !this.passwordsCoinciden) {
+      return;
+    }
 
     this.cargando = true;
+    console.log('Registrando usuario:', this.nickUsuario);
+  }
 
-    const datos = {
-      nickUsuario: this.nickUsuario,
-      nombre: this.nombre,
-      primerApellido: this.primerApellido,
-      segundoApellido: this.segundoApellido,
-      email: this.email,
-      password: this.password,
-      preguntaSeguridad: this.preguntaSeguridad,
-      respuestaSeguridad: this.respuestaSeguridad,
-      fotoPerfil: null
-    };
-
-    this.http.post(this.apiUrl, datos).subscribe({
-      next: () => {
-        this.cargando = false;
-        this.exitoMensaje = '¡Cuenta creada correctamente! Redirigiendo al login...';
-        setTimeout(() => this.router.navigate(['/login']), 2000);
-      },
-      error: (err) => {
-        this.cargando = false;
-        if (err.status === 400) {
-          this.errorMensaje = 'El nombre de usuario ya está en uso. Prueba con otro.';
-        } else {
-          this.errorMensaje = 'Ha ocurrido un error. Inténtalo de nuevo más tarde.';
-        }
-      }
-    });
+  onIrAlLogin(): void {
+    this.router.navigate(['/login']);
   }
 }
