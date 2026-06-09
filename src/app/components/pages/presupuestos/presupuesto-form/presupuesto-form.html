@@ -1,16 +1,15 @@
 <div class="modal-overlay" (click)="cancelar.emit()">
   <div class="modal-content card" (click)="$event.stopPropagation()">
-    
+
     <h3>{{ esEdicion ? 'Editar Presupuesto' : 'Nuevo Presupuesto' }}</h3>
-    
+
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <div class="form-group">
         <label>Categoría</label>
         <select formControlName="idCategoria" class="form-control">
           <option value="" disabled>Selecciona una categoría</option>
-          <option *ngFor="let cat of categoriasLista" [value]="cat.id">
-            {{ cat.nombre }}
+          <option *ngFor="let cat of categoriasLista" [ngValue]="cat.id"> {{ cat.nombre }}
           </option>
         </select>
       </div>

@@ -1,19 +1,19 @@
 <div class="modal-overlay" (click)="cancelar.emit()">
-  
+
   <div class="modal-content card" (click)="$event.stopPropagation()">
-    
+
     <h3>{{ esEdicion ? 'Editar Movimiento' : 'Nuevo Movimiento' }}</h3>
-    
+
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <div class="tipo-selector">
         <label [class.activo]="form.get('tipoTransaccion')?.value === true" class="radio-btn ingreso">
-          <input type="radio" formControlName="tipoTransaccion" [value]="true"> 
+          <input type="radio" formControlName="tipoTransaccion" [value]="true">
           <span class="material-symbols-outlined">arrow_upward</span> Ingreso
         </label>
-        
+
         <label [class.activo]="form.get('tipoTransaccion')?.value === false" class="radio-btn gasto">
-          <input type="radio" formControlName="tipoTransaccion" [value]="false"> 
+          <input type="radio" formControlName="tipoTransaccion" [value]="false">
           <span class="material-symbols-outlined">arrow_downward</span> Gasto
         </label>
       </div>
@@ -37,7 +37,7 @@
 
       <div class="form-group">
         <label>Categoría</label>
-        <select formControlName="idCategoria">
+        <select formControlName="idCategoria" class="form-control">
           <option value="" disabled>Selecciona una categoría</option>
           <option *ngFor="let cat of categoriasLista" [value]="cat.id">
             {{ cat.nombre }}

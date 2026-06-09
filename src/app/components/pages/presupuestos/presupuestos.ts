@@ -1,22 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Header } from "../../layout/header/header";
 import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PresupuestoForm } from './presupuesto-form/presupuesto-form';
+import { TransaccionService } from '../../../services/transaccion.service';
+import { PresupuestosService } from '../../../services/presupuesto.service';
+import { CategoriaService } from '../../../services/categoria.service';
 
-const ICONOS_CATEGORIA: Record<string, string> = {
-  'Comida y Restaurantes': '🍽️',
-  'Vivienda': '🏠',
-  'Transporte': '🚗',
-  'Entretenimiento': '🎬',
-  'Compras': '🛍️',
-  'Salud': '🏥',
-  'Educación': '📚',
-  'Servicios': '⚡',
-  'Viajes': '✈️',
-  'Otros': '📦'
-};
 
 @Component({
   selector: 'app-presupuestos',
@@ -26,100 +17,88 @@ const ICONOS_CATEGORIA: Record<string, string> = {
   styleUrl: './presupuestos.css',
 })
 
-export class Presupuestos {
+export class Presupuestos implements OnInit {
+
+  idUsuario: number = 1; //ID PARA PRUEBAS CAMBIAR POR EL LOGEADO!!!!!! 
+
 
   public presupuestoEditando: any = null;
   public mostrarFormulario: boolean = false;
 
-  // Categorías hardcodeadas
-  public listaCategorias = [
-    { id: 1, nombre: 'Comida y Restaurantes', icono: ICONOS_CATEGORIA['Comida y Restaurantes'] },
-    { id: 2, nombre: 'Vivienda', icono: ICONOS_CATEGORIA['Vivienda'] },
-    { id: 3, nombre: 'Transporte', icono: ICONOS_CATEGORIA['Transporte'] },
-    { id: 4, nombre: 'Entretenimiento', icono: ICONOS_CATEGORIA['Entretenimiento'] },
-    { id: 5, nombre: 'Compras', icono: ICONOS_CATEGORIA['Compras'] },
-    { id: 6, nombre: 'Salud', icono: ICONOS_CATEGORIA['Salud'] },
-    { id: 7, nombre: 'Educación', icono: ICONOS_CATEGORIA['Educación'] },
-    { id: 8, nombre: 'Servicios', icono: ICONOS_CATEGORIA['Servicios'] },
-    { id: 9, nombre: 'Viajes', icono: ICONOS_CATEGORIA['Viajes'] },
-    { id: 10, nombre: 'Otros', icono: ICONOS_CATEGORIA['Otros'] }
-  ];
+  public listaPresupuestos: any[] = []
+  public listaCategorias: { id: number, nombre: string }[] = [];
 
-  // Datos harcodeados que controlan la interfaz
-  public listaPresupuestos = [
-    {
-      id: 1,
-      categoria: 'Comida y Restaurantes',
-      icono: ICONOS_CATEGORIA['Comida y Restaurantes'],
-      gastado: 810.40,
-      limite: 1200.00
-    },
-    {
-      id: 2,
-      categoria: 'Vivienda',
-      icono: ICONOS_CATEGORIA['Vivienda'],
-      gastado: 2700.00,
-      limite: 3000.00
-    },
-    {
-      id: 3,
-      categoria: 'Transporte',
-      icono: ICONOS_CATEGORIA['Transporte'],
-      gastado: 50.15,
-      limite: 600.00
-    },
-    {
-      id: 4,
-      categoria: 'Entretenimiento',
-      icono: ICONOS_CATEGORIA['Entretenimiento'],
-      gastado: 1305.00,
-      limite: 400.00
-    },
-    {
-      id: 5,
-      categoria: 'Compras',
-      icono: ICONOS_CATEGORIA['Compras'],
-      gastado: 120.00,
-      limite: 500.00
-    },
-    {
-      id: 6,
-      categoria: 'Salud',
-      icono: ICONOS_CATEGORIA['Salud'],
-      gastado: 45.00,
-      limite: 200.00
-    },
-    {
-      id: 7,
-      categoria: 'Educación',
-      icono: ICONOS_CATEGORIA['Educación'],
-      gastado: 100,
-      limite: 300.00
-    },
-    {
-      id: 8,
-      categoria: 'Servicios',
-      icono: ICONOS_CATEGORIA['Servicios'],
-      gastado: 150.00,
-      limite: 250.00
-    },
-    {
-      id: 9,
-      categoria: 'Viajes',
-      icono: ICONOS_CATEGORIA['Viajes'],
-      gastado: 990,
-      limite: 1000.00
-    },
-    {
-      id: 10,
-      categoria: 'Otros',
-      icono: ICONOS_CATEGORIA['Otros'],
-      gastado: 20.00,
-      limite: 100.00
-    }
-  ];
 
-  // Propiedades dinamicas para el grafico superior
+  constructor(
+    private presupuestoService: PresupuestosService,
+    private transaccionService: TransaccionService,
+    private categoriaService: CategoriaService,
+    private cdr: ChangeDetectorRef // Se fuerza el renderizado si Angular no detecta los cambios
+  ) { }
+
+  ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  // Calculamos las fechas del mes actual
+  private obtenerFechaInicioMes(): string {
+    const ahora = new Date();
+    const anio = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    return `${anio}-${mes}-01T00:00:00`; // Ejemplo: 2026-06-01T00:00:00
+  }
+
+  private obtenerFechaFinMes(): string {
+    const ahora = new Date();
+    const anio = ahora.getFullYear();
+    const mes = ahora.getMonth() + 1;
+    // El día '0' del siguiente mes nos da el último día del mes actual
+    const ultimoDia = new Date(anio, mes, 0).getDate();
+    const mesStr = String(mes).padStart(2, '0');
+    return `${anio}-${mesStr}-${String(ultimoDia).padStart(2, '0')}T23:59:59`;
+  }
+
+cargarDatos() {
+    // Cargamos los presupuestos (el backend ya calcula el gastoActual aquí)
+    this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
+      next: (data) => {
+        this.listaPresupuestos = data.map(p => ({
+          id: p.id,
+          idCategoria: p.categoria.id,
+          categoria: p.categoria.nombre,
+          icono: (p.categoria as any).icono || '📦', 
+          gastado: p.gastoActual, // 👈 El backend ya te da el cálculo hecho aquí
+          limite: p.limite
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al cargar presupuestos:', e)
+    });
+
+    // Cargamos las categorías globales para el dropdown del formulario
+    this.categoriaService.obtenerTodas().subscribe({
+      next: (data) => {
+        this.listaCategorias = data.map(cat => ({
+          id: cat.id,
+          nombre: cat.nombre
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al cargar el catálogo de categorías:', e)
+    });
+
+    // Traemos las transacciones del backend para tus cálculos manuales
+    this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
+      next: (transacciones) => {
+        console.log('Transacciones cargadas en Presupuestos:', transacciones);
+        
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al cargar transacciones para cálculos:', e)
+    });
+  }
+
+  // Calculamos el porcentaje de consumo del presupuesto
   calcularPorcentaje(gastado: number, limite: number): number {
     if (!limite) return 0;
     return Math.round((gastado / limite) * 100);
@@ -128,18 +107,8 @@ export class Presupuestos {
   obtenerEstado(gastado: number, limite: number): 'bueno' | 'advertencia' | 'peligro' {
     const porcentaje = (gastado / limite) * 100;
     if (porcentaje >= 100) return 'peligro';
-    if (porcentaje >= 90) return 'advertencia'; // Alerta amarilla al llegar al 90%
+    if (porcentaje >= 80) return 'advertencia'; // Alerta amarilla al llegar al 90%
     return 'bueno';
-  }
-
-  // PROPIEDADES DINÁMICAS PARA EL GRÁFICO INFERIOR
-
-  get totalGastadoGlobal(): number {
-    return this.listaPresupuestos.reduce((acumulado, p) => acumulado + p.gastado, 0);
-  }
-
-  get totalLimiteGlobal(): number {
-    return this.listaPresupuestos.reduce((acumulado, p) => acumulado + p.limite, 0);
   }
 
 
@@ -166,22 +135,37 @@ export class Presupuestos {
   }
 
   guardarCambios() {
-    // Lógica para actualizar el array original
-    const index = this.listaPresupuestos.findIndex(p => p.id === this.presupuestoEditando.id);
-    if (index !== -1) {
-      this.listaPresupuestos[index] = { ...this.presupuestoEditando };
-    }
-    this.cerrarEdicion();
+    this.presupuestoService.editarPresupuesto(
+      this.presupuestoEditando.id,
+      this.presupuestoEditando.idCategoria,
+      this.presupuestoEditando.limite,
+      this.obtenerFechaInicioMes(),
+      this.obtenerFechaFinMes()
+    ).subscribe({
+      next: (editado) => {
+        if (editado) {
+          this.cargarDatos(); // Recarga desde la Base de Datos
+          this.cerrarEdicion();
+        }
+      },
+      error: (err) => console.error('Error al actualizar presupuesto en BD:', err)
+    });
   }
 
   eliminarPresupuesto() {
     if (confirm('¿Estás seguro de que quieres eliminar este presupuesto?')) {
-      // Filtramos la lista para quitar el elemento
-      this.listaPresupuestos = this.listaPresupuestos.filter(p => p.id !== this.presupuestoEditando.id);
-
-      // Cerramos el modal
-      this.cerrarEdicion();
-      console.log('Presupuesto eliminado');
+      this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
+        next: (eliminado) => {
+          if (eliminado) {
+            this.cargarDatos(); // Recarga la lista real
+            this.cerrarEdicion();
+            console.log('Presupuesto eliminado de la BD');
+          } else {
+            alert('No se pudo eliminar el presupuesto.');
+          }
+        },
+        error: (err) => console.error('Error al intentar eliminar de la BD:', err)
+      });
     }
   }
 
@@ -190,20 +174,22 @@ export class Presupuestos {
   }
 
   guardarNuevoPresupuesto(datos: any) {
-    const categoriaEncontrada = this.listaCategorias.find(c => c.id == datos.idCategoria);
-    const nombreCat = categoriaEncontrada ? categoriaEncontrada.nombre : 'Otros';
-
     const nuevoPresupuesto = {
-      id: Math.floor(Math.random() * 1000),
-      categoria: nombreCat,
-      // Buscamos el icono
-      icono: ICONOS_CATEGORIA[nombreCat] || '❓',
+      usuario: { id: this.idUsuario },
+      categoria: { id: datos.idCategoria },
       limite: datos.limite,
-      gastado: 0
+      fechaInicio: this.obtenerFechaInicioMes(),
+      fechaFin: this.obtenerFechaFinMes()
     };
 
-    this.listaPresupuestos.push(nuevoPresupuesto);
-    this.mostrarFormulario = false;
+    this.presupuestoService.crearPresupuesto(nuevoPresupuesto).subscribe({
+      next: () => {
+        this.cargarDatos();
+        this.mostrarFormulario = false;
+      },
+      error: (err) => console.error('Error al guardar nuevo presupuesto:', err)
+    });
+
   }
 
 }
