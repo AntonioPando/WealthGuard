@@ -7,7 +7,12 @@ import { Registro } from './components/pages/registro/registro';
 import { Presupuestos } from './components/pages/presupuestos/presupuestos';
 
 export const routes: Routes = [
-      {
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+  {
     path: 'movimientos',
     component: Movimientos
   },
@@ -28,5 +33,10 @@ export const routes: Routes = [
     component: Registro
   },
   { path: 'presupuestos', 
-    component: Presupuestos }
+    component: Presupuestos
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
 ];

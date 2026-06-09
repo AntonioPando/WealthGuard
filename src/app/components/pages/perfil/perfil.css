@@ -21,6 +21,27 @@
   padding-top: 8.889vh;
 }
 
+.alerta {
+  max-width: 83.333vw;
+  margin: 0 auto 1.111vw auto;
+  padding: 0.833vw 1.111vw;
+  border-radius: 0.556vw;
+  font-weight: 600;
+  border: 0.069vw solid transparent;
+}
+
+.alerta-exito {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}
+
+.alerta-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
 .contenedor-principal {
   display: grid;
   grid-template-columns: 1fr 22.222vw;
@@ -81,6 +102,10 @@
 
 .boton-editar-avatar:hover { transform: scale(1.1); }
 
+.input-archivo-oculto {
+  display: none;
+}
+
 .datos-usuario h2 {
   font-size: 1.667vw;
   margin: 0 0 0.278vw 0;
@@ -127,6 +152,12 @@
   background: white;
   border: 0.069vw solid var(--border);
   color: var(--text-main);
+}
+
+.boton-editar-perfil:disabled,
+.boton-exportar-datos:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .tarjeta-plan {
@@ -223,6 +254,86 @@
   white-space: nowrap;
 }
 
+.overlay-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-perfil {
+  width: min(90vw, 34.722vw);
+  background: var(--white);
+  border-radius: 1.111vw;
+  border: 0.069vw solid var(--border);
+  box-shadow: 0 0.972vw 2.083vw -1.042vw rgba(15, 23, 42, 0.35);
+  padding: 1.667vw;
+}
+
+.modal-perfil h3 {
+  margin: 0 0 1.111vw 0;
+  color: var(--primary);
+}
+
+.campo-form {
+  margin-bottom: 0.833vw;
+}
+
+.campo-form label {
+  display: block;
+  margin-bottom: 0.347vw;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.campo-form input {
+  width: 100%;
+  border: 0.069vw solid var(--border);
+  border-radius: 0.556vw;
+  padding: 0.625vw 0.833vw;
+}
+
+.campo-doble {
+  display: grid;
+  gap: 0.833vw;
+  grid-template-columns: 1fr 1fr;
+}
+
+.acciones-modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.694vw;
+  margin-top: 1.111vw;
+}
+
+.boton-primario,
+.boton-secundario {
+  border-radius: 0.556vw;
+  padding: 0.625vw 1.111vw;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton-primario {
+  border: none;
+  color: white;
+  background: var(--primary);
+}
+
+.boton-primario:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.boton-secundario {
+  border: 0.069vw solid var(--border);
+  color: var(--text-main);
+  background: white;
+}
+
 @media (max-width: 1024px) {
   .contenedor-principal {
     grid-template-columns: 1fr;
@@ -249,5 +360,21 @@
   .seccion-desactivar-cuenta {
     flex-direction: column;
     text-align: center;
+  }
+
+  .modal-perfil {
+    width: min(92vw, 35.417vw);
+    border-radius: 2.222vw;
+    padding: 4.444vw;
+  }
+
+  .campo-doble {
+    grid-template-columns: 1fr;
+  }
+
+  .alerta {
+    margin-bottom: 2.222vw;
+    padding: 2.222vw;
+    border-radius: 1.111vw;
   }
 }
