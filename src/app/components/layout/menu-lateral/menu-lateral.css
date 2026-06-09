@@ -108,6 +108,8 @@
 
 .barra-lateral__acciones{
 	padding-top: 14px;
+	display: grid;
+	gap: 10px;
 }
 
 .boton-primario-accion{
@@ -126,5 +128,28 @@
 }
 
 .boton-primario-accion .material-symbols-outlined{
+	font-size:18px;
+}
+
+.boton-secundario-accion{
+	width: calc(var(--sidebar-width) * 0.9);
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	gap: 1dvw;
+	background: #fee2e2;
+	color: #b91c1c;
+	border: 1px solid #fecaca;
+	border-radius: 20px;
+	cursor: pointer;
+	font-weight: 700;
+	padding: 10px 12px;
+}
+
+.boton-secundario-accion:hover{
+	background: #fecaca;
+}
+
+.boton-secundario-accion .material-symbols-outlined{
 	font-size:18px;
 }

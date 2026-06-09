@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-menu-lateral',
@@ -7,4 +8,14 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './menu-lateral.html',
   styleUrl: './menu-lateral.css',
 })
-export class MenuLateral {}
+export class MenuLateral {
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+  ) {}
+
+  onCerrarSesion(): void {
+    this.loginService.cerrarSesion();
+    this.router.navigate(['/login']);
+  }
+}
