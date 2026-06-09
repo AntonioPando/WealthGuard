@@ -1,77 +1,77 @@
-<div class = "login-wrapper">
+<main class="login-shell" aria-labelledby="login-title">
+    <section class="login-card" role="region" aria-label="Acceso a cuenta">
+        <aside class="login-brand" aria-hidden="true">
+            <p class="brand-pill">Banca personal inteligente</p>
+            <h1 class="logo">WealthGuard</h1>
+            <p class="descripcion">
+                Protege tu patrimonio con visibilidad total de tus movimientos y presupuestos.
+            </p>
+            <ul class="caracteristicas">
+                <li>Seguridad cifrada</li>
+                <li>Análisis en tiempo real</li>
+                <li>Soporte experto</li>
+            </ul>
+        </aside>
 
-    <div class = "login-izq">
-        <h1 class="logo">WealthGuard</h1>
+        <section class="login-panel">
+            <h2 id="login-title">Bienvenido de nuevo</h2>
+            <p class="credenciales">Ingresa tus credenciales para continuar</p>
 
-        <p class="descripcion">
-            Proteja su patrimonio con precisión institucional.
-        </p>
-
-        <p class = "descripcion">
-        Gestiones sus archivos, presupuestos y trasacciones en una plataforma diseñada para la claridad y el control total.
-        </p>
-
-        <div class = "caracteristicas">
-            <span>Seguridad cifrada</span> ·
-            <span>Análisis en tiempo real</span> ·
-            <span>Soporte experto</span>
-        </div>
-    </div>
-
-    <div class = "login-der">
-        <h2>Bienvenido de Nuevo</h2>
-        <p class = "credenciales"> Ingrese sus credenciales para acceder a la cuenta</p>
-
-        <form (ngSubmit) = "onSubmit()" #loginForm="ngForm">
-
-            <div class="form-group">
-                <label for = "usuario"> Usuario </label>
-                <div class = "entrada">
-                    <input type = "text" 
-                    id = "usuario" 
-                    name = "usuario" 
-                    [(ngModel)] = "usuario"
-                    required
-                    />
-                    <span class = "icono">✉️</span>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for = "password"> Contraseña </label>
-                <div class = "entrada">
-                    <input 
-                    type = "password" 
-                    id = "password" 
-                    name = "password" 
-                    [(ngModel)] = "password"
-                    required
-                    />
-                    <span class = "icono">🔒</span>
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="formulario" novalidate>
+                <div class="form-group">
+                    <label for="usuario">Usuario</label>
+                    <div class="entrada">
+                        <input
+                            type="text"
+                            id="usuario"
+                            name="usuario"
+                            [(ngModel)]="usuario"
+                            required
+                            autocomplete="username"
+                            placeholder="tu.usuario"
+                        />
+                        <span class="icono" aria-hidden="true">@</span>
+                    </div>
                 </div>
 
-                <a class =  "olvidar" (click) = "onOlvideMiPassword()">
-                    ¿Olvidaste tu contraseña?
-                </a>
-            </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="entrada">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            [(ngModel)]="password"
+                            required
+                            autocomplete="current-password"
+                            placeholder="••••••••"
+                        />
+                        <span class="icono" aria-hidden="true">*</span>
+                    </div>
 
-            <div class = "error" *ngIf = "errormensaje">
-                {{ errormensaje }}
-            </div>
+                    <button type="button" class="olvidar" (click)="onOlvideMiPassword()">
+                        ¿Olvidaste tu contraseña?
+                    </button>
+                </div>
 
-            <div class = "recordar">
-                <input type = "checkbox" id = "recordar" />
-                <label for = "recordar"> Recordarme en este dispositivo </label>
-            </div>
+                @if (errormensaje) {
+                    <p class="error" role="alert" aria-live="assertive">{{ errormensaje }}</p>
+                }
 
-            <button type = "submit" class = "iniciarsesion">
-                Iniciar Sesión
-            </button>
-        </form>
+                <div class="recordar">
+                    <input type="checkbox" id="recordar" name="recordar" [(ngModel)]="recordar" />
+                    <label for="recordar">Recordarme en este dispositivo</label>
+                </div>
 
-        <p class = "registro">
-            ¿No tienes una cuenta? 
-            <a (click) = "onRegistrarse()">Regístrate</a>
-        </p>
-    </div>
-</div>
+                <button type="submit" class="iniciarsesion" [disabled]="cargando">
+                    {{ cargando ? 'Validando acceso...' : 'Iniciar sesión' }}
+                </button>
+            </form>
+
+            <p class="registro">
+                ¿No tienes una cuenta?
+                <button type="button" class="registro-link" (click)="onRegistrarse()">Regístrate</button>
+            </p>
+        </section>
+    </section>
+</main>
