@@ -7,6 +7,7 @@ import { Header } from "../../layout/header/header";
 import { TransaccionResponse } from '../../../models/transaccion.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionForm } from './transaccion-form/transaccion-form';
+import { CategoriaService } from '../../../services/categoria.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -46,7 +47,7 @@ export class Movimientos implements OnInit {
 
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
-  constructor(private transaccionService: TransaccionService, private cdr: ChangeDetectorRef) { }
+  constructor(private transaccionService: TransaccionService, private categoriaService: CategoriaService, private cdr: ChangeDetectorRef) { }
 
 
   ngOnInit(): void {
@@ -54,48 +55,57 @@ export class Movimientos implements OnInit {
   }
 
   cargarDatos() {
-    // Primero cargamos el historial completo de las transacciones
+    // Cargamos las categorías globales para el formulario
+    this.categoriaService.obtenerTodas().subscribe({
+      next: (cats) => {
+        this.categoriasDesdeBackend = cats.map(c => ({
+          id: c.id,
+          nombre: c.nombre
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al traer categorías:', e)
+    });
+
+    // Cargamos el historial completo de las transacciones
     this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
       next: (data) => {
         // Ordenamos las transacciones por fecha (de más reciente a más antigua)
         this.movimientos = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-        // Extraemos las categorias para el filtro
+        
+        // Extraemos los strings de categorías existentes SOLO para el componente <app-filtros> de la tabla
         this.categorias = [...new Set(data.map(m => m.nombreCategoria).filter(Boolean))] as string[];
 
-        const mapaCategorias = new Map<number, string>();
-
-        data.forEach(m => {
-          if (m.idCategoria && m.nombreCategoria) {
-            mapaCategorias.set(m.idCategoria, m.nombreCategoria);
-          }
-        });
-
-        this.categoriasDesdeBackend = Array.from(mapaCategorias.entries()).map(([id, nombre]) => ({
-          id: id,
-          nombre: nombre
-        }));
-
         this.limpiarFiltros(); // Inicialmente mostramos todos los movimientos sin filtros
-        this.cdr.detectChanges(); // Forzamos la detección de cambios para actualizar la vista con los datos cargados
+        this.cdr.detectChanges(); // Forzamos la detección de cambios para actualizar la vista
       },
-      error: (e) => console.error(e)
+      error: (e) => console.error('Error al cargar movimientos:', e)
     });
 
-    // luego cargamos la tendencia, categoria principal y meta para los insights
-    this.transaccionService.obtenerTendencia(this.idUsuario).subscribe(resultado => {
-      this.tendencia = resultado;
-      this.cdr.detectChanges();
+    // Cargamos los insights (Tendencia, Categoría Principal y Meta)
+    this.transaccionService.obtenerTendencia(this.idUsuario).subscribe({
+      next: (resultado) => {
+        this.tendencia = resultado;
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al obtener tendencia:', e)
     });
 
-    this.transaccionService.obtenerCategoriaPrincipal(this.idUsuario).subscribe(resultado => {
-      this.categoriaPrincipal = resultado;
-      this.cdr.detectChanges();
+    this.transaccionService.obtenerCategoriaPrincipal(this.idUsuario).subscribe({
+      next: (resultado) => {
+        this.categoriaPrincipal = resultado;
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al obtener categoría principal:', e)
     });
 
-    this.transaccionService.obtenerMeta(this.idUsuario).subscribe(resultado => {
-      this.meta = resultado;
-      this.cdr.detectChanges();
-    })
+    this.transaccionService.obtenerMeta(this.idUsuario).subscribe({
+      next: (resultado) => {
+        this.meta = resultado;
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al obtener meta:', e)
+    });
   }
 
   // Filtro de fechas
@@ -205,20 +215,20 @@ export class Movimientos implements OnInit {
 
   eliminarMovimiento(idTransaccion: number) {
     if (confirm('¿Estás seguro de que deseas eliminar este movimiento?')) {
-      
+
       // Llamamos al método eliminarTransaccion
       this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
         next: (eliminado) => {
           if (eliminado) {
             // Si Java responde true, volvemos a cargar los datos reales
-            this.cargarDatos(); 
+            this.cargarDatos();
           } else {
             alert('No se pudo eliminar el movimiento.');
           }
         },
         error: (err) => console.error('Error al intentar eliminar de la BD:', err)
       });
-      
+
     }
   }
 }
