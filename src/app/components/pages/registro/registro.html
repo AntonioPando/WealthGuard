@@ -2,15 +2,12 @@
 
     <div class="registro-izq">
         <h1 class="logo">WealthGuard</h1>
-
         <p class="descripcion">
-            Comienza a proteger tu patrimonio hoy mismo.
+            Comienza a proteger tu salud financiera hoy mismo.
         </p>
-
         <p class="descripcion">
             Crea tu cuenta en segundos y accede a herramientas de análisis financiero diseñadas para darte el control total de tu dinero.
         </p>
-
         <div class="caracteristicas">
             <span>Seguridad cifrada</span> ·
             <span>Análisis en tiempo real</span> ·
@@ -33,12 +30,10 @@
                         name="nickUsuario"
                         [(ngModel)]="nickUsuario"
                         required
-                        minlength="3"
-                        #nickCtrl="ngModel"
                     />
                     <span class="icono">👤</span>
                 </div>
-                <span class="campo-error" *ngIf="nickCtrl.invalid && nickCtrl.touched">
+                <span class="campo-error" *ngIf="formularioEnviado && !nickValido">
                     El usuario debe tener al menos 3 caracteres.
                 </span>
             </div>
@@ -53,10 +48,9 @@
                             name="nombre"
                             [(ngModel)]="nombre"
                             required
-                            #nombreCtrl="ngModel"
                         />
                     </div>
-                    <span class="campo-error" *ngIf="nombreCtrl.invalid && nombreCtrl.touched">
+                    <span class="campo-error" *ngIf="formularioEnviado && !nombreValido">
                         Campo obligatorio.
                     </span>
                 </div>
@@ -70,10 +64,9 @@
                             name="primerApellido"
                             [(ngModel)]="primerApellido"
                             required
-                            #apellido1Ctrl="ngModel"
                         />
                     </div>
-                    <span class="campo-error" *ngIf="apellido1Ctrl.invalid && apellido1Ctrl.touched">
+                    <span class="campo-error" *ngIf="formularioEnviado && !apellidoValido">
                         Campo obligatorio.
                     </span>
                 </div>
@@ -100,12 +93,10 @@
                         name="email"
                         [(ngModel)]="email"
                         required
-                        email
-                        #emailCtrl="ngModel"
                     />
                     <span class="icono">✉️</span>
                 </div>
-                <span class="campo-error" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+                <span class="campo-error" *ngIf="formularioEnviado && !emailValido">
                     Introduce un correo válido.
                 </span>
             </div>
@@ -119,16 +110,26 @@
                         name="password"
                         [(ngModel)]="password"
                         required
-                        minlength="6"
-                        #passwordCtrl="ngModel"
                     />
                     <span class="icono icono-click" (click)="togglePassword()">
-                        {{ mostrarPassword ? '🙈' : '🔒' }}
+                        {{ mostrarPassword ? '👁️' : '👁️' }}
                     </span>
                 </div>
-                <span class="campo-error" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
-                    La contraseña debe tener al menos 6 caracteres.
-                </span>
+
+                <div class="requisitos-password">
+                    <span [class.cumplido]="tieneMinCaracteres" [class.pendiente]="!tieneMinCaracteres">
+                        {{ tieneMinCaracteres ? '✅' : '❌' }} Mínimo 6 caracteres
+                    </span>
+                    <span [class.cumplido]="tieneMayuscula" [class.pendiente]="!tieneMayuscula">
+                        {{ tieneMayuscula ? '✅' : '❌' }} Al menos una mayúscula
+                    </span>
+                    <span [class.cumplido]="tieneMinuscula" [class.pendiente]="!tieneMinuscula">
+                        {{ tieneMinuscula ? '✅' : '❌' }} Al menos una minúscula
+                    </span>
+                    <span [class.cumplido]="tieneNumero" [class.pendiente]="!tieneNumero">
+                        {{ tieneNumero ? '✅' : '❌' }} Al menos un número
+                    </span>
+                </div>
             </div>
 
             <div class="form-group">
@@ -140,12 +141,14 @@
                         name="confirmarPassword"
                         [(ngModel)]="confirmarPassword"
                         required
-                        #confirmCtrl="ngModel"
                     />
                     <span class="icono">🔒</span>
                 </div>
-                <span class="campo-error" *ngIf="confirmCtrl.touched && password !== confirmarPassword">
+                <span class="campo-error" *ngIf="confirmarPassword.length > 0 && !passwordsCoinciden">
                     Las contraseñas no coinciden.
+                </span>
+                <span class="campo-exito" *ngIf="confirmarPassword.length > 0 && passwordsCoinciden">
+                    ✅ Las contraseñas coinciden.
                 </span>
             </div>
 
@@ -157,7 +160,6 @@
                         name="preguntaSeguridad"
                         [(ngModel)]="preguntaSeguridad"
                         required
-                        #preguntaCtrl="ngModel"
                     >
                         <option value="">-- Selecciona una pregunta --</option>
                         <option value="¿Cuál es el nombre de tu primera mascota?">¿Cuál es el nombre de tu primera mascota?</option>
@@ -167,7 +169,7 @@
                         <option value="¿Cuál es tu película favorita?">¿Cuál es tu película favorita?</option>
                     </select>
                 </div>
-                <span class="campo-error" *ngIf="preguntaCtrl.invalid && preguntaCtrl.touched">
+                <span class="campo-error" *ngIf="formularioEnviado && !preguntaValida">
                     Selecciona una pregunta de seguridad.
                 </span>
             </div>
@@ -181,27 +183,21 @@
                         name="respuestaSeguridad"
                         [(ngModel)]="respuestaSeguridad"
                         required
-                        #respuestaCtrl="ngModel"
                     />
                     <span class="icono">🛡️</span>
                 </div>
-                <span class="campo-error" *ngIf="respuestaCtrl.invalid && respuestaCtrl.touched">
+                <span class="campo-error" *ngIf="formularioEnviado && !respuestaValida">
                     Campo obligatorio.
                 </span>
             </div>
 
-            <div class="error" *ngIf="errorMensaje">
-                {{ errorMensaje }}
-            </div>
-
-            <div class="exito" *ngIf="exitoMensaje">
-                {{ exitoMensaje }}
-            </div>
+            <div class="error" *ngIf="errorMensaje">{{ errorMensaje }}</div>
+            <div class="exito" *ngIf="exitoMensaje">{{ exitoMensaje }}</div>
 
             <button
                 type="submit"
                 class="registrarse"
-                [disabled]="registroForm.invalid || password !== confirmarPassword || cargando"
+                [disabled]="cargando"
             >
                 {{ cargando ? 'Registrando...' : 'Crear cuenta' }}
             </button>

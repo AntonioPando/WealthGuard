@@ -214,4 +214,27 @@ label {
         flex-direction: column;
         gap: 0;
     }
+    
+}
+
+.requisitos-password {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 0.8rem;
+}
+
+.requisitos-password .cumplido {
+    color: #16803d;
+}
+
+.requisitos-password .pendiente {
+    color: #94a3b8;
+}
+
+.campo-exito {
+    color: #16803d;
+    font-size: 0.8rem;
+    margin-top: 4px;
 }
