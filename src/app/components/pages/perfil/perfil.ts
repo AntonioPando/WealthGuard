@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
 import { UsuarioRequest, UsuarioResponse } from '../../../models/usuario.model';
+import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
@@ -16,9 +17,10 @@ import { UsuarioService } from '../../../services/usuario.service';
 })
 export class Perfil implements OnInit {
   private readonly usuarioService = inject(UsuarioService);
+  private readonly loginService = inject(LoginService);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  idUsuario: number = 1;
+  idUsuario: number | null = null;
 
   cargandoPerfil: boolean = false;
   guardandoPerfil: boolean = false;
@@ -48,13 +50,25 @@ export class Perfil implements OnInit {
   passwordNueva: string = '';
 
   ngOnInit(): void {
+    this.idUsuario = this.loginService.obtenerIdUsuario();
+
+    if (this.idUsuario === null) {
+      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tu perfil.';
+      return;
+    }
+
     this.cargarPerfil();
   }
 
   cargarPerfil() {
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) {
+      return;
+    }
+
     this.mensajeError = '';
     this.cargandoPerfil = true;
-    this.usuarioService.obtenerPerfil(this.idUsuario).subscribe({
+    this.usuarioService.obtenerPerfil(idUsuario).subscribe({
       next: (data) => {
         this.usuario = data;
         this.cargandoPerfil = false;
@@ -99,8 +113,13 @@ export class Perfil implements OnInit {
       return;
     }
 
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) {
+      return;
+    }
+
     this.guardandoPerfil = true;
-    this.usuarioService.actualizarUsuario(this.idUsuario, this.formularioEditar).subscribe({
+    this.usuarioService.actualizarUsuario(idUsuario, this.formularioEditar).subscribe({
       next: (data) => {
         this.usuario = data;
         this.guardandoPerfil = false;
@@ -133,8 +152,13 @@ export class Perfil implements OnInit {
       return;
     }
 
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) {
+      return;
+    }
+
     this.actualizandoPassword = true;
-    this.usuarioService.cambiarPassword(this.idUsuario, this.passwordAntigua, this.passwordNueva).subscribe({
+    this.usuarioService.cambiarPassword(idUsuario, this.passwordAntigua, this.passwordNueva).subscribe({
       next: (ok) => {
         this.actualizandoPassword = false;
         if (ok) {
@@ -156,6 +180,11 @@ export class Perfil implements OnInit {
   }
 
   subirFoto(event: Event) {
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) {
+      return;
+    }
+
     const input = event.target as HTMLInputElement;
     const archivo = input.files?.[0];
 
@@ -166,7 +195,7 @@ export class Perfil implements OnInit {
     const reader = new FileReader();
     reader.onload = () => {
       const bytes = new Uint8Array(reader.result as ArrayBuffer);
-      this.usuarioService.actualizarFotoPerfil(this.idUsuario, Array.from(bytes)).subscribe({
+      this.usuarioService.actualizarFotoPerfil(idUsuario, Array.from(bytes)).subscribe({
         next: (url) => {
           if (this.usuario) {
             this.usuario.fotoPerfil = url;
@@ -189,7 +218,12 @@ export class Perfil implements OnInit {
       return;
     }
 
-    this.usuarioService.eliminarCuenta(this.idUsuario).subscribe({
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) {
+      return;
+    }
+
+    this.usuarioService.eliminarCuenta(idUsuario).subscribe({
       next: (eliminado) => {
         if (eliminado) {
           this.usuario = null;
@@ -246,5 +280,20 @@ export class Perfil implements OnInit {
   private limpiarMensajes() {
     this.mensajeExito = '';
     this.mensajeError = '';
+  }
+
+  private obtenerIdUsuarioActivo(): number | null {
+    if (this.idUsuario !== null) {
+      return this.idUsuario;
+    }
+
+    this.idUsuario = this.loginService.obtenerIdUsuario();
+    if (this.idUsuario === null) {
+      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para continuar.';
+      this.cdr.detectChanges();
+      return null;
+    }
+
+    return this.idUsuario;
   }
 }
