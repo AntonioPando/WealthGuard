@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-not-found',
@@ -10,10 +11,17 @@ import { Router } from '@angular/router';
 })
 export class NotFound {
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private loginService: LoginService  // ← añadir esto
+  ) {}
 
   irAlPanel(): void {
-    this.router.navigate(['/dashboard']);
+    if (this.loginService.estaAutenticado()) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   irAlLogin(): void {
