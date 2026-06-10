@@ -142,27 +142,38 @@
   <section class="tabla-actividad">
     <header class="tabla-actividad__encabezado">
       <h3 class="tabla-actividad__titulo">Transacciones Recientes</h3>
-      <button class="boton-enlace">Ver todas</button>
+      <button class="boton-enlace" routerLink="/movimientos">Ver todas</button>
     </header>
     <div class="tabla-actividad__cuerpo">
-      <!-- Fila de Transacción -->
-      <article class="transaccion-item">
-        <div class="transaccion-item__perfil">
-          <div class="transaccion-item__icono">
-            <span class="material-symbols-outlined">shopping_bag</span>
+      <!-- Últimas 5 transacciones del usuario -->
+      <ng-container *ngIf="recentTransactions && recentTransactions.length > 0; else sinTransacciones">
+        <article class="transaccion-item" *ngFor="let t of recentTransactions">
+          <div class="transaccion-item__perfil">
+            <div class="transaccion-item__icono">
+              <span class="material-symbols-outlined">shopping_bag</span>
+            </div>
+            <div class="transaccion-item__detalles">
+              <h4 class="transaccion-item__nombre">{{ t.descripcion || (t.nombreCategoria || 'Transacción') }}</h4>
+              <p class="transaccion-item__categoria">{{ t.nombreCategoria || 'Sin categoría' }} • {{ t.fecha | date:'short' }}</p>
+            </div>
           </div>
-          <div class="transaccion-item__detalles">
-            <h4 class="transaccion-item__nombre">Apple Store - MacBook Pro</h4>
-            <p class="transaccion-item__categoria">Electrónica • Hoy, 2:45 PM</p>
+          <div class="transaccion-item__monto">
+            <span class="monto-valor" [ngClass]="{ 'monto-valor--positivo': t.tipoTransaccion, 'monto-valor--negativo': !t.tipoTransaccion }">
+              {{ t.tipoTransaccion ? (t.cantidad | number:'1.2-2') + ' €' : '-' + (t.cantidad | number:'1.2-2') + ' €' }}
+            </span>
+            <span class="etiqueta-estado" [class.etiqueta-estado--completado]="t.tipoTransaccion">{{ t.tipoTransaccion ? 'Ingreso' : 'Gasto' }}</span>
+          </div>
+        </article>
+      </ng-container>
+      <ng-template #sinTransacciones>
+        <div class="transaccion-item">
+          <div class="transaccion-item__perfil">
+            <div class="transaccion-item__detalles">
+              <h4 class="transaccion-item__nombre">Sin transacciones recientes</h4>
+            </div>
           </div>
         </div>
-        <div class="transaccion-item__monto">
-          <span class="monto-valor monto-valor--negativo">-$2,499.00</span>
-          <span class="etiqueta-estado etiqueta-estado--completado">Completado</span>
-        </div>
-      </article>
-
-      <!-- ... más transacciones -->
+      </ng-template>
     </div>
   </section>
   </main>

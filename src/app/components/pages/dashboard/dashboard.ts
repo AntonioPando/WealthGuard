@@ -8,10 +8,11 @@ import { LoginService } from '../../../services/login.service';
 import { UsuarioResponse } from '../../../models/usuario.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionResponse } from '../../../models/transaccion.model';
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Header, MenuLateral, RecomendacionPopupComponent],
+  imports: [CommonModule, Header, MenuLateral, RecomendacionPopupComponent, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -39,6 +40,10 @@ export class Dashboard implements OnInit {
 
   usuario: UsuarioResponse | null = null;
 
+  constructor(
+    private router: Router
+  ) {}
+
   ngOnInit(): void {
     this.idUsuario = this.loginService.obtenerIdUsuario();
 
@@ -55,6 +60,7 @@ export class Dashboard implements OnInit {
     this.cargarGastoMensual();
     this.cargarIngresoMensual();
     this.cargarDistribucionCategorias();
+    this.cargarUltimasTransacciones();
   }
 
   // cargarDatosDashboard(): void {
@@ -250,6 +256,9 @@ export class Dashboard implements OnInit {
   // Distribución por categoría (gastos del mes)
   distribucionSegments: Array<{ nombre: string; valor: number; porcentaje: number; dashArray: string; dashOffset: string; colorIndex: number; colorKey: string }> = [];
 
+  // Últimas transacciones (mostradas en dashboard)
+  recentTransactions: TransaccionResponse[] = [];
+
   cargarDistribucionCategorias(): void {
     const idUsuario = this.obtenerIdUsuarioActivo();
     if (idUsuario === null) return;
@@ -317,6 +326,26 @@ export class Dashboard implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar distribución por categoría', err);
+      }
+    });
+  }
+
+  cargarUltimasTransacciones(): void {
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) return;
+
+    this.transaccionService.listarTransacciones(idUsuario).subscribe({
+      next: (txs: TransaccionResponse[]) => {
+        const ordenadas = (txs || []).slice().sort((a, b) => {
+          const fa = a.fecha ? new Date(a.fecha).getTime() : 0;
+          const fb = b.fecha ? new Date(b.fecha).getTime() : 0;
+          return fb - fa;
+        });
+        this.recentTransactions = ordenadas.slice(0, 5);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar últimas transacciones', err);
       }
     });
   }
