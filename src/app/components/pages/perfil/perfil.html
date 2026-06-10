@@ -14,7 +14,6 @@
     <section class="tarjeta-perfil">
       <div class="contenido-perfil">
         <div class="contenedor-avatar">
-
           <img [src]="obtenerFotoPerfil()" class="imagen-perfil" alt="Foto de perfil">
           <label class="boton-editar-avatar" title="Editar foto" for="input-foto">✎</label>
           <input id="input-foto" type="file" accept="image/*" (change)="subirFoto($event)" class="input-archivo-oculto">
@@ -43,11 +42,8 @@
         <h3>Nuevas Funciones</h3>
         <p>Estamos preparando herramientas de análisis predictivo para tu cartera.</p>
       </div>
-      <button class="boton-proximamente">
-        PRÓXIMAMENTE
-      </button>
+      <button class="boton-proximamente">PRÓXIMAMENTE</button>
     </aside>
-
 
     <div class="grid-configuracion">
 
@@ -55,11 +51,10 @@
         <div class="cabecera-seccion">
           <h3>Seguridad de la cuenta</h3>
         </div>
-
         <div class="item-ajuste">
           <div class="texto-item">
             <strong>Contraseña</strong>
-            <p>Tu última actualización fue hace 3 meses</p>
+            <p>{{ formatearFechaPassword() }}</p>
           </div>
           <button class="boton-flecha" (click)="abrirCambiarPassword()">Actualizar ›</button>
         </div>
@@ -121,8 +116,17 @@
     </div>
 
     <div class="campo-form">
-      <label>Password (obligatoria para actualizar)</label>
-      <input [(ngModel)]="formularioEditar.password" type="password">
+      <label>Contraseña (obligatoria para guardar)</label>
+      <div class="entrada">
+        <input [type]="mostrarPasswordEditar ? 'text' : 'password'" [(ngModel)]="formularioEditar.password"
+          placeholder="••••••••" (ngModelChange)="mensajeErrorEditarPerfil = ''" />
+        <span class="icono icono-click" (click)="togglePasswordEditar()" aria-label="Mostrar contraseña">
+          {{ mostrarPasswordEditar ? '👁' : '*' }}
+        </span>
+      </div>
+      @if (mensajeErrorEditarPerfil) {
+      <span class="campo-error">{{ mensajeErrorEditarPerfil }}</span>
+      }
     </div>
 
     <div class="acciones-modal">
@@ -142,7 +146,16 @@
 
     <div class="campo-form">
       <label>Contraseña actual</label>
-      <input [(ngModel)]="passwordAntigua" type="password">
+      <div class="entrada">
+        <input [type]="mostrarPasswordAntigua ? 'text' : 'password'" [(ngModel)]="passwordAntigua"
+          placeholder="••••••••" (ngModelChange)="mensajeErrorPassword = ''" />
+        <span class="icono icono-click" (click)="togglePasswordAntigua()" aria-label="Mostrar contraseña">
+          {{ mostrarPasswordAntigua ? '👁' : '*' }}
+        </span>
+      </div>
+      @if (mensajeErrorPassword) {
+      <span class="campo-error">{{ mensajeErrorPassword }}</span>
+      }
     </div>
 
     <div class="campo-form">
@@ -172,16 +185,18 @@
     <div class="campo-form">
       <label>Confirmar nueva contraseña</label>
       <div class="entrada">
-        <input [type]="mostrarNuevaPassword ? 'text' : 'password'" [(ngModel)]="confirmarPasswordNueva"
+        <input [type]="mostrarConfirmarPassword ? 'text' : 'password'" [(ngModel)]="confirmarPasswordNueva"
           placeholder="••••••••" />
-        <span class="icono" aria-hidden="true">*</span>
+        <span class="icono icono-click" (click)="toggleConfirmarPassword()" aria-label="Mostrar contraseña">
+          {{ mostrarConfirmarPassword ? '👁' : '*' }}
+        </span>
       </div>
-      <span class="campo-error" *ngIf="confirmarPasswordNueva.length > 0 && !nuevasPasswordsCoinciden">
-        Las contraseñas no coinciden.
-      </span>
-      <span class="campo-exito" *ngIf="confirmarPasswordNueva.length > 0 && nuevasPasswordsCoinciden">
-        ✓ Las contraseñas coinciden.
-      </span>
+      @if (confirmarPasswordNueva.length > 0 && !nuevasPasswordsCoinciden) {
+      <span class="campo-error">Las contraseñas no coinciden.</span>
+      }
+      @if (confirmarPasswordNueva.length > 0 && nuevasPasswordsCoinciden) {
+      <span class="campo-exito">✓ Las contraseñas coinciden.</span>
+      }
     </div>
 
     <div class="acciones-modal">

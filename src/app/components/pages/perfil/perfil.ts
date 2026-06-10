@@ -31,6 +31,8 @@ export class Perfil implements OnInit {
 
   mensajeExito: string = '';
   mensajeError: string = '';
+  mensajeErrorPassword: string = '';
+  mensajeErrorEditarPerfil: string = '';
 
   usuario: UsuarioResponse | null = null;
 
@@ -49,7 +51,10 @@ export class Perfil implements OnInit {
   passwordAntigua: string = '';
   passwordNueva: string = '';
   confirmarPasswordNueva: string = '';
+  mostrarPasswordAntigua: boolean = false;
   mostrarNuevaPassword: boolean = false;
+  mostrarConfirmarPassword: boolean = false;
+  mostrarPasswordEditar: boolean = false;
   formularioPasswordEnviado: boolean = false;
 
   get nuevaPasswordTieneMinCaracteres() { return this.passwordNueva.length >= 6; }
@@ -64,9 +69,10 @@ export class Perfil implements OnInit {
       this.nuevaPasswordTieneNumero;
   }
 
-  toggleNuevaPassword(): void {
-    this.mostrarNuevaPassword = !this.mostrarNuevaPassword;
-  }
+  togglePasswordAntigua(): void { this.mostrarPasswordAntigua = !this.mostrarPasswordAntigua; }
+  toggleNuevaPassword(): void { this.mostrarNuevaPassword = !this.mostrarNuevaPassword; }
+  toggleConfirmarPassword(): void { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
+  togglePasswordEditar(): void { this.mostrarPasswordEditar = !this.mostrarPasswordEditar; }
 
   ngOnInit(): void {
     this.idUsuario = this.loginService.obtenerIdUsuario();
@@ -106,6 +112,8 @@ export class Perfil implements OnInit {
     }
 
     this.limpiarMensajes();
+    this.mensajeErrorEditarPerfil = '';
+    this.mostrarPasswordEditar = false;
     this.formularioEditar = {
       nickUsuario: this.usuario.nickUsuario,
       nombre: this.usuario.nombre,
@@ -121,12 +129,19 @@ export class Perfil implements OnInit {
   }
 
   cerrarEditarPerfil() {
+    this.mensajeErrorEditarPerfil = '';
+    this.mostrarPasswordEditar = false;
     this.mostrarPopupEditarPerfil = false;
   }
 
   guardarPerfil() {
     if (!this.formularioEditar.email || !this.formularioEditar.nombre || !this.formularioEditar.nickUsuario) {
-      this.mensajeError = 'Nombre, usuario y email son obligatorios.';
+      this.mensajeErrorEditarPerfil = 'Nombre, usuario y email son obligatorios.';
+      return;
+    }
+
+    if (!this.formularioEditar.password || this.formularioEditar.password.trim() === '') {
+      this.mensajeErrorEditarPerfil = 'Debes introducir tu contraseña para guardar los cambios.';
       return;
     }
 
@@ -134,6 +149,7 @@ export class Perfil implements OnInit {
     if (idUsuario === null) return;
 
     this.guardandoPerfil = true;
+    this.mensajeErrorEditarPerfil = '';
     this.usuarioService.actualizarUsuario(idUsuario, this.formularioEditar).subscribe({
       next: (data) => {
         this.usuario = data;
@@ -142,9 +158,13 @@ export class Perfil implements OnInit {
         this.mensajeExito = 'Perfil actualizado correctamente.';
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
         this.guardandoPerfil = false;
-        this.mensajeError = 'No se pudo actualizar el perfil.';
+        if (err.status === 400) {
+          this.mensajeErrorEditarPerfil = 'La contraseña introducida es incorrecta.';
+        } else {
+          this.mensajeErrorEditarPerfil = 'No se pudo actualizar el perfil.';
+        }
         this.cdr.detectChanges();
       }
     });
@@ -152,10 +172,13 @@ export class Perfil implements OnInit {
 
   abrirCambiarPassword() {
     this.limpiarMensajes();
+    this.mensajeErrorPassword = '';
     this.passwordAntigua = '';
     this.passwordNueva = '';
     this.confirmarPasswordNueva = '';
+    this.mostrarPasswordAntigua = false;
     this.mostrarNuevaPassword = false;
+    this.mostrarConfirmarPassword = false;
     this.formularioPasswordEnviado = false;
     this.mostrarPopupPassword = true;
   }
@@ -166,9 +189,10 @@ export class Perfil implements OnInit {
 
   guardarPassword() {
     this.formularioPasswordEnviado = true;
+    this.mensajeErrorPassword = '';
 
     if (!this.passwordAntigua) {
-      this.mensajeError = 'Debes introducir tu contraseña actual.';
+      this.mensajeErrorPassword = 'Debes introducir tu contraseña actual.';
       return;
     }
 
@@ -190,12 +214,16 @@ export class Perfil implements OnInit {
           this.cdr.detectChanges();
           return;
         }
-        this.mensajeError = 'No se pudo actualizar la contraseña.';
+        this.mensajeErrorPassword = 'No se pudo actualizar la contraseña.';
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
         this.actualizandoPassword = false;
-        this.mensajeError = 'No se pudo actualizar la contraseña.';
+        if (err.status === 400 || err.status === 401) {
+          this.mensajeErrorPassword = 'La contraseña actual es incorrecta.';
+        } else {
+          this.mensajeErrorPassword = 'No se pudo actualizar la contraseña.';
+        }
         this.cdr.detectChanges();
       }
     });
@@ -280,6 +308,29 @@ export class Perfil implements OnInit {
     const fecha = new Date(this.usuario.fechaRegistro);
     const mes = fecha.toLocaleDateString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
     return `UNIDO EN ${mes} ${fecha.getFullYear()}`;
+  }
+
+  formatearFechaPassword(): string {
+    const fecha = this.usuario?.fechaUltimoCambioPassword;
+    if (!fecha) return 'Nunca actualizada';
+
+    const ahora = new Date();
+    const fechaActualizacion = new Date(fecha);
+    const diffMs = ahora.getTime() - fechaActualizacion.getTime();
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDias === 0) return 'Actualizada hoy';
+    if (diffDias === 1) return 'Actualizada ayer';
+    if (diffDias < 7) return `Actualizada hace ${diffDias} días`;
+
+    const diffSemanas = Math.floor(diffDias / 7);
+    if (diffSemanas < 4) return `Actualizada hace ${diffSemanas} semana${diffSemanas > 1 ? 's' : ''}`;
+
+    const diffMeses = Math.floor(diffDias / 30);
+    if (diffMeses < 12) return `Actualizada hace ${diffMeses} mes${diffMeses > 1 ? 'es' : ''}`;
+
+    const diffAnios = Math.floor(diffDias / 365);
+    return `Actualizada hace ${diffAnios} año${diffAnios > 1 ? 's' : ''}`;
   }
 
   private limpiarMensajes() {

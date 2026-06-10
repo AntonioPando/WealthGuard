@@ -17,10 +17,11 @@ export interface UsuarioResponse {
   primerApellido: string;
   segundoApellido: string;
   email: string;
-  password: string;
+  password?: string;
   preguntaSeguridad: string;
   fotoPerfil: string | null;
   fechaRegistro: string;
+  fechaUltimoCambioPassword: string | null;
   esAdmin: boolean;
   activo: boolean;
   cuentaBloqueada: boolean;
