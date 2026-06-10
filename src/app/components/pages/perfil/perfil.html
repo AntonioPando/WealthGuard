@@ -147,7 +147,41 @@
 
     <div class="campo-form">
       <label>Nueva contraseña</label>
-      <input [(ngModel)]="passwordNueva" type="password">
+      <div class="entrada">
+        <input [type]="mostrarNuevaPassword ? 'text' : 'password'" [(ngModel)]="passwordNueva" placeholder="••••••••" />
+        <span class="icono icono-click" (click)="toggleNuevaPassword()" aria-label="Mostrar contraseña">
+          {{ mostrarNuevaPassword ? '👁' : '*' }}
+        </span>
+      </div>
+      <div class="requisitos-password">
+        <span [class.cumplido]="nuevaPasswordTieneMinCaracteres" [class.pendiente]="!nuevaPasswordTieneMinCaracteres">
+          {{ nuevaPasswordTieneMinCaracteres ? '✓' : '○' }} Mínimo 6 caracteres
+        </span>
+        <span [class.cumplido]="nuevaPasswordTieneMayuscula" [class.pendiente]="!nuevaPasswordTieneMayuscula">
+          {{ nuevaPasswordTieneMayuscula ? '✓' : '○' }} Al menos una mayúscula
+        </span>
+        <span [class.cumplido]="nuevaPasswordTieneMinuscula" [class.pendiente]="!nuevaPasswordTieneMinuscula">
+          {{ nuevaPasswordTieneMinuscula ? '✓' : '○' }} Al menos una minúscula
+        </span>
+        <span [class.cumplido]="nuevaPasswordTieneNumero" [class.pendiente]="!nuevaPasswordTieneNumero">
+          {{ nuevaPasswordTieneNumero ? '✓' : '○' }} Al menos un número
+        </span>
+      </div>
+    </div>
+
+    <div class="campo-form">
+      <label>Confirmar nueva contraseña</label>
+      <div class="entrada">
+        <input [type]="mostrarNuevaPassword ? 'text' : 'password'" [(ngModel)]="confirmarPasswordNueva"
+          placeholder="••••••••" />
+        <span class="icono" aria-hidden="true">*</span>
+      </div>
+      <span class="campo-error" *ngIf="confirmarPasswordNueva.length > 0 && !nuevasPasswordsCoinciden">
+        Las contraseñas no coinciden.
+      </span>
+      <span class="campo-exito" *ngIf="confirmarPasswordNueva.length > 0 && nuevasPasswordsCoinciden">
+        ✓ Las contraseñas coinciden.
+      </span>
     </div>
 
     <div class="acciones-modal">

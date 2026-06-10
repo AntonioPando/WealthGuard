@@ -48,6 +48,25 @@ export class Perfil implements OnInit {
 
   passwordAntigua: string = '';
   passwordNueva: string = '';
+  confirmarPasswordNueva: string = '';
+  mostrarNuevaPassword: boolean = false;
+  formularioPasswordEnviado: boolean = false;
+
+  get nuevaPasswordTieneMinCaracteres() { return this.passwordNueva.length >= 6; }
+  get nuevaPasswordTieneMayuscula() { return /[A-Z]/.test(this.passwordNueva); }
+  get nuevaPasswordTieneMinuscula() { return /[a-z]/.test(this.passwordNueva); }
+  get nuevaPasswordTieneNumero() { return /[0-9]/.test(this.passwordNueva); }
+  get nuevasPasswordsCoinciden() { return this.passwordNueva === this.confirmarPasswordNueva; }
+  get nuevaPasswordValida() {
+    return this.nuevaPasswordTieneMinCaracteres &&
+      this.nuevaPasswordTieneMayuscula &&
+      this.nuevaPasswordTieneMinuscula &&
+      this.nuevaPasswordTieneNumero;
+  }
+
+  toggleNuevaPassword(): void {
+    this.mostrarNuevaPassword = !this.mostrarNuevaPassword;
+  }
 
   ngOnInit(): void {
     this.idUsuario = this.loginService.obtenerIdUsuario();
@@ -135,6 +154,9 @@ export class Perfil implements OnInit {
     this.limpiarMensajes();
     this.passwordAntigua = '';
     this.passwordNueva = '';
+    this.confirmarPasswordNueva = '';
+    this.mostrarNuevaPassword = false;
+    this.formularioPasswordEnviado = false;
     this.mostrarPopupPassword = true;
   }
 
@@ -143,8 +165,15 @@ export class Perfil implements OnInit {
   }
 
   guardarPassword() {
-    if (!this.passwordAntigua || !this.passwordNueva) {
-      this.mensajeError = 'Debes completar ambas contraseñas.';
+    this.formularioPasswordEnviado = true;
+
+    if (!this.passwordAntigua) {
+      this.mensajeError = 'Debes introducir tu contraseña actual.';
+      return;
+    }
+
+    if (!this.nuevaPasswordValida || !this.nuevasPasswordsCoinciden) {
+      this.mensajeError = 'La nueva contraseña no cumple los requisitos o no coincide.';
       return;
     }
 
@@ -183,7 +212,6 @@ export class Perfil implements OnInit {
     this.usuarioService.actualizarFotoPerfil(idUsuario, archivo).subscribe({
       next: (url) => {
         if (this.usuario) {
-          // Timestamp para evitar caché del navegador
           this.usuario.fotoPerfil = url + '?t=' + Date.now();
         }
         this.mensajeExito = 'Foto de perfil actualizada.';
@@ -244,7 +272,6 @@ export class Perfil implements OnInit {
     const foto = this.usuario?.fotoPerfil;
     if (!foto) return '/usuario.png';
     if (foto.startsWith('http')) return foto;
-    // Ruta relativa legacy
     return 'http://localhost:8080/' + foto.replace(/\\/g, '/');
   }
 
