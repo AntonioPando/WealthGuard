@@ -271,6 +271,9 @@
   border: 0.069vw solid var(--border);
   box-shadow: 0 0.972vw 2.083vw -1.042vw rgba(15, 23, 42, 0.35);
   padding: 1.667vw;
+  box-sizing: border-box;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-perfil h3 {
@@ -294,6 +297,8 @@
   border: 0.069vw solid var(--border);
   border-radius: 0.556vw;
   padding: 0.625vw 0.833vw;
+  box-sizing: border-box;
+  font-size: 0.972vw;
 }
 
 .campo-doble {
