@@ -1,0 +1,385 @@
+:host {
+    --color-fondo-oscuro: #213145;
+    --color-superficie: #ffffff;
+    --color-superficie-tenue: #f8f9ff;
+    --color-primario: #000000;
+    --color-secundario: #006c49;
+    --color-verde-claro: #6ffbbe;
+    --color-texto: #0b1c30;
+    --color-texto-variante: #45464d;
+    --color-borde: #c6c6cd;
+    --color-superficie-alta: #d3e4fe;
+    --fuente: 'Inter', Arial, sans-serif;
+    display: block;
+    height: 100vh;
+}
+
+.wrapper-404 {
+    display: flex;
+    height: 100vh;
+    font-family: var(--fuente);
+}
+
+.lado-izq {
+    flex: 1;
+    background-color: var(--color-fondo-oscuro);
+    color: white;
+    padding: 3.75vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.lado-izq::before {
+    content: '';
+    position: absolute;
+    bottom: -6.25vw;
+    left: -6.25vw;
+    width: 25vw;
+    height: 25vw;
+    background: rgba(0, 108, 73, 0.12);
+    border-radius: 50%;
+    filter: blur(6.25vw);
+    pointer-events: none;
+}
+
+.lado-izq::after {
+    content: '';
+    position: absolute;
+    top: 3.125vw;
+    right: -6.25vw;
+    width: 18.75vw;
+    height: 18.75vw;
+    background: rgba(57, 128, 244, 0.05);
+    border-radius: 50%;
+    filter: blur(5.47vw);
+    pointer-events: none;
+}
+
+.logo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.78vw;
+}
+
+.logo-icon {
+    background-color: var(--color-secundario);
+    padding: 0.55vw 0.7vw;
+    border-radius: 0.625vw;
+    display: flex;
+    align-items: center;
+}
+
+.icono-wallet {
+    font-size: 1.4vw;
+    color: white;
+    font-style: normal;
+}
+
+.logo-nombre {
+    font-size: 1.72vw;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.contenido-izq {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 2.5vw;
+}
+
+.titular {
+    font-size: 2.81vw;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25vw;
+}
+
+.acento {
+    color: var(--color-verde-claro);
+}
+
+.subtitulo {
+    font-size: 1.25vw;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 28vw;
+}
+
+.estado-footer {
+    display: flex;
+    gap: 1.875vw;
+    padding-top: 1.875vw;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.estado-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.47vw;
+}
+
+.estado-item.borde-izq {
+    padding-left: 1.875vw;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.estado-label {
+    font-size: 0.86vw;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+}
+
+.estado-valor {
+    font-size: 1.09vw;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.47vw;
+}
+
+.estado-valor.verde {
+    color: var(--color-verde-claro);
+}
+
+.dot-pulso {
+    width: 0.55vw;
+    height: 0.55vw;
+    border-radius: 50%;
+    background-color: var(--color-secundario);
+    animation: pulso 1.8s ease-in-out infinite;
+}
+
+@keyframes pulso {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+    }
+}
+
+.lado-der {
+    flex: 1;
+    background-color: var(--color-superficie);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.75vw;
+    text-align: center;
+    position: relative;
+}
+
+.numero-404 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.875vw;
+}
+
+.fondo-404 {
+    font-size: 9.375vw;
+    font-weight: 800;
+    color: var(--color-superficie-alta);
+    line-height: 1;
+    user-select: none;
+    letter-spacing: -0.03em;
+}
+
+.icono-error {
+    position: absolute;
+    font-size: 4.06vw;
+    color: var(--color-primario);
+    font-style: normal;
+    opacity: 0.85;
+}
+
+.titulo-error {
+    font-size: 2.19vw;
+    font-weight: 600;
+    color: var(--color-primario);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.94vw;
+}
+
+.descripcion-error {
+    font-size: 1.17vw;
+    line-height: 1.6;
+    color: var(--color-texto-variante);
+    max-width: 26.56vw;
+    margin-bottom: 2.81vw;
+}
+
+.acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.94vw;
+    width: 100%;
+    max-width: 26.56vw;
+    margin-bottom: 2.5vw;
+}
+
+.btn-primario {
+    width: 100%;
+    padding: 1.09vw 1.875vw;
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    border-radius: 9999px;
+    font-size: 1.17vw;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    font-family: var(--fuente);
+}
+
+.btn-primario:hover {
+    background-color: #1e1e2f;
+    transform: scale(1.02);
+}
+
+.btn-primario:active {
+    transform: scale(0.97);
+}
+
+.btn-secundario {
+    width: 100%;
+    padding: 1.09vw 1.875vw;
+    background-color: transparent;
+    color: var(--color-primario);
+    border: 1px solid var(--color-borde);
+    border-radius: 9999px;
+    font-size: 1.17vw;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: var(--fuente);
+}
+
+.btn-secundario:hover {
+    background-color: #f0f4ff;
+}
+
+.soporte {
+    font-size: 1.02vw;
+    color: var(--color-texto-variante);
+    margin-bottom: 0;
+}
+
+.link-soporte {
+    color: var(--color-secundario);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.link-soporte:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.copyright {
+    position: absolute;
+    bottom: 1.56vw;
+    font-size: 0.86vw;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(0, 0, 0, 0.25);
+    text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+    .wrapper-404 {
+        flex-direction: column;
+    }
+
+    .lado-izq,
+    .lado-der {
+        flex: none;
+        width: 100%;
+        padding: 10vw 7vw;
+    }
+
+    .logo-nombre {
+        font-size: 5vw;
+    }
+
+    .icono-wallet {
+        font-size: 4.5vw;
+    }
+
+    .titular {
+        font-size: 8vw;
+    }
+
+    .subtitulo {
+        font-size: 4vw;
+        max-width: 100%;
+    }
+
+    .estado-label {
+        font-size: 3vw;
+    }
+
+    .estado-valor {
+        font-size: 3.5vw;
+    }
+
+    .dot-pulso {
+        width: 2vw;
+        height: 2vw;
+    }
+
+    .fondo-404 {
+        font-size: 28vw;
+    }
+
+    .icono-error {
+        font-size: 12vw;
+    }
+
+    .titulo-error {
+        font-size: 7vw;
+    }
+
+    .descripcion-error {
+        font-size: 4vw;
+        max-width: 100%;
+    }
+
+    .acciones {
+        max-width: 100%;
+        gap: 3vw;
+        margin-bottom: 6vw;
+    }
+
+    .btn-primario,
+    .btn-secundario {
+        font-size: 4vw;
+        padding: 3.5vw 5vw;
+    }
+
+    .soporte {
+        font-size: 3.5vw;
+    }
+
+    .copyright {
+        position: static;
+        margin-top: 6vw;
+        font-size: 2.5vw;
+    }
+}

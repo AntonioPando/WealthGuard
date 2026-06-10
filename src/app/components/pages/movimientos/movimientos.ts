@@ -1,0 +1,224 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Filtros } from './filtros/filtros';
+import { Tabla } from './tabla/tabla';
+import { HeaderMovimientos } from './header-movimientos/header-movimientos';
+import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
+import { Header } from "../../layout/header/header";
+import { TransaccionResponse } from '../../../models/transaccion.model';
+import { TransaccionService } from '../../../services/transaccion.service';
+import { TransaccionForm } from './transaccion-form/transaccion-form';
+
+@Component({
+  selector: 'app-movimientos',
+  standalone: true,
+  imports: [
+    HeaderMovimientos,
+    Filtros,
+    Tabla,
+    MenuLateral,
+    Header,
+    TransaccionForm
+  ],
+  templateUrl: './movimientos.html',
+  styleUrls: ['./movimientos.css'],
+})
+export class Movimientos implements OnInit {
+
+
+  idUsuario: number = 1; // ID de usuario fijo para pruebas!!!!!!!!!!!!!!!!!!!
+
+  // variables para los movimientos
+  movimientos: TransaccionResponse[] = [];
+  movimientosFiltrados: TransaccionResponse[] = [];
+
+  // variables para los insigths
+  tendencia: number = 0;
+  categoriaPrincipal: string[] = ['sin datos', '0,0'];
+  meta: number[] = [0.0, 0.0];
+
+  // variables para el filtro de categorias
+  categorias: string[] = [];
+  filtroCategoria: string = 'todas';
+
+  // variables para el formulario
+  mostrarPopup: boolean = false;
+  transaccionSeleccionada: any = null;
+
+  categoriasDesdeBackend: { id: number, nombre: string }[] = [];
+
+  constructor(private transaccionService: TransaccionService, private cdr: ChangeDetectorRef) { }
+
+
+  ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  cargarDatos() {
+    // Primero cargamos el historial completo de las transacciones
+    this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
+      next: (data) => {
+        // Ordenamos las transacciones por fecha (de más reciente a más antigua)
+        this.movimientos = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+        // Extraemos las categorias para el filtro
+        this.categorias = [...new Set(data.map(m => m.nombreCategoria).filter(Boolean))] as string[];
+
+        const mapaCategorias = new Map<number, string>();
+
+        data.forEach(m => {
+          if (m.idCategoria && m.nombreCategoria) {
+            mapaCategorias.set(m.idCategoria, m.nombreCategoria);
+          }
+        });
+
+        this.categoriasDesdeBackend = Array.from(mapaCategorias.entries()).map(([id, nombre]) => ({
+          id: id,
+          nombre: nombre
+        }));
+
+        this.limpiarFiltros(); // Inicialmente mostramos todos los movimientos sin filtros
+        this.cdr.detectChanges(); // Forzamos la detección de cambios para actualizar la vista con los datos cargados
+      },
+      error: (e) => console.error(e)
+    });
+
+    // luego cargamos la tendencia, categoria principal y meta para los insights
+    this.transaccionService.obtenerTendencia(this.idUsuario).subscribe(resultado => {
+      this.tendencia = resultado;
+      this.cdr.detectChanges();
+    });
+
+    this.transaccionService.obtenerCategoriaPrincipal(this.idUsuario).subscribe(resultado => {
+      this.categoriaPrincipal = resultado;
+      this.cdr.detectChanges();
+    });
+
+    this.transaccionService.obtenerMeta(this.idUsuario).subscribe(resultado => {
+      this.meta = resultado;
+      this.cdr.detectChanges();
+    })
+  }
+
+  // Filtro de fechas
+  aplicarFiltroFechas(rango: { inicio: Date | null, fin: Date | null }) {
+
+    if (!rango.inicio || !rango.fin) {
+      this.movimientosFiltrados = [...this.movimientos];
+      return;
+    }
+
+    const inicio = new Date(rango.inicio).getTime();
+    const fin = new Date(rango.fin).getTime();
+
+    this.movimientosFiltrados = this.movimientos.filter(m => {
+      const fecha = new Date(m.fecha).getTime();
+      return fecha >= inicio && fecha <= fin;
+    });
+  }
+
+  // Limpiar filtros
+  limpiarFiltros() {
+    this.filtroTipo = 'todos';
+    this.filtroCategoria = 'todas';
+    this.movimientosFiltrados = [...this.movimientos];
+  }
+
+  // Filtro tipo
+  filtroTipo: 'todos' | 'ingreso' | 'gasto' = 'todos';
+
+  filtrarPorTipo(tipo: 'todos' | 'ingreso' | 'gasto') {
+    this.filtroTipo = tipo;
+    this.aplicarFiltros();
+  }
+
+  aplicarFiltros() {
+    let data = [...this.movimientos];
+
+    // Filtro por tipo
+    if (this.filtroTipo === 'ingreso') {
+      data = data.filter(m => m.tipoTransaccion === true);
+    } else if (this.filtroTipo === 'gasto') {
+      data = data.filter(m => m.tipoTransaccion === false);
+    }
+
+    // Filtro por categoria
+    if (this.filtroCategoria !== 'todas') {
+      data = data.filter(m => m.nombreCategoria === this.filtroCategoria);
+    }
+
+    this.movimientosFiltrados = data;
+  }
+
+  filtrarPorCategoria(cat: string) {
+    this.filtroCategoria = cat;
+    this.aplicarFiltros();
+  }
+
+  abrirFormulario(transaccion: any = null) {
+    this.transaccionSeleccionada = transaccion;
+    this.mostrarPopup = true;
+  }
+
+  cerrarFormulario() {
+    this.mostrarPopup = false;
+  }
+
+  guardarTransaccion(datosFormulario: any) {
+
+    // Formateamos la fecha para que Java lo acepte como LocalDateTime
+    const fechaParaJava = datosFormulario.fecha.includes('T')
+      ? datosFormulario.fecha
+      : datosFormulario.fecha + 'T00:00:00';
+
+    // Preparamos el paquete de datos para Java
+    const transaccionParaJava = {
+      ...datosFormulario,
+      fecha: fechaParaJava,
+      idUsuario: this.idUsuario
+    };
+
+    // Comprobamos si es Edición o Creación
+    if (this.transaccionSeleccionada) {
+
+      // Para el modo editar
+      const idTransaccion = this.transaccionSeleccionada.id;
+
+      this.transaccionService.editarTransaccion(idTransaccion, transaccionParaJava).subscribe({
+        next: () => {
+          this.cargarDatos(); // Recarga la tabla
+          this.cerrarFormulario(); // Cierra el popup
+        },
+        error: (err) => console.error('Error al actualizar:', err)
+      });
+
+    } else {
+
+      // Para el modo crear
+      this.transaccionService.crearTransaccion(transaccionParaJava).subscribe({
+        next: () => {
+          this.cargarDatos();
+          this.cerrarFormulario();
+        },
+        error: (err) => console.error('Error al guardar:', err)
+      });
+    }
+  }
+
+  eliminarMovimiento(idTransaccion: number) {
+    if (confirm('¿Estás seguro de que deseas eliminar este movimiento?')) {
+      
+      // Llamamos al método eliminarTransaccion
+      this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
+        next: (eliminado) => {
+          if (eliminado) {
+            // Si Java responde true, volvemos a cargar los datos reales
+            this.cargarDatos(); 
+          } else {
+            alert('No se pudo eliminar el movimiento.');
+          }
+        },
+        error: (err) => console.error('Error al intentar eliminar de la BD:', err)
+      });
+      
+    }
+  }
+}

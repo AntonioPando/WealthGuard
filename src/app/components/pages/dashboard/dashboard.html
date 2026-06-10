@@ -1,0 +1,190 @@
+<app-header></app-header>
+
+<div class="pagina-dashboard">
+  <app-menu-lateral></app-menu-lateral>
+
+  <!-- Área de Contenido Principal -->
+  <main class="contenedor-principal">
+  <!-- Sección: Indicadores Clave de Rendimiento (KPIs) -->
+  <section class="rejilla-kpi" aria-label="Resumen financiero rápido">
+    <!-- Tarjeta KPI: Saldo -->
+    <article class="tarjeta-kpi">
+      <header class="tarjeta-kpi__encabezado">
+        <div class="tarjeta-kpi__icono-contenedor tarjeta-kpi__icono-contenedor--primario">
+          <span class="material-symbols-outlined">account_balance</span>
+        </div>
+
+      </header>
+      <div class="tarjeta-kpi__contenido">
+        <h3 class="tarjeta-kpi__titulo">Saldo Total</h3>
+        <p class="tarjeta-kpi__valor">$24,500.00</p>
+        <footer class="tarjeta-kpi__metadatos">Actualizado hace 2 min</footer>
+      </div>
+    </article>
+
+    <!-- Tarjeta KPI: Gastos -->
+    <article class="tarjeta-kpi">
+      <header class="tarjeta-kpi__encabezado">
+        <div class="tarjeta-kpi__icono-contenedor tarjeta-kpi__icono-contenedor--alerta">
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </div>
+
+      </header>
+      <div class="tarjeta-kpi__contenido">
+        <h3 class="tarjeta-kpi__titulo">Gastos Mensuales</h3>
+        <p class="tarjeta-kpi__valor">$3,240.50</p>
+        <div
+          class="barra-progreso"
+          role="progressbar"
+          aria-valuenow="65"
+          aria-valuemin="0"
+          aria-valuemax="100"
+         >
+          <div class="barra-progreso__relleno" style="width: 65%"></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tarjeta KPI: Ingresos -->
+    <article class="tarjeta-kpi">
+      <header class="tarjeta-kpi__encabezado">
+        <div class="tarjeta-kpi__icono-contenedor tarjeta-kpi__icono-contenedor--exito">
+          <span class="material-symbols-outlined">payments</span>
+        </div>
+
+      </header>
+      <div class="tarjeta-kpi__contenido">
+        <h3 class="tarjeta-kpi__titulo">Ingresos Mensuales</h3>
+        <p class="tarjeta-kpi__valor">$8,400.00</p>
+        <footer class="tarjeta-kpi__metadatos">Próximo depósito: 28 oct</footer>
+      </div>
+    </article>
+  </section>
+
+  <!-- Sección: Análisis Visual -->
+  <section class="rejilla-analisis">
+    <!-- Gráfico de Evolución -->
+    <div class="panel-grafico panel-grafico--principal">
+      <header class="panel-grafico__encabezado">
+        <div class="panel-grafico__info">
+          <h3 class="panel-grafico__titulo">Evolución de Gastos</h3>
+          <p class="panel-grafico__subtitulo">Vista general de gastos diarios en octubre</p>
+        </div>
+        <p class="selector-periodo">Últimos 30 días</p>
+      </header>
+      <div class="visualizacion-barras">
+        <!-- Las barras se generan dinámicamente o vía CSS -->
+        <div class="visualizacion-barras__contenedor">
+          <div class="barra barra--secundaria" style="height: 85%"></div>
+          <div class="barra barra--primaria" style="height: 50%"></div>
+          <div class="barra barra--primaria" style="height: 60%"></div>
+          <div class="barra barra--primaria" style="height: 70%"></div>
+          <div class="barra barra--secundaria" style="height: 100%"></div>
+          <div class="barra barra--primaria" style="height: 40%"></div>
+          <div class="barra barra--primaria" style="height: 50%"></div>
+          <div class="barra barra--primaria" style="height: 80%"></div>
+          <div class="barra barra--secundaria" style="height: 20%"></div>
+          <div class="barra barra--primaria" style="height: 60%"></div>
+          <div class="barra barra--primaria" style="height: 40%"></div>
+          <div class="barra barra--primaria" style="height: 60%"></div>
+
+          <!-- ... resto de barras -->
+        </div>
+        <footer class="visualizacion-barras__eje-x">
+          <span>01 Oct</span><span>10 Oct</span><span>20 Oct</span><span>30 Oct</span>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Gráfico de Distribución (Doughnut) -->
+    <div class="panel-grafico panel-grafico--secundario">
+      <h3 class="panel-grafico__titulo">Por Categoría</h3>
+      <div class="grafico-circular">
+        <svg class="grafico-circular__svg" viewBox="0 0 36 36" aria-hidden="true">
+          <circle class="grafico-circular__fondo" cx="18" cy="18" r="16"></circle>
+          <!-- Segmentos: 45%, 25%, 30% (circumference ≈ 100.53) -->
+          <circle
+            class="grafico-circular__segmento grafico-circular__segmento--1"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray="45.24 55.29"
+            stroke-dashoffset="0"
+          ></circle>
+          <circle
+            class="grafico-circular__segmento grafico-circular__segmento--2"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray="25.13 75.40"
+            stroke-dashoffset="-45.24"
+          ></circle>
+          <circle
+            class="grafico-circular__segmento grafico-circular__segmento--3"
+            cx="18"
+            cy="18"
+            r="16"
+            stroke-dasharray="30.16 70.37"
+            stroke-dashoffset="-70.37"
+          ></circle>
+        </svg>
+        <div class="grafico-circular__leyenda-central" aria-label="Total">
+          <span class="leyenda-titulo">TOTAL</span>
+          <span class="leyenda-valor">$3.2k</span>
+        </div>
+      </div>
+      <ul class="lista-leyendas">
+        <li class="lista-leyendas__item">
+          <div class="lista-leyendas__item-left">
+            <span class="punto-color punto-color--basico"></span>
+            <span>Básicos</span>
+          </div>
+          <b>45%</b>
+        </li>
+        <li class="lista-leyendas__item">
+          <div class="lista-leyendas__item-left">
+            <span class="punto-color punto-color--estilo"></span>
+            <span>Estilo de Vida</span>
+          </div>
+          <b>25%</b>
+        </li>
+        <li class="lista-leyendas__item">
+          <div class="lista-leyendas__item-left">
+            <span class="punto-color punto-color--otros"></span>
+            <span>Otros</span>
+          </div>
+          <b>30%</b>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Sección: Historial Operativo -->
+  <section class="tabla-actividad">
+    <header class="tabla-actividad__encabezado">
+      <h3 class="tabla-actividad__titulo">Transacciones Recientes</h3>
+      <button class="boton-enlace">Ver todas</button>
+    </header>
+    <div class="tabla-actividad__cuerpo">
+      <!-- Fila de Transacción -->
+      <article class="transaccion-item">
+        <div class="transaccion-item__perfil">
+          <div class="transaccion-item__icono">
+            <span class="material-symbols-outlined">shopping_bag</span>
+          </div>
+          <div class="transaccion-item__detalles">
+            <h4 class="transaccion-item__nombre">Apple Store - MacBook Pro</h4>
+            <p class="transaccion-item__categoria">Electrónica • Hoy, 2:45 PM</p>
+          </div>
+        </div>
+        <div class="transaccion-item__monto">
+          <span class="monto-valor monto-valor--negativo">-$2,499.00</span>
+          <span class="etiqueta-estado etiqueta-estado--completado">Completado</span>
+        </div>
+      </article>
+
+      <!-- ... más transacciones -->
+    </div>
+  </section>
+  </main>
+</div>

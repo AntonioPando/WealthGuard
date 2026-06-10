@@ -1,0 +1,160 @@
+<app-header></app-header>
+<app-menu-lateral></app-menu-lateral>
+
+<div class="container">
+  @if (mensajeExito) {
+    <div class="alerta alerta-exito">{{ mensajeExito }}</div>
+  }
+  @if (mensajeError) {
+    <div class="alerta alerta-error">{{ mensajeError }}</div>
+  }
+
+  <main class="contenedor-principal">
+
+    <section class="tarjeta-perfil">
+      <div class="contenido-perfil">
+        <div class="contenedor-avatar">
+
+          <img [src]="usuario?.fotoPerfil || '/usuario.png'" class="imagen-perfil" alt="Foto de perfil">
+
+          <label class="boton-editar-avatar" title="Editar foto" for="input-foto">✎</label>
+          <input id="input-foto" type="file" accept="image/*" (change)="subirFoto($event)" class="input-archivo-oculto">
+        </div>
+
+        <div class="datos-usuario">
+          <h2>{{ obtenerNombreCompleto() || 'Sin nombre' }}</h2>
+          <p>{{ usuario?.email || 'Sin email' }}</p>
+          <div class="etiquetas-usuario">
+            <span class="etiqueta-fecha-registro">{{ formatearFechaRegistro() }}</span>
+          </div>
+        </div>
+
+        <div class="acciones-usuario">
+          <button class="boton-exportar-datos" [disabled]="cargandoPerfil || !usuario" (click)="exportarDatosPerfil()">Exportar Datos</button>
+          <button class="boton-editar-perfil" [disabled]="cargandoPerfil || !usuario" (click)="abrirEditarPerfil()">Editar Perfil</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="tarjeta-plan tarjeta-proximamente">
+      <div class="cabecera-plan">
+        <div class="badge-nuevo">NUEVO</div>
+        <h3>Nuevas Funciones</h3>
+        <p>Estamos preparando herramientas de análisis predictivo para tu cartera.</p>
+      </div>
+      <button class="boton-proximamente">
+        PRÓXIMAMENTE
+      </button>
+    </aside>
+
+   
+    <div class="grid-configuracion">
+      
+      <section class="seccion-ajustes">
+        <div class="cabecera-seccion">
+          <h3>Seguridad de la cuenta</h3>
+        </div>
+        
+        <div class="item-ajuste">
+          <div class="texto-item">
+            <strong>Contraseña</strong>
+            <p>Tu última actualización fue hace 3 meses</p>
+          </div>
+          <button class="boton-flecha" (click)="abrirCambiarPassword()">Actualizar ›</button>
+        </div>
+      </section>
+
+      <section class="seccion-desactivar-cuenta">
+        <div class="texto-desactivar-cuenta">
+          <h3>Eliminar Cuenta</h3>
+          <p>La eliminación de la cuenta es permanente y borrará todo tu historial financiero.</p>
+        </div>
+        <button class="boton-eliminar-cuenta" (click)="eliminarCuenta()">
+          Eliminar Cuenta
+        </button>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+@if (mostrarPopupEditarPerfil) {
+  <div class="overlay-modal" (click)="cerrarEditarPerfil()">
+    <section class="modal-perfil" (click)="$event.stopPropagation()">
+      <h3>Editar Perfil</h3>
+
+      <div class="campo-form">
+        <label>Usuario</label>
+        <input [(ngModel)]="formularioEditar.nickUsuario" type="text">
+      </div>
+
+      <div class="campo-form">
+        <label>Nombre</label>
+        <input [(ngModel)]="formularioEditar.nombre" type="text">
+      </div>
+
+      <div class="campo-form campo-doble">
+        <div>
+          <label>Primer Apellido</label>
+          <input [(ngModel)]="formularioEditar.primerApellido" type="text">
+        </div>
+        <div>
+          <label>Segundo Apellido</label>
+          <input [(ngModel)]="formularioEditar.segundoApellido" type="text">
+        </div>
+      </div>
+
+      <div class="campo-form">
+        <label>Email</label>
+        <input [(ngModel)]="formularioEditar.email" type="email">
+      </div>
+
+      <div class="campo-form">
+        <label>Pregunta de Seguridad</label>
+        <input [(ngModel)]="formularioEditar.preguntaSeguridad" type="text">
+      </div>
+
+      <div class="campo-form">
+        <label>Respuesta de Seguridad</label>
+        <input [(ngModel)]="formularioEditar.respuestaSeguridad" type="text">
+      </div>
+
+      <div class="campo-form">
+        <label>Password (obligatoria para actualizar)</label>
+        <input [(ngModel)]="formularioEditar.password" type="password">
+      </div>
+
+      <div class="acciones-modal">
+        <button class="boton-secundario" (click)="cerrarEditarPerfil()">Cancelar</button>
+        <button class="boton-primario" [disabled]="guardandoPerfil" (click)="guardarPerfil()">
+          {{ guardandoPerfil ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}
+
+@if (mostrarPopupPassword) {
+  <div class="overlay-modal" (click)="cerrarCambiarPassword()">
+    <section class="modal-perfil" (click)="$event.stopPropagation()">
+      <h3>Actualizar Contraseña</h3>
+
+      <div class="campo-form">
+        <label>Contraseña actual</label>
+        <input [(ngModel)]="passwordAntigua" type="password">
+      </div>
+
+      <div class="campo-form">
+        <label>Nueva contraseña</label>
+        <input [(ngModel)]="passwordNueva" type="password">
+      </div>
+
+      <div class="acciones-modal">
+        <button class="boton-secundario" (click)="cerrarCambiarPassword()">Cancelar</button>
+        <button class="boton-primario" [disabled]="actualizandoPassword" (click)="guardarPassword()">
+          {{ actualizandoPassword ? 'Actualizando...' : 'Actualizar' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

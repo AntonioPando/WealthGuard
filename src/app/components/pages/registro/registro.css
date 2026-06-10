@@ -1,0 +1,217 @@
+.registro-wrapper {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.registro-izq {
+    flex: 1;
+    background-color: #1e1e2f;
+    color: white;
+    padding: 5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo {
+    font-size: 3vw;
+    font-weight: bold;
+    margin-bottom: 2vh;
+}
+
+.descripcion {
+    font-size: 1.1vw;
+    line-height: 1.5;
+    margin-bottom: 2vh;
+}
+
+.caracteristicas {
+    margin-top: 2vh;
+    font-size: 0.85vw;
+    opacity: 0.8;
+}
+
+.registro-der {
+    flex: 1;
+    padding: 4vh 5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+h2 {
+    font-size: 1.8vw;
+    margin-bottom: 1vh;
+}
+
+.credenciales {
+    margin-bottom: 2.5vh;
+    color: #555;
+    font-size: 0.9vw;
+}
+
+.fila-doble {
+    display: flex;
+    gap: 1.5vw;
+}
+
+.fila-doble .form-group {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 1.8vh;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.6vh;
+    font-weight: bold;
+    font-size: 0.85vw;
+}
+
+.opcional {
+    font-weight: normal;
+    color: #999;
+    font-size: 0.8vw;
+}
+
+.entrada {
+    position: relative;
+}
+
+.entrada input,
+.entrada select {
+    width: 100%;
+    padding: 1.1vh 3vw 1.1vh 0.8vw;
+    border: 1px solid #ccc;
+    border-radius: 0.4vw;
+    font-size: 0.9vw;
+    box-sizing: border-box;
+}
+
+.entrada select {
+    padding-right: 0.8vw;
+    appearance: auto;
+    background: white;
+}
+
+.entrada input:focus,
+.entrada select:focus {
+    outline: none;
+    border-color: #1e1e2f;
+}
+
+.icono {
+    position: absolute;
+    right: 0.8vw;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1vw;
+    opacity: 0.6;
+}
+
+.icono-click {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.campo-error {
+    display: block;
+    margin-top: 0.4vh;
+    font-size: 0.75vw;
+    color: #a30000;
+}
+
+.error {
+    background-color: #ffdddd;
+    color: #a30000;
+    padding: 1vh 0.8vw;
+    border-left: 0.3vw solid #a30000;
+    border-radius: 0.3vw;
+    margin-bottom: 1.5vh;
+    font-size: 0.85vw;
+}
+
+.exito {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 1vh 0.8vw;
+    border-left: 0.3vw solid #155724;
+    border-radius: 0.3vw;
+    margin-bottom: 1.5vh;
+    font-size: 0.85vw;
+}
+
+.registrarse {
+    width: 100%;
+    padding: 1.2vh 0;
+    background-color: #1e1e2f;
+    color: white;
+    border: none;
+    border-radius: 0.4vw;
+    font-size: 1vw;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.registrarse:hover:not(:disabled) {
+    background-color: #2d2d44;
+}
+
+.registrarse:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+.login {
+    margin-top: 2vh;
+    font-size: 0.85vw;
+    text-align: center;
+}
+
+.login a {
+    color: #0077cc;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .registro-wrapper {
+        flex-direction: column;
+    }
+
+    .registro-izq,
+    .registro-der {
+        flex: none;
+        width: 100%;
+        padding: 6vw;
+    }
+
+    .logo { font-size: 7vw; }
+    .descripcion { font-size: 3.5vw; }
+    .caracteristicas { font-size: 3vw; }
+    h2 { font-size: 5vw; }
+    .credenciales { font-size: 3.5vw; }
+    label { font-size: 3.5vw; }
+
+    .entrada input,
+    .entrada select {
+        font-size: 3.5vw;
+        padding: 1.5vh 8vw 1.5vh 3vw;
+        border-radius: 1.5vw;
+    }
+
+    .icono { font-size: 4vw; right: 3vw; }
+    .campo-error { font-size: 3vw; }
+    .error, .exito { font-size: 3.5vw; }
+    .registrarse { font-size: 4vw; border-radius: 1.5vw; }
+    .login { font-size: 3.5vw; }
+
+    .fila-doble {
+        flex-direction: column;
+        gap: 0;
+    }
+}

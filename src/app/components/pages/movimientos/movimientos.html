@@ -1,0 +1,37 @@
+
+<app-header></app-header>
+<app-menu-lateral></app-menu-lateral>
+
+<div class="container">
+<app-header-movimientos (abrirCrear)="abrirFormulario()"></app-header-movimientos>
+
+<app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" 
+(limpiar)="limpiarFiltros()" 
+(tipoSeleccionado)="filtrarPorTipo($event)"
+(categoriaSeleccionada)="filtrarPorCategoria($event)"
+[categorias]="categorias"
+[categoriaSeleccionadaVisual]="filtroCategoria"
+>
+</app-filtros>
+
+<app-tabla 
+[movimientos]="movimientosFiltrados"
+[tendencia]="tendencia"
+[categoriaPrincipal]="categoriaPrincipal"
+[meta]="meta"
+(abrirEditar)="abrirFormulario($event)"
+(eliminar)="eliminarMovimiento($event)">
+</app-tabla>
+
+@if(mostrarPopup) {
+  <app-transaccion-form 
+    [transaccionEditar]="transaccionSeleccionada"
+    [categoriasLista]="categoriasDesdeBackend"
+    (cancelar)="mostrarPopup = false"
+    (guardar)="guardarTransaccion($event)">
+  </app-transaccion-form>
+}
+
+</div>
+
+

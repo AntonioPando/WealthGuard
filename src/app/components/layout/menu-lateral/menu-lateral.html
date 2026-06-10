@@ -1,0 +1,60 @@
+<!-- Componente: Barra Lateral de Navegación -->
+<aside class="barra-lateral">
+  <!-- Identidad de la Marca / Header de la barra -->
+  <header class="barra-lateral__identidad">
+    <div class="logo-contenedor">
+      <img src="/logo.svg" alt="Logo de WealthGuard" class="logo-contenedor__logo">
+    </div>
+    <div class="info-marca">
+      <h1 class="info-marca__titulo">WealthGuard</h1>
+      <p class="info-marca__eslogan">Socio Experto</p>
+    </div>
+  </header>
+
+  <!-- Navegación Principal -->
+  <nav class="barra-lateral__navegacion" aria-label="Navegación principal">
+    <ul class="lista-navegacion">
+      <li class="lista-navegacion__item">
+        <a routerLink="/dashboard" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_dashboard.svg" alt="Icono de Panel de Control" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Panel de Control</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/movimientos" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_transaccion.svg" alt="Icono de Transacciones" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Transacciones</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/presupuestos" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_presupuestos.svg" alt="Icono de Presupuestos" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Presupuestos</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/perfil" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_perfil.svg" alt="Icono de Perfil" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Perfil</p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Pie de la barra lateral / Acciones globales -->
+  <footer class="barra-lateral__acciones">
+    <button class="boton-primario-accion">
+      <p class="material-symbols-outlined">+</p>
+      <p class="boton-primario-accion__texto">Nueva Transacción</p>
+    </button>
+
+    <button type="button" class="boton-secundario-accion" (click)="onCerrarSesion()">
+      <p class="material-symbols-outlined">logout</p>
+      <p class="boton-secundario-accion__texto">Cerrar sesión</p>
+    </button>
+  </footer>
+</aside>
