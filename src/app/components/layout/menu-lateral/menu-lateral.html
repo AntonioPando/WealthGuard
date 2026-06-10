@@ -1,6 +1,4 @@
-<!-- Componente: Barra Lateral de Navegación -->
 <aside class="barra-lateral">
-  <!-- Identidad de la Marca / Header de la barra -->
   <header class="barra-lateral__identidad">
     <div class="logo-contenedor">
       <img src="/logo.svg" alt="Logo de WealthGuard" class="logo-contenedor__logo">
@@ -11,7 +9,6 @@
     </div>
   </header>
 
-  <!-- Navegación Principal -->
   <nav class="barra-lateral__navegacion" aria-label="Navegación principal">
     <ul class="lista-navegacion">
       <li class="lista-navegacion__item">
@@ -36,6 +33,13 @@
         </a>
       </li>
       <li class="lista-navegacion__item">
+        <a routerLink="/recomendaciones" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/bombilla.png" alt="Icono de Recomendaciones" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Recomendaciones</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
         <a routerLink="/perfil" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
           class="enlace-menu">
           <img src="/icono_perfil.svg" alt="Icono de Perfil" class="enlace-menu__icono">
@@ -45,13 +49,11 @@
     </ul>
   </nav>
 
-  <!-- Pie de la barra lateral / Acciones globales -->
   <footer class="barra-lateral__acciones">
     <button class="boton-primario-accion">
       <p class="material-symbols-outlined">+</p>
       <p class="boton-primario-accion__texto">Nueva Transacción</p>
     </button>
-
     <button type="button" class="boton-secundario-accion" (click)="onCerrarSesion()">
       <p class="material-symbols-outlined">logout</p>
       <p class="boton-secundario-accion__texto">Cerrar sesión</p>

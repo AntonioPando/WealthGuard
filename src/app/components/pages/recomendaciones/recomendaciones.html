@@ -1,0 +1,77 @@
+<app-header></app-header>
+<app-menu-lateral></app-menu-lateral>
+<div class="container">
+
+  <div class="overlay-modal" *ngIf="mostrarPopup" (click)="cerrarPopup()">
+    <div class="modal-recomendacion" (click)="$event.stopPropagation()">
+      <button class="popup-close" (click)="cerrarPopup()">✕</button>
+      <div class="popup-icon-wrap">
+        <img src="/historial.svg" alt="" class="popup-icon">
+      </div>
+      <p class="popup-eyebrow">Recomendación para ti</p>
+      <h3 class="popup-titulo">{{ recomendacionActual?.titulo }}</h3>
+      <p class="popup-desc">{{ recomendacionActual?.descripcion }}</p>
+      <div class="popup-meta">
+        <span class="badge-score" [ngClass]="badgeClase(recomendacionActual?.scoreRango ?? '')">
+          Score {{ recomendacionActual?.scoreRango }}
+        </span>
+        <span class="popup-fecha">{{ recomendacionActual?.fechaRecomendacion | date:'d MMM yyyy' }}</span>
+      </div>
+      <button class="boton-primario w-full" (click)="cerrarPopup()">Entendido</button>
+    </div>
+  </div>
+
+  <div class="rec-header">
+    <div>
+      <h2 class="rec-titulo">Recomendaciones</h2>
+      <p class="rec-subtitulo">Historial generado según tu score financiero</p>
+    </div>
+    <button
+      class="boton-eliminar-sel"
+      [disabled]="seleccionadas.size === 0"
+      (click)="eliminarSeleccionadas()">
+      Eliminar seleccionadas ({{ seleccionadas.size }})
+    </button>
+  </div>
+
+  <div class="rec-lista" *ngIf="cargando">
+    <div class="rec-card skeleton" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <div class="rec-vacio" *ngIf="!cargando && recomendaciones.length === 0">
+    <img src="/historial.svg" alt="" class="vacio-icon">
+    <p class="vacio-titulo">Sin recomendaciones aún</p>
+    <p class="vacio-desc">Cuando tu score sea evaluado, aparecerán aquí tus recomendaciones personalizadas.</p>
+  </div>
+
+  <div class="rec-lista" *ngIf="!cargando && recomendaciones.length > 0">
+    <div
+      class="rec-card"
+      *ngFor="let r of recomendaciones"
+      [class.seleccionada]="seleccionadas.has(r.idRecomendacion)">
+
+      <label class="rec-check-wrap">
+        <input
+          type="checkbox"
+          class="rec-check"
+          [checked]="seleccionadas.has(r.idRecomendacion)"
+          (change)="toggleSeleccion(r.idRecomendacion)">
+        <span class="checkmark"></span>
+      </label>
+
+      <div class="rec-card-body">
+        <div class="rec-card-top">
+          <span class="badge-score" [ngClass]="badgeClase(r.scoreRango)">
+            Score {{ r.scoreRango }}
+          </span>
+          <span class="rec-fecha">{{ r.fechaRecomendacion | date:'d MMM yyyy · HH:mm' }}</span>
+        </div>
+        <h3 class="rec-card-titulo">{{ r.titulo }}</h3>
+        <p class="rec-card-desc">{{ r.descripcion }}</p>
+      </div>
+
+      <button class="btn-eliminar-uno" (click)="eliminarUna(r.idRecomendacion)" title="Eliminar">🗑</button>
+    </div>
+  </div>
+
+</div>
