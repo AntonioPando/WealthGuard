@@ -24,12 +24,13 @@ export class UsuarioService {
     const params = new HttpParams()
       .set('passwordAntigua', passwordAntigua)
       .set('passwordNueva', passwordNueva);
-
     return this.http.put<boolean>(`${this.apiUrl}/cambiar-password/${idUsuario}`, null, { params });
   }
 
-  actualizarFotoPerfil(idUsuario: number, imagen: number[]): Observable<string> {
-    return this.http.put(`${this.apiUrl}/foto-perfil/${idUsuario}`, imagen, {
+  actualizarFotoPerfil(idUsuario: number, archivo: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('imagen', archivo, archivo.name);
+    return this.http.put(`${this.apiUrl}/foto-perfil/${idUsuario}`, formData, {
       responseType: 'text'
     });
   }

@@ -62,9 +62,7 @@ export class Perfil implements OnInit {
 
   cargarPerfil() {
     const idUsuario = this.obtenerIdUsuarioActivo();
-    if (idUsuario === null) {
-      return;
-    }
+    if (idUsuario === null) return;
 
     this.mensajeError = '';
     this.cargandoPerfil = true;
@@ -84,7 +82,7 @@ export class Perfil implements OnInit {
 
   abrirEditarPerfil() {
     if (!this.usuario) {
-      this.mensajeError = 'No hay datos de perfil cargados todavía. Intenta nuevamente cuando el backend esté disponible.';
+      this.mensajeError = 'No hay datos de perfil cargados todavía.';
       return;
     }
 
@@ -114,9 +112,7 @@ export class Perfil implements OnInit {
     }
 
     const idUsuario = this.obtenerIdUsuarioActivo();
-    if (idUsuario === null) {
-      return;
-    }
+    if (idUsuario === null) return;
 
     this.guardandoPerfil = true;
     this.usuarioService.actualizarUsuario(idUsuario, this.formularioEditar).subscribe({
@@ -153,9 +149,7 @@ export class Perfil implements OnInit {
     }
 
     const idUsuario = this.obtenerIdUsuarioActivo();
-    if (idUsuario === null) {
-      return;
-    }
+    if (idUsuario === null) return;
 
     this.actualizandoPassword = true;
     this.usuarioService.cambiarPassword(idUsuario, this.passwordAntigua, this.passwordNueva).subscribe({
@@ -167,7 +161,6 @@ export class Perfil implements OnInit {
           this.cdr.detectChanges();
           return;
         }
-
         this.mensajeError = 'No se pudo actualizar la contraseña.';
         this.cdr.detectChanges();
       },
@@ -181,47 +174,33 @@ export class Perfil implements OnInit {
 
   subirFoto(event: Event) {
     const idUsuario = this.obtenerIdUsuarioActivo();
-    if (idUsuario === null) {
-      return;
-    }
+    if (idUsuario === null) return;
 
     const input = event.target as HTMLInputElement;
     const archivo = input.files?.[0];
+    if (!archivo) return;
 
-    if (!archivo) {
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const bytes = new Uint8Array(reader.result as ArrayBuffer);
-      this.usuarioService.actualizarFotoPerfil(idUsuario, Array.from(bytes)).subscribe({
-        next: (url) => {
-          if (this.usuario) {
-            this.usuario.fotoPerfil = url;
-          }
-          this.mensajeExito = 'Foto de perfil actualizada.';
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.mensajeError = 'No se pudo actualizar la foto de perfil.';
-          this.cdr.detectChanges();
+    this.usuarioService.actualizarFotoPerfil(idUsuario, archivo).subscribe({
+      next: (url) => {
+        if (this.usuario) {
+          // Timestamp para evitar caché del navegador
+          this.usuario.fotoPerfil = url + '?t=' + Date.now();
         }
-      });
-    };
-
-    reader.readAsArrayBuffer(archivo);
+        this.mensajeExito = 'Foto de perfil actualizada.';
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mensajeError = 'No se pudo actualizar la foto de perfil.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   eliminarCuenta() {
-    if (!confirm('¿Estás seguro de que deseas eliminar la cuenta? Esta acción es irreversible.')) {
-      return;
-    }
+    if (!confirm('¿Estás seguro de que deseas eliminar la cuenta? Esta acción es irreversible.')) return;
 
     const idUsuario = this.obtenerIdUsuarioActivo();
-    if (idUsuario === null) {
-      return;
-    }
+    if (idUsuario === null) return;
 
     this.usuarioService.eliminarCuenta(idUsuario).subscribe({
       next: (eliminado) => {
@@ -231,7 +210,6 @@ export class Perfil implements OnInit {
           this.cdr.detectChanges();
           return;
         }
-
         this.mensajeError = 'No se pudo eliminar la cuenta.';
         this.cdr.detectChanges();
       },
@@ -243,9 +221,7 @@ export class Perfil implements OnInit {
   }
 
   exportarDatosPerfil() {
-    if (!this.usuario) {
-      return;
-    }
+    if (!this.usuario) return;
 
     const contenido = JSON.stringify(this.usuario, null, 2);
     const blob = new Blob([contenido], { type: 'application/json' });
@@ -258,20 +234,22 @@ export class Perfil implements OnInit {
   }
 
   obtenerNombreCompleto(): string {
-    if (!this.usuario) {
-      return '';
-    }
-
+    if (!this.usuario) return '';
     return [this.usuario.nombre, this.usuario.primerApellido, this.usuario.segundoApellido]
       .filter(Boolean)
       .join(' ');
   }
 
-  formatearFechaRegistro(): string {
-    if (!this.usuario?.fechaRegistro) {
-      return 'UNIDO EN -';
-    }
+  obtenerFotoPerfil(): string {
+    const foto = this.usuario?.fotoPerfil;
+    if (!foto) return '/usuario.png';
+    if (foto.startsWith('http')) return foto;
+    // Ruta relativa legacy
+    return 'http://localhost:8080/' + foto.replace(/\\/g, '/');
+  }
 
+  formatearFechaRegistro(): string {
+    if (!this.usuario?.fechaRegistro) return 'UNIDO EN -';
     const fecha = new Date(this.usuario.fechaRegistro);
     const mes = fecha.toLocaleDateString('es-ES', { month: 'short' }).toUpperCase().replace('.', '');
     return `UNIDO EN ${mes} ${fecha.getFullYear()}`;
@@ -283,9 +261,7 @@ export class Perfil implements OnInit {
   }
 
   private obtenerIdUsuarioActivo(): number | null {
-    if (this.idUsuario !== null) {
-      return this.idUsuario;
-    }
+    if (this.idUsuario !== null) return this.idUsuario;
 
     this.idUsuario = this.loginService.obtenerIdUsuario();
     if (this.idUsuario === null) {
