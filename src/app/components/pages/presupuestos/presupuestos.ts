@@ -4,7 +4,6 @@ import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PresupuestoForm } from './presupuesto-form/presupuesto-form';
-import { TransaccionService } from '../../../services/transaccion.service';
 import { PresupuestosService } from '../../../services/presupuesto.service';
 import { CategoriaService } from '../../../services/categoria.service';
 
@@ -31,7 +30,6 @@ export class Presupuestos implements OnInit {
 
   constructor(
     private presupuestoService: PresupuestosService,
-    private transaccionService: TransaccionService,
     private categoriaService: CategoriaService,
     private cdr: ChangeDetectorRef // Se fuerza el renderizado si Angular no detecta los cambios
   ) { }
@@ -45,7 +43,7 @@ export class Presupuestos implements OnInit {
     const ahora = new Date();
     const anio = ahora.getFullYear();
     const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-    return `${anio}-${mes}-01T00:00:00`; // Ejemplo: 2026-06-01T00:00:00
+    return `${anio}-${mes}-01T00:00:00`; 
   }
 
   private obtenerFechaFinMes(): string {
@@ -59,7 +57,7 @@ export class Presupuestos implements OnInit {
   }
 
 cargarDatos() {
-    // Cargamos los presupuestos (el backend ya calcula el gastoActual aquí)
+    // Cargamos los presupuestos 
     this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
       next: (data) => {
         this.listaPresupuestos = data.map(p => ({
@@ -67,7 +65,7 @@ cargarDatos() {
           idCategoria: p.categoria.id,
           categoria: p.categoria.nombre,
           icono: (p.categoria as any).icono || '📦', 
-          gastado: p.gastoActual, // 👈 El backend ya te da el cálculo hecho aquí
+          gastado: p.gastoActual, 
           limite: p.limite
         }));
         this.cdr.detectChanges();
@@ -80,22 +78,14 @@ cargarDatos() {
       next: (data) => {
         this.listaCategorias = data.map(cat => ({
           id: cat.id,
-          nombre: cat.nombre
+          nombre: cat.nombre,
+          icono: cat.icono
         }));
         this.cdr.detectChanges();
       },
       error: (e) => console.error('Error al cargar el catálogo de categorías:', e)
     });
 
-    // Traemos las transacciones del backend para tus cálculos manuales
-    this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
-      next: (transacciones) => {
-        console.log('Transacciones cargadas en Presupuestos:', transacciones);
-        
-        this.cdr.detectChanges();
-      },
-      error: (e) => console.error('Error al cargar transacciones para cálculos:', e)
-    });
   }
 
   // Calculamos el porcentaje de consumo del presupuesto
@@ -107,7 +97,7 @@ cargarDatos() {
   obtenerEstado(gastado: number, limite: number): 'bueno' | 'advertencia' | 'peligro' {
     const porcentaje = (gastado / limite) * 100;
     if (porcentaje >= 100) return 'peligro';
-    if (porcentaje >= 80) return 'advertencia'; // Alerta amarilla al llegar al 90%
+    if (porcentaje >= 80) return 'advertencia'; // Alerta amarilla al llegar al 80%
     return 'bueno';
   }
 
@@ -144,7 +134,7 @@ cargarDatos() {
     ).subscribe({
       next: (editado) => {
         if (editado) {
-          this.cargarDatos(); // Recarga desde la Base de Datos
+          this.cargarDatos(); 
           this.cerrarEdicion();
         }
       },
@@ -157,7 +147,7 @@ cargarDatos() {
       this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
         next: (eliminado) => {
           if (eliminado) {
-            this.cargarDatos(); // Recarga la lista real
+            this.cargarDatos(); 
             this.cerrarEdicion();
             console.log('Presupuesto eliminado de la BD');
           } else {
