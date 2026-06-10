@@ -1,7 +1,0 @@
-.container {
-  margin-left: calc(var(--sidebar-width) + 20px);  
-  padding-left: 40px;  
-  padding-right: 40px;
-  padding-top: 80px;
-}
-
