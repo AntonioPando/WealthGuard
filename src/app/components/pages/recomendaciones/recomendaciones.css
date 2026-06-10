@@ -1,0 +1,428 @@
+.container {
+    margin-left: calc(var(--sidebar-width) + 1.389vw);
+    padding-left: 2.778vw;
+    padding-right: 2.778vw;
+    padding-top: 8.889vh;
+}
+
+.rec-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.111vw;
+    max-width: 83.333vw;
+    margin: 0 auto 1.667vw auto;
+}
+
+.rec-titulo {
+    font-size: 1.667vw;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 0.278vw 0;
+}
+
+.rec-subtitulo {
+    font-size: 0.903vw;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.boton-eliminar-sel {
+    padding: 0.694vw 1.389vw;
+    border-radius: 0.556vw;
+    border: 0.069vw solid #fecaca;
+    background: var(--danger-bg);
+    color: var(--danger);
+    font-size: 0.833vw;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    white-space: nowrap;
+}
+
+.boton-eliminar-sel:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.boton-eliminar-sel:not(:disabled):hover {
+    background: #fecaca;
+}
+
+.rec-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.833vw;
+    max-width: 83.333vw;
+    margin: 0 auto;
+}
+
+.rec-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.111vw;
+    padding: 1.111vw 1.389vw;
+    background: var(--white);
+    border: 0.069vw solid var(--border);
+    border-radius: 0.833vw;
+    box-shadow: 0 0.278vw 0.417vw -0.069vw rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rec-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 0.417vw 0.833vw -0.139vw rgba(0, 0, 0, 0.08);
+}
+
+.rec-card.seleccionada {
+    border-color: var(--accent);
+    background: var(--accent-light);
+}
+
+.rec-check-wrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 1.111vw;
+    height: 1.111vw;
+    min-width: 16px;
+    min-height: 16px;
+    margin-top: 0.139vw;
+    cursor: pointer;
+}
+
+.rec-check {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkmark {
+    position: absolute;
+    inset: 0;
+    border-radius: 0.278vw;
+    border: 0.104vw solid #cbd5e1;
+    background: var(--white);
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.rec-check:checked~.checkmark {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.rec-check:checked~.checkmark::after {
+    content: '';
+    position: absolute;
+    left: 28%;
+    top: 8%;
+    width: 30%;
+    height: 55%;
+    border: 0.139vw solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+.rec-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.rec-card-top {
+    display: flex;
+    align-items: center;
+    gap: 0.694vw;
+    margin-bottom: 0.417vw;
+}
+
+.badge-score {
+    font-size: 0.694vw;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.208vw 0.556vw;
+    border-radius: 0.278vw;
+}
+
+.badge-score.alto {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 0.069vw solid #d1fae5;
+}
+
+.badge-score.medio {
+    background: #fefce8;
+    color: #a16207;
+    border: 0.069vw solid #fde68a;
+}
+
+.badge-score.bajo {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 0.069vw solid #fecaca;
+}
+
+.rec-fecha {
+    font-size: 0.764vw;
+    color: var(--text-muted);
+}
+
+.rec-card-titulo {
+    font-size: 0.972vw;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 0.278vw 0;
+}
+
+.rec-card-desc {
+    font-size: 0.833vw;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.btn-eliminar-uno {
+    flex-shrink: 0;
+    width: 2.222vw;
+    height: 2.222vw;
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.556vw;
+    border: 0.069vw solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+    font-size: 0.903vw;
+}
+
+.rec-card:hover .btn-eliminar-uno {
+    opacity: 1;
+}
+
+.btn-eliminar-uno:hover {
+    background: var(--danger-bg);
+    border-color: #fecaca;
+}
+
+.rec-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8.333vh 2.778vw;
+    text-align: center;
+    gap: 0.694vw;
+    max-width: 83.333vw;
+    margin: 0 auto;
+}
+
+.vacio-icon {
+    width: 3.472vw;
+    height: 3.472vw;
+    opacity: 0.2;
+    margin-bottom: 0.556vw;
+}
+
+.vacio-titulo {
+    font-size: 1.111vw;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.vacio-desc {
+    font-size: 0.833vw;
+    color: var(--text-muted);
+    max-width: 22.222vw;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rec-card.skeleton {
+    height: 5.556vh;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border: none;
+    box-shadow: none;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.overlay-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-recomendacion {
+    position: relative;
+    width: min(90vw, 34.722vw);
+    background: var(--white);
+    border-radius: 1.111vw;
+    border: 0.069vw solid var(--border);
+    box-shadow: 0 0.972vw 2.083vw -1.042vw rgba(15, 23, 42, 0.35);
+    padding: 1.667vw;
+    text-align: center;
+}
+
+.popup-close {
+    position: absolute;
+    top: 0.833vw;
+    right: 0.833vw;
+    width: 1.667vw;
+    height: 1.667vw;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 0.417vw;
+    border: 0.069vw solid var(--border);
+    background: #f8fafc;
+    color: var(--text-muted);
+    font-size: 0.764vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.popup-close:hover {
+    background: var(--border);
+}
+
+.popup-icon-wrap {
+    width: 3.472vw;
+    height: 3.472vw;
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 0.833vw;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.111vw;
+}
+
+.popup-icon {
+    width: 1.667vw;
+    height: 1.667vw;
+    min-width: 24px;
+}
+
+.popup-eyebrow {
+    font-size: 0.694vw;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.556vw 0;
+}
+
+.popup-titulo {
+    font-size: 1.111vw;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 0.556vw 0;
+    line-height: 1.3;
+}
+
+.popup-desc {
+    font-size: 0.833vw;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0 0 1.111vw 0;
+}
+
+.popup-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.694vw;
+    margin-bottom: 1.389vw;
+}
+
+.popup-fecha {
+    font-size: 0.764vw;
+    color: var(--text-muted);
+}
+
+.boton-primario {
+    border: none;
+    color: white;
+    background: var(--primary);
+    border-radius: 0.556vw;
+    padding: 0.625vw 1.111vw;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.boton-primario:hover {
+    opacity: 0.88;
+}
+
+.w-full {
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        margin-left: 0;
+        width: 100%;
+        padding: 2.222vw;
+    }
+
+    .rec-header {
+        flex-direction: column;
+    }
+
+    .boton-eliminar-sel {
+        font-size: 3.5vw;
+        padding: 2vw 4vw;
+    }
+
+    .rec-card-titulo {
+        font-size: 3.8vw;
+    }
+
+    .rec-card-desc,
+    .rec-fecha {
+        font-size: 3.2vw;
+    }
+
+    .badge-score {
+        font-size: 2.8vw;
+        padding: 1vw 2vw;
+    }
+
+    .vacio-titulo {
+        font-size: 4vw;
+    }
+
+    .vacio-desc {
+        font-size: 3.2vw;
+        max-width: 80vw;
+    }
+
+    .popup-titulo {
+        font-size: 4.5vw;
+    }
+
+    .popup-desc {
+        font-size: 3.5vw;
+    }
+}

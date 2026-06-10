@@ -1,0 +1,29 @@
+<div class="rec-popup-overlay" *ngIf="mostrarPopup" (click)="cerrar()">
+  <div class="rec-popup" (click)="$event.stopPropagation()">
+
+    <button class="popup-close" (click)="cerrar()" title="Cerrar">✕</button>
+
+    <div class="popup-icon-wrap">
+      <img src="/historial.svg" alt="" class="popup-icon">
+    </div>
+
+    <p class="popup-eyebrow">Recomendación para ti</p>
+    <h2 class="popup-titulo">{{ recomendacion?.titulo }}</h2>
+    <p class="popup-desc">{{ recomendacion?.descripcion }}</p>
+
+    <div class="popup-meta">
+      <span class="popup-score" [ngClass]="badgeClase(recomendacion?.scoreRango)">
+        Score {{ recomendacion?.scoreRango }}
+      </span>
+      <span class="popup-fecha">
+        {{ recomendacion?.fechaRecomendacion | date:'d MMM yyyy' }}
+      </span>
+    </div>
+
+    <div class="popup-acciones">
+      <button class="btn-ver-todas" (click)="irAHistorial()">Ver todas</button>
+      <button class="btn-entendido" (click)="cerrar()">Entendido</button>
+    </div>
+
+  </div>
+</div>

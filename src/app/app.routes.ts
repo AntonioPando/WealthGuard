@@ -6,6 +6,7 @@ import { Login } from './components/pages/login/login';
 import { Registro } from './components/pages/registro/registro';
 import { Presupuestos } from './components/pages/presupuestos/presupuestos';
 import { NotFound } from './components/pages/not-found/not-found';
+import { RecomendacionesComponent } from './components/pages/recomendaciones/recomendaciones';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,10 @@ export const routes: Routes = [
   {
     path: 'presupuestos',
     component: Presupuestos
+  },
+  {
+    path: 'recomendaciones',
+    component: RecomendacionesComponent
   },
   {
     path: '**',
