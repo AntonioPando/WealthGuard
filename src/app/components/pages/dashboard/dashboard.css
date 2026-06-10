@@ -221,9 +221,46 @@
   height: 12px;
   border-radius: 50%;
 }
+.punto-color-square {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
 .punto-color--basico { background: #0b7a4a }
 .punto-color--estilo { background: #2f9bf0 }
 .punto-color--otros { background: #d63a3a }
+
+/* Paleta ampliada y más contrastada para el gráfico */
+.punto-color--c1 { background: #0b7a4a }
+.punto-color--c2 { background: #2f9bf0 }
+.punto-color--c3 { background: #d63a3a }
+.punto-color--c4 { background: #f59e0b }
+.punto-color--c5 { background: #8b5cf6 }
+.punto-color--c6 { background: #06b6d4 }
+.punto-color--c7 { background: #10b981 }
+.punto-color--c8 { background: #ef4444 }
+
+/* Aplicar también al trazo del SVG (usa stroke currentColor) */
+.grafico-circular__segmento {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-dasharray: 60 40;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  stroke-linecap: round;
+}
+
+/* Mapeo de clases que establezcan el color para elementos que usan currentColor */
+.grafico-color--c1 { color: #0b7a4a }
+.grafico-color--c2 { color: #2f9bf0 }
+.grafico-color--c3 { color: #d63a3a }
+.grafico-color--c4 { color: #f59e0b }
+.grafico-color--c5 { color: #8b5cf6 }
+.grafico-color--c6 { color: #06b6d4 }
+.grafico-color--c7 { color: #10b981 }
+.grafico-color--c8 { color: #ef4444 }
 
 /* Tabla / Transacciones */
 .tabla-actividad__encabezado {

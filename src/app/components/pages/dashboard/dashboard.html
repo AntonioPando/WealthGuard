@@ -18,8 +18,8 @@
       </header>
       <div class="tarjeta-kpi__contenido">
         <h3 class="tarjeta-kpi__titulo">Saldo Total</h3>
-        <p class="tarjeta-kpi__valor">$24,500.00</p>
-        <footer class="tarjeta-kpi__metadatos">Actualizado hace 2 min</footer>
+        <p class="tarjeta-kpi__valor">{{ cargandoSaldo ? 'Cargando...' : obtenerSaldo() }}</p>
+        <footer class="tarjeta-kpi__metadatos">{{ cargandoSaldo ? 'Actualizando...' : 'Actualizado hace unos segundos' }}</footer>
       </div>
     </article>
 
@@ -33,7 +33,7 @@
       </header>
       <div class="tarjeta-kpi__contenido">
         <h3 class="tarjeta-kpi__titulo">Gastos Mensuales</h3>
-        <p class="tarjeta-kpi__valor">$3,240.50</p>
+        <p class="tarjeta-kpi__valor">{{ cargandoGasto ? 'Cargando...' : obtenerGastoMensual() }}</p>
         <div
           class="barra-progreso"
           role="progressbar"
@@ -56,8 +56,7 @@
       </header>
       <div class="tarjeta-kpi__contenido">
         <h3 class="tarjeta-kpi__titulo">Ingresos Mensuales</h3>
-        <p class="tarjeta-kpi__valor">$8,400.00</p>
-        <footer class="tarjeta-kpi__metadatos">Próximo depósito: 28 oct</footer>
+        <p class="tarjeta-kpi__valor">{{ cargandoIngreso ? 'Cargando...' : obtenerIngresoMensual() }}</p>
       </div>
     </article>
   </section>
@@ -103,58 +102,37 @@
       <div class="grafico-circular">
         <svg class="grafico-circular__svg" viewBox="0 0 36 36" aria-hidden="true">
           <circle class="grafico-circular__fondo" cx="18" cy="18" r="16"></circle>
-          <!-- Segmentos: 45%, 25%, 30% (circumference ≈ 100.53) -->
-          <circle
-            class="grafico-circular__segmento grafico-circular__segmento--1"
-            cx="18"
-            cy="18"
-            r="16"
-            stroke-dasharray="45.24 55.29"
-            stroke-dashoffset="0"
-          ></circle>
-          <circle
-            class="grafico-circular__segmento grafico-circular__segmento--2"
-            cx="18"
-            cy="18"
-            r="16"
-            stroke-dasharray="25.13 75.40"
-            stroke-dashoffset="-45.24"
-          ></circle>
-          <circle
-            class="grafico-circular__segmento grafico-circular__segmento--3"
-            cx="18"
-            cy="18"
-            r="16"
-            stroke-dasharray="30.16 70.37"
-            stroke-dashoffset="-70.37"
-          ></circle>
+          <ng-container *ngFor="let seg of distribucionSegments; let i = index">
+            <circle
+              class="grafico-circular__segmento"
+              [class]="'grafico-color--' + seg.colorKey"
+              cx="18"
+              cy="18"
+              r="16"
+              [attr.stroke-dasharray]="seg.dashArray"
+              [attr.stroke-dashoffset]="seg.dashOffset"
+            ></circle>
+          </ng-container>
         </svg>
         <div class="grafico-circular__leyenda-central" aria-label="Total">
-          <span class="leyenda-titulo">TOTAL</span>
-          <span class="leyenda-valor">$3.2k</span>
+          <span class="leyenda-titulo">TOTAL GASTOS</span>
+          <span class="leyenda-valor">{{ cargandoGasto ? '...' : obtenerGastoMensual() }}</span>
         </div>
       </div>
       <ul class="lista-leyendas">
-        <li class="lista-leyendas__item">
+        <li class="lista-leyendas__item" *ngFor="let seg of distribucionSegments; let i = index">
           <div class="lista-leyendas__item-left">
-            <span class="punto-color punto-color--basico"></span>
-            <span>Básicos</span>
+            <span [class]="'punto-color-square punto-color--' + seg.colorKey" aria-hidden="true"></span>
+            <span>{{ seg.nombre }}</span>
           </div>
-          <b>45%</b>
+          <b>{{ seg.porcentaje | number: '1.2-2' }}%</b>
         </li>
-        <li class="lista-leyendas__item">
+        <li *ngIf="distribucionSegments.length === 0" class="lista-leyendas__item">
           <div class="lista-leyendas__item-left">
-            <span class="punto-color punto-color--estilo"></span>
-            <span>Estilo de Vida</span>
+            <span class="punto-color-square punto-color--otros" aria-hidden="true"></span>
+            <span>Sin datos</span>
           </div>
-          <b>25%</b>
-        </li>
-        <li class="lista-leyendas__item">
-          <div class="lista-leyendas__item-left">
-            <span class="punto-color punto-color--otros"></span>
-            <span>Otros</span>
-          </div>
-          <b>30%</b>
+          <b>0%</b>
         </li>
       </ul>
     </div>
