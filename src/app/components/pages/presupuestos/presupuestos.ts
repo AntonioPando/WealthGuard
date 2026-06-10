@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { PresupuestoForm } from './presupuesto-form/presupuesto-form';
 import { PresupuestosService } from '../../../services/presupuesto.service';
 import { CategoriaService } from '../../../services/categoria.service';
+import { LoginService } from '../../../services/login.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { CategoriaService } from '../../../services/categoria.service';
 
 export class Presupuestos implements OnInit {
 
-  idUsuario: number = 1; //ID PARA PRUEBAS CAMBIAR POR EL LOGEADO!!!!!! 
+  public idUsuario!: number;
 
 
   public presupuestoEditando: any = null;
@@ -31,11 +32,24 @@ export class Presupuestos implements OnInit {
   constructor(
     private presupuestoService: PresupuestosService,
     private categoriaService: CategoriaService,
+    private loginService: LoginService,
     private cdr: ChangeDetectorRef // Se fuerza el renderizado si Angular no detecta los cambios
   ) { }
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.comprobarUsuarioLogeado();
+  }
+
+  private comprobarUsuarioLogeado(): void {
+
+    const id = this.loginService.obtenerIdUsuario();
+
+    if (id !== null) {
+      this.idUsuario = id;
+      this.cargarDatos();
+    } else {
+      console.warn('WealthGuard Alerta: No se encontró un usuario logeado.');
+    }
   }
 
   // Calculamos las fechas del mes actual
@@ -43,7 +57,7 @@ export class Presupuestos implements OnInit {
     const ahora = new Date();
     const anio = ahora.getFullYear();
     const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-    return `${anio}-${mes}-01T00:00:00`; 
+    return `${anio}-${mes}-01T00:00:00`;
   }
 
   private obtenerFechaFinMes(): string {
@@ -56,7 +70,7 @@ export class Presupuestos implements OnInit {
     return `${anio}-${mesStr}-${String(ultimoDia).padStart(2, '0')}T23:59:59`;
   }
 
-cargarDatos() {
+  cargarDatos() {
     // Cargamos los presupuestos 
     this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
       next: (data) => {
@@ -64,8 +78,8 @@ cargarDatos() {
           id: p.id,
           idCategoria: p.categoria.id,
           categoria: p.categoria.nombre,
-          icono: (p.categoria as any).icono || '📦', 
-          gastado: p.gastoActual, 
+          icono: (p.categoria as any).icono || '📦',
+          gastado: p.gastoActual,
           limite: p.limite
         }));
         this.cdr.detectChanges();
@@ -134,7 +148,7 @@ cargarDatos() {
     ).subscribe({
       next: (editado) => {
         if (editado) {
-          this.cargarDatos(); 
+          this.cargarDatos();
           this.cerrarEdicion();
         }
       },
@@ -147,7 +161,7 @@ cargarDatos() {
       this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
         next: (eliminado) => {
           if (eliminado) {
-            this.cargarDatos(); 
+            this.cargarDatos();
             this.cerrarEdicion();
             console.log('Presupuesto eliminado de la BD');
           } else {

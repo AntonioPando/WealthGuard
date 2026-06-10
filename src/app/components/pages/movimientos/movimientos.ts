@@ -8,6 +8,7 @@ import { TransaccionResponse } from '../../../models/transaccion.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionForm } from './transaccion-form/transaccion-form';
 import { CategoriaService } from '../../../services/categoria.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -26,7 +27,7 @@ import { CategoriaService } from '../../../services/categoria.service';
 export class Movimientos implements OnInit {
 
 
-  idUsuario: number = 1; // ID de usuario fijo para pruebas!!!!!!!!!!!!!!!!!!!
+  public idUsuario!: number;
 
   // variables para los movimientos
   movimientos: TransaccionResponse[] = [];
@@ -47,11 +48,24 @@ export class Movimientos implements OnInit {
 
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
-  constructor(private transaccionService: TransaccionService, private categoriaService: CategoriaService, private cdr: ChangeDetectorRef) { }
+  constructor(private transaccionService: TransaccionService, private categoriaService: CategoriaService, private loginService: LoginService,
+   private cdr: ChangeDetectorRef) { }
 
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.comprobarUsuarioLogeado();
+  }
+
+    private comprobarUsuarioLogeado(): void {
+
+    const id = this.loginService.obtenerIdUsuario();
+
+    if (id !== null) {
+      this.idUsuario = id;
+      this.cargarDatos();
+    } else {
+      console.warn('WealthGuard Alerta: No se encontró un usuario logeado.');
+    }
   }
 
   cargarDatos() {
