@@ -25,7 +25,7 @@ export class TransaccionForm implements OnInit {
   constructor(private fb: FormBuilder) {
     // Estructura del formulario
     this.form = this.fb.group({
-      tipoTransaccion: [false, Validators.required], // false = gasto, true = ingreso
+      tipoTransaccion: [null, Validators.required], // false = gasto, true = ingreso
       cantidad: ['', [Validators.required, Validators.min(0.01)]], // validamos que el numero sea positivo
       fecha: ['', Validators.required],
       descripcion: [''],
