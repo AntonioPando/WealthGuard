@@ -22,7 +22,9 @@
                     <div class="caja-icono"
                         [style.background-color]="estado === 'peligro' ? '#fee2e2' : estado === 'advertencia' ? '#fef08a' : '#dcfce7'"
                         [style.color]="estado === 'peligro' ? '#b91c1c' : estado === 'advertencia' ? '#b45309' : '#16803d'">
-                        {{ p.icono }}
+                        <span class="material-symbols-outlined">
+                            {{ p.icono || 'category' }}
+                        </span>
                     </div>
 
                     @if (estado === 'advertencia') {
