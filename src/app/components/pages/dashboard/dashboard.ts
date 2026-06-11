@@ -39,6 +39,8 @@ export class Dashboard implements OnInit {
   cargandoIngreso: boolean = false;
 
   usuario: UsuarioResponse | null = null;
+  mesActual: string = '';
+  private readonly _mesesEspanol = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
   constructor(
     private router: Router
@@ -55,12 +57,14 @@ export class Dashboard implements OnInit {
     }
 
     // Cargamos datos principales
+    this.mesActual = this.obtenerMesActual();
     this.cargarPerfil();
     this.cargarSaldo();
     this.cargarGastoMensual();
     this.cargarIngresoMensual();
     this.cargarDistribucionCategorias();
     this.cargarUltimasTransacciones();
+    this.cargarEvolucionGastos();
   }
 
   // cargarDatosDashboard(): void {
@@ -259,6 +263,9 @@ export class Dashboard implements OnInit {
   // Últimas transacciones (mostradas en dashboard)
   recentTransactions: TransaccionResponse[] = [];
 
+  // Datos para gráfico de evolución: un elemento por día
+  dailyExpenses: Array<{ date: string; label: string; value: number; heightPercent: number; colorClass: string }> = [];
+
   cargarDistribucionCategorias(): void {
     const idUsuario = this.obtenerIdUsuarioActivo();
     if (idUsuario === null) return;
@@ -350,7 +357,69 @@ export class Dashboard implements OnInit {
     });
   }
 
+  cargarEvolucionGastos(): void {
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) return;
+
+    const ahora = new Date();
+    const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0, 0);
+    const finMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const filtros: any = {
+      fechaInicio: inicioMes.toISOString(),
+      fechaFin: finMes.toISOString()
+    };
+
+    this.transaccionService.listarTransaccionesConFiltros(idUsuario, filtros).subscribe({
+      next: (txs: TransaccionResponse[]) => {
+        // Mapear por día YYYY-MM-DD
+        const map = new Map<string, number>();
+        for (const t of txs || []) {
+          if (t.tipoTransaccion === false) {
+            const d = t.fecha ? new Date(t.fecha) : null;
+            if (!d) continue;
+            const key = d.toISOString().slice(0,10); // YYYY-MM-DD
+            map.set(key, (map.get(key) ?? 0) + Number(t.cantidad ?? 0));
+          }
+        }
+
+        // Construir array de todos los días del mes
+        const days: Array<{ date: string; label: string; value: number }> = [];
+        for (let d = new Date(inicioMes); d <= finMes; d.setDate(d.getDate() + 1)) {
+          const key = new Date(d).toISOString().slice(0,10);
+          const value = map.get(key) ?? 0;
+          days.push({ date: key, label: String(d.getDate()), value });
+        }
+
+        // Escalar alturas según máximo
+        const max = days.reduce((m, it) => Math.max(m, it.value), 0);
+        this.dailyExpenses = days.map(it => {
+          const heightPercent = max > 0 ? (it.value / max) * 100 : 0;
+          let colorClass = 'barra--verde';
+          if (it.value >= 300) colorClass = 'barra--roja';
+          else if (it.value >= 100) colorClass = 'barra--amarilla';
+          return { date: it.date, label: it.label, value: it.value, heightPercent, colorClass };
+        });
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar evolución de gastos', err);
+      }
+    });
+  }
+
   obtenerIngresosMensuales(): string {
     return '0,00 €';
+  }
+
+  obtenerMesActual(): string {
+    try {
+      const idx = new Date().getMonth();
+      const raw = this._mesesEspanol[idx] ?? '';
+      return raw ? (raw.charAt(0).toUpperCase() + raw.slice(1)) : '';
+    } catch (e) {
+      return '';
+    }
   }
 }
