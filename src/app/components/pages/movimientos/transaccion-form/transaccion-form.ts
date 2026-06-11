@@ -37,7 +37,7 @@ export class TransaccionForm implements OnInit {
     // Comprobamos si recibimos una transaccion para editar
     if (this.transaccionEditar) {
       this.esEdicion = true;
-    }
+    
 
     const datos = this.transaccionEditar;
 
@@ -52,7 +52,7 @@ export class TransaccionForm implements OnInit {
       descripcion: this.transaccionEditar.descripcion,
       idCategoria: this.transaccionEditar.idCategoria
     });
-
+  }
   }
 
   onSubmit() {

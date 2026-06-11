@@ -21,4 +21,12 @@ export class MenuLateral {
     this.loginService.cerrarSesion();
     this.router.navigate(['/login']);
   }
+
+  onNuevaTransaccion(): void {
+    if (this.router.url.includes('/movimientos')) {
+      this.nuevaTransaccion.emit();
+    } else {
+      this.router.navigate(['/movimientos'], { queryParams: { abrir: 'true' } });
+    }
+  }
 }
