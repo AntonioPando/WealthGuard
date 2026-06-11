@@ -4,58 +4,19 @@
   right: 0;
   top: 0;
   height: var(--header-height);
+
   display: flex;
+  justify-content: flex-end; 
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 20px 20px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(16, 24, 40, 0.06);
-  z-index: 20;
+
+  padding: 20px;
 }
 
-/* ── Búsqueda ── */
-.search-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  max-width: 360px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
 
-.search-icon {
-  width: 16px;
-  height: 16px;
-  opacity: 0.5;
-  flex-shrink: 0;
-}
-
-.search-input {
-  border: none;
-  background: none;
-  outline: none;
-  font-size: 13px;
-  color: #0f172a;
-  width: 100%;
-  font-family: inherit;
-}
-
-.search-input::placeholder {
-  color: #94a3b8;
-}
-
-/* ── Acciones / derecha ── */
 .header-actions {
   display: flex;
-  align-items: center;
+  align-items: center; 
   gap: 28px;
-  padding: 6px 10px;
 }
 
 .balance-display {

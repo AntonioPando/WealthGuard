@@ -1,8 +1,4 @@
 <header class="main-header">
-    <div class="search-container">
-        <img src="/icono_lupa.svg" alt="Icono de búsqueda" class="search-icon">
-        <input type="text" placeholder="Buscar transacciones, presupuestos..." class="search-input">
-    </div>
 
     <div class="header-actions">
         <div class="balance-display">
@@ -14,9 +10,6 @@
             <span class="balance-label">SCORE FINANCIERO</span>
             <span class="balance-amount score">760</span>
         </div>
-
-        <img src="/campana.svg" alt="Notificaciones" class="icono-header">
-        <img src="/historial.svg" alt="Historial" class="icono-header">
 
         <div class="user-menu-wrapper">
             <div class="user-chip" [class.activo]="menuAbierto" (click)="toggleMenu($event)">
