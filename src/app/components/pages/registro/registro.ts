@@ -28,6 +28,10 @@ export class Registro {
   preguntaSeguridad: string = '';
   respuestaSeguridad: string = '';
 
+  archivoFoto: File | null = null;
+  previsualizacionFoto: string | null = null;
+  nombreArchivoFoto: string = '';
+
   formularioEnviado: boolean = false;
   cargando: boolean = false;
   errorMensaje: string = '';
@@ -36,24 +40,35 @@ export class Registro {
   constructor(
     private router: Router,
     private registroService: RegistroService
-  ) {}
+  ) { }
 
-  // ── Validaciones paso 1 ───────────────────────────────────────────────────
-  get nickValido()     { return this.nickUsuario.trim().length >= 3; }
-  get nombreValido()   { return this.nombre.trim().length > 0; }
+  get nickValido() { return this.nickUsuario.trim().length >= 3; }
+  get nombreValido() { return this.nombre.trim().length > 0; }
   get apellidoValido() { return this.primerApellido.trim().length > 0; }
-  get emailValido()    { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email); }
-
-  // ── Validaciones paso 2 ───────────────────────────────────────────────────
-  get preguntaValida()   { return this.preguntaSeguridad !== ''; }
-  get respuestaValida()  { return this.respuestaSeguridad.trim().length > 0; }
+  get emailValido() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email); }
+  get preguntaValida() { return this.preguntaSeguridad !== ''; }
+  get respuestaValida() { return this.respuestaSeguridad.trim().length > 0; }
   get tieneMinCaracteres() { return this.password.length >= 6; }
-  get tieneMayuscula()   { return /[A-Z]/.test(this.password); }
-  get tieneMinuscula()   { return /[a-z]/.test(this.password); }
-  get tieneNumero()      { return /[0-9]/.test(this.password); }
+  get tieneMayuscula() { return /[A-Z]/.test(this.password); }
+  get tieneMinuscula() { return /[a-z]/.test(this.password); }
+  get tieneNumero() { return /[0-9]/.test(this.password); }
   get passwordsCoinciden() { return this.password === this.confirmarPassword; }
 
-  // ── Navegación entre pasos ────────────────────────────────────────────────
+  seleccionarFoto(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0];
+    if (!archivo) return;
+
+    this.archivoFoto = archivo;
+    this.nombreArchivoFoto = archivo.name;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.previsualizacionFoto = e.target?.result as string;
+    };
+    reader.readAsDataURL(archivo);
+  }
+
   irAlPaso2(): void {
     this.formularioEnviado = true;
     if (!this.nickValido || !this.nombreValido || !this.apellidoValido || !this.emailValido) {
@@ -73,30 +88,29 @@ export class Registro {
     this.mostrarPassword = !this.mostrarPassword;
   }
 
-  // ── Envío del formulario ──────────────────────────────────────────────────
   onSubmit(): void {
     this.formularioEnviado = true;
     this.errorMensaje = '';
 
     if (!this.preguntaValida || !this.respuestaValida ||
-        !this.tieneMinCaracteres || !this.tieneMayuscula ||
-        !this.tieneMinuscula || !this.tieneNumero || !this.passwordsCoinciden) {
+      !this.tieneMinCaracteres || !this.tieneMayuscula ||
+      !this.tieneMinuscula || !this.tieneNumero || !this.passwordsCoinciden) {
       return;
     }
 
     this.cargando = true;
 
     this.registroService.registrar({
-      nickUsuario:       this.nickUsuario.trim(),
-      nombre:            this.nombre.trim(),
-      primerApellido:    this.primerApellido.trim(),
-      segundoApellido:   this.segundoApellido.trim(),
-      email:             this.email.trim(),
-      password:          this.password,
+      nickUsuario: this.nickUsuario.trim(),
+      nombre: this.nombre.trim(),
+      primerApellido: this.primerApellido.trim(),
+      segundoApellido: this.segundoApellido.trim(),
+      email: this.email.trim(),
+      password: this.password,
       preguntaSeguridad: this.preguntaSeguridad,
       respuestaSeguridad: this.respuestaSeguridad.trim(),
-      fotoPerfil:        null
-    }).subscribe({
+      fotoPerfil: null
+    }, this.archivoFoto).subscribe({
       next: () => {
         this.cargando = false;
         this.exitoMensaje = '¡Cuenta creada correctamente! Redirigiendo al login...';

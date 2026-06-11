@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap, of } from 'rxjs';
 
 export interface RegistroRequest {
   nickUsuario: string;
@@ -24,9 +24,22 @@ export interface RegistroResponse {
 @Injectable({ providedIn: 'root' })
 export class RegistroService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/usuarios/crear';
+  private readonly apiUrl = 'http://localhost:8080/usuarios';
 
-  registrar(datos: RegistroRequest): Observable<RegistroResponse> {
-    return this.http.post<RegistroResponse>(this.apiUrl, datos);
+  registrar(datos: RegistroRequest, foto: File | null = null): Observable<RegistroResponse> {
+    return this.http.post<RegistroResponse>(`${this.apiUrl}/crear`, datos).pipe(
+      switchMap((usuario) => {
+        if (!foto) return of(usuario);
+
+        const formData = new FormData();
+        formData.append('imagen', foto, foto.name);
+
+        return this.http
+          .put<string>(`${this.apiUrl}/foto-perfil/${usuario.id}`, formData, {
+            responseType: 'text' as 'json'
+          })
+          .pipe(switchMap(() => of(usuario)));
+      })
+    );
   }
 }

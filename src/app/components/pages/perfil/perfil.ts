@@ -6,6 +6,7 @@ import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
 import { UsuarioRequest, UsuarioResponse } from '../../../models/usuario.model';
 import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
+import { FotoPerfilService } from '../../../services/foto-perfil.service';
 
 @Component({
   selector: 'app-perfil',
@@ -19,6 +20,7 @@ export class Perfil implements OnInit {
   private readonly usuarioService = inject(UsuarioService);
   private readonly loginService = inject(LoginService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly fotoPerfilService = inject(FotoPerfilService);
 
   idUsuario: number | null = null;
 
@@ -94,11 +96,18 @@ export class Perfil implements OnInit {
     this.usuarioService.obtenerPerfil(idUsuario).subscribe({
       next: (data) => {
         this.usuario = data;
+        const foto = data.fotoPerfil;
+        if (foto) {
+          const url = foto.startsWith('http')
+            ? foto
+            : 'http://localhost:8080/' + foto.replace(/\\/g, '/');
+          this.fotoPerfilService.actualizar(url);
+        }
         this.cargandoPerfil = false;
         this.cdr.detectChanges();
       },
       error: () => {
-        this.mensajeError = 'No se pudo cargar el perfil. Verifica que el backend esté activo en http://localhost:8080.';
+        this.mensajeError = 'No se pudo cargar el perfil. Inicia sesión nuevamente para ver tu perfil.';
         this.cargandoPerfil = false;
         this.cdr.detectChanges();
       }
@@ -239,9 +248,14 @@ export class Perfil implements OnInit {
 
     this.usuarioService.actualizarFotoPerfil(idUsuario, archivo).subscribe({
       next: (url) => {
+        const urlLimpia = url.startsWith('http')
+          ? url
+          : 'http://localhost:8080/' + url.replace(/\\/g, '/');
+        const urlConTimestamp = urlLimpia + '?t=' + Date.now();
         if (this.usuario) {
-          this.usuario.fotoPerfil = url + '?t=' + Date.now();
+          this.usuario.fotoPerfil = urlConTimestamp;
         }
+        this.fotoPerfilService.actualizar(urlConTimestamp);
         this.mensajeExito = 'Foto de perfil actualizada.';
         this.cdr.detectChanges();
       },
