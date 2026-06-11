@@ -1,9 +1,8 @@
 
 <app-header></app-header>
-<app-menu-lateral></app-menu-lateral>
-
+<app-menu-lateral (nuevaTransaccion)="abrirFormulario()"></app-menu-lateral>
 <div class="container">
-<app-header-movimientos (abrirCrear)="abrirFormulario()"></app-header-movimientos>
+<app-header-movimientos (abrirCrearTransaccion)="abrirFormulario()"></app-header-movimientos>
 
 <app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" 
 (limpiar)="limpiarFiltros()" 
