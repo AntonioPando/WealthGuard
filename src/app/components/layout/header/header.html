@@ -10,12 +10,40 @@
             <span class="balance-amount">$24,500.00</span>
         </div>
 
-        <div class="action-icons">
-            <img src="/campana.svg" alt="Notificaciones" class="icono-header">
-            <img src="/historial.svg" alt="Historial" class="icono-header">
-            <div class="user-profile">
+        <div class="balance-display">
+            <span class="balance-label">SCORE FINANCIERO</span>
+            <span class="balance-amount score">760</span>
+        </div>
+
+        <img src="/campana.svg" alt="Notificaciones" class="icono-header">
+        <img src="/historial.svg" alt="Historial" class="icono-header">
+
+        <div class="user-menu-wrapper">
+            <div class="user-chip" [class.activo]="menuAbierto" (click)="toggleMenu($event)">
                 <img [src]="fotoPerfil" alt="Perfil" class="avatar">
+                <span class="usuario-nombre">{{ nombreUsuario }}</span>
+                <span class="chevron" [class.girado]="menuAbierto">▾</span>
             </div>
+
+            @if (menuAbierto) {
+            <div class="dropdown-menu" (click)="$event.stopPropagation()">
+                <div class="dropdown-header">
+                    <img [src]="fotoPerfil" alt="Perfil" class="dropdown-avatar">
+                    <div class="dropdown-info">
+                        <span class="dropdown-nombre">{{ nombreUsuario }}</span>
+                        <span class="dropdown-email">{{ emailUsuario }}</span>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" [routerLink]="['/perfil']" (click)="cerrarMenu()">
+                    Mi perfil
+                </button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item item-danger" (click)="cerrarSesion()">
+                    Cerrar sesión
+                </button>
+            </div>
+            }
         </div>
     </div>
 </header>
