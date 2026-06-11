@@ -8,5 +8,5 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class HeaderMovimientos {
 
-  @Output() abrirCrear = new EventEmitter<void>();
+  @Output() abrirCrearTransaccion = new EventEmitter<void>();
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LoginService } from '../../../services/login.service';
 
@@ -9,6 +9,9 @@ import { LoginService } from '../../../services/login.service';
   styleUrl: './menu-lateral.css',
 })
 export class MenuLateral {
+
+  @Output() nuevaTransaccion = new EventEmitter<void>();
+
   constructor(
     private loginService: LoginService,
     private router: Router,
