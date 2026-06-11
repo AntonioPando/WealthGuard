@@ -1,11 +1,9 @@
 <header class="main-header">
-    <!-- Buscador -->
     <div class="search-container">
         <img src="/icono_lupa.svg" alt="Icono de búsqueda" class="search-icon">
         <input type="text" placeholder="Buscar transacciones, presupuestos..." class="search-input">
     </div>
 
-    <!-- Lado derecho: Saldo y Usuario -->
     <div class="header-actions">
         <div class="balance-display">
             <span class="balance-label">SALDO TOTAL</span>
@@ -16,7 +14,7 @@
             <img src="/campana.svg" alt="Notificaciones" class="icono-header">
             <img src="/historial.svg" alt="Historial" class="icono-header">
             <div class="user-profile">
-                <img src="/avatar.svg" alt="Perfil" class="avatar">
+                <img [src]="fotoPerfil" alt="Perfil" class="avatar">
             </div>
         </div>
     </div>
