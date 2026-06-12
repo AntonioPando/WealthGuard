@@ -25,6 +25,7 @@ export class Registro {
   password: string = '';
   confirmarPassword: string = '';
   mostrarPassword: boolean = false;
+  mostrarConfirmarPassword: boolean = false;
   preguntaSeguridad: string = '';
   respuestaSeguridad: string = '';
 
@@ -37,15 +38,18 @@ export class Registro {
   errorMensaje: string = '';
   exitoMensaje: string = '';
 
+  nickRepetido: boolean = false;
+  emailRepetido: boolean = false;
+
   constructor(
     private router: Router,
     private registroService: RegistroService
   ) { }
 
-  get nickValido() { return this.nickUsuario.trim().length >= 4; }
+  get nickValido() { return this.nickUsuario.trim().length >= 3 && !this.nickRepetido; }
   get nombreValido() { return this.nombre.trim().length > 0; }
   get apellidoValido() { return this.primerApellido.trim().length > 0; }
-  get emailValido() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email); }
+  get emailValido() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email) && !this.emailRepetido; }
   get preguntaValida() { return this.preguntaSeguridad !== ''; }
   get respuestaValida() { return this.respuestaSeguridad.trim().length > 0; }
   get tieneMinCaracteres() { return this.password.length >= 6; }
@@ -53,6 +57,26 @@ export class Registro {
   get tieneMinuscula() { return /[a-z]/.test(this.password); }
   get tieneNumero() { return /[0-9]/.test(this.password); }
   get passwordsCoinciden() { return this.password === this.confirmarPassword; }
+
+  onNickChange(): void {
+    this.nickRepetido = false;
+    if (this.nickUsuario.trim().length >= 3) {
+      this.registroService.existeNick(this.nickUsuario.trim()).subscribe({
+        next: (existe) => { this.nickRepetido = existe; },
+        error: () => { }
+      });
+    }
+  }
+
+  onEmailChange(): void {
+    this.emailRepetido = false;
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
+      this.registroService.existeEmail(this.email.trim()).subscribe({
+        next: (existe) => { this.emailRepetido = existe; },
+        error: () => { }
+      });
+    }
+  }
 
   seleccionarFoto(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -87,6 +111,11 @@ export class Registro {
   togglePassword(): void {
     this.mostrarPassword = !this.mostrarPassword;
   }
+
+  toggleConfirmarPassword(): void {
+    this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword;
+  }
+
 
   onSubmit(): void {
     this.formularioEnviado = true;

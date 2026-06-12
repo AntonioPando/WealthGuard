@@ -42,4 +42,12 @@ export class RegistroService {
       })
     );
   }
+
+  existeNick(nick: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/existe-nick`, { params: { nick } });
+  }
+
+  existeEmail(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/existe-email`, { params: { email } });
+  }
 }

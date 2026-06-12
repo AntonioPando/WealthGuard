@@ -39,11 +39,14 @@
             <label for="nickUsuario">Usuario *</label>
             <div class="entrada">
               <input type="text" id="nickUsuario" name="nickUsuario" [(ngModel)]="nickUsuario" required
-                autocomplete="username" placeholder="Usuario" />
+                autocomplete="username" placeholder="Usuario" (ngModelChange)="onNickChange()" />
               <span class="icono" aria-hidden="true">@</span>
             </div>
-            <span class="campo-error" *ngIf="formularioEnviado && !nickValido">
-              El usuario debe tener al menos 4 caracteres.
+            <span class="campo-error" *ngIf="formularioEnviado && nickUsuario.trim().length < 3">
+              El usuario debe tener al menos 3 caracteres.
+            </span>
+            <span class="campo-error" *ngIf="nickRepetido">
+              Este nombre de usuario ya está en uso.
             </span>
           </div>
 
@@ -84,11 +87,14 @@
             <label for="email">Correo electrónico *</label>
             <div class="entrada">
               <input type="email" id="email" name="email" [(ngModel)]="email" required autocomplete="email"
-                placeholder="juan@correo.com" />
+                placeholder="juan@correo.com" (ngModelChange)="onEmailChange()" />
               <span class="icono" aria-hidden="true">✉</span>
             </div>
-            <span class="campo-error" *ngIf="formularioEnviado && !emailValido">
+            <span class="campo-error" *ngIf="formularioEnviado && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)">
               Introduce un correo válido.
+            </span>
+            <span class="campo-error" *ngIf="emailRepetido">
+              Este correo electrónico ya está en uso.
             </span>
           </div>
 
@@ -113,6 +119,7 @@
             <input #inputFoto type="file" accept="image/*" class="input-archivo-oculto"
               (change)="seleccionarFoto($event)">
           </div>
+
           <button type="button" class="btn-siguiente" (click)="irAlPaso2()">
             Continuar →
           </button>
@@ -148,9 +155,13 @@
           <div class="form-group">
             <label for="confirmarPassword">Confirmar contraseña *</label>
             <div class="entrada">
-              <input [type]="mostrarPassword ? 'text' : 'password'" id="confirmarPassword" name="confirmarPassword"
-                [(ngModel)]="confirmarPassword" required autocomplete="new-password" placeholder="••••••••" />
-              <span class="icono" aria-hidden="true">*</span>
+              <input [type]="mostrarConfirmarPassword ? 'text' : 'password'" id="confirmarPassword"
+                name="confirmarPassword" [(ngModel)]="confirmarPassword" required autocomplete="new-password"
+                placeholder="••••••••" />
+              <span class="icono icono-click" (click)="toggleConfirmarPassword()"
+                aria-label="Mostrar confirmar contraseña">
+                {{ mostrarConfirmarPassword ? '👁' : '*' }}
+              </span>
             </div>
             <span class="campo-error" *ngIf="confirmarPassword.length > 0 && !passwordsCoinciden">
               Las contraseñas no coinciden.
