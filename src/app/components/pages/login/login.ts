@@ -18,12 +18,13 @@ export class Login {
   recordar: boolean = false;
   errormensaje: string = '';
   cargando: boolean = false;
+  mostrarPassword: boolean = false;
   private bloqueoSubmitId: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private loginService: LoginService,
     private router: Router,
-  ) {}
+  ) { }
 
   onSubmit(): void {
     if (this.cargando) {
@@ -58,41 +59,45 @@ export class Login {
         })
       )
       .subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard']);
-      },
-      error: (error: unknown) => {
+        next: () => {
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error: unknown) => {
 
-        if (error instanceof TimeoutError) {
-          this.errormensaje = 'El servidor tardó demasiado en responder. Inténtalo de nuevo.';
-          return;
+          if (error instanceof TimeoutError) {
+            this.errormensaje = 'El servidor tardó demasiado en responder. Inténtalo de nuevo.';
+            return;
+          }
+
+          const httpError = error as HttpErrorResponse;
+
+          if (httpError.status === 401) {
+            const mensajeBackend = (httpError.error as { mensaje?: string })?.mensaje;
+            this.errormensaje = mensajeBackend || 'Usuario o contraseña incorrectos.';
+            return;
+          }
+
+          if (httpError.status === 404) {
+            this.errormensaje = 'No se encontró el endpoint de login en el backend.';
+            return;
+          }
+
+          if (httpError.status === 0) {
+            this.errormensaje = 'No hay conexión con el backend en http://localhost:8080.';
+            return;
+          }
+
+          this.errormensaje = 'No se pudo iniciar sesión. Inténtalo de nuevo.';
         }
-
-        const httpError = error as HttpErrorResponse;
-
-        if (httpError.status === 401) {
-          const mensajeBackend = (httpError.error as { mensaje?: string })?.mensaje;
-          this.errormensaje = mensajeBackend || 'Usuario o contraseña incorrectos.';
-          return;
-        }
-
-        if (httpError.status === 404) {
-          this.errormensaje = 'No se encontró el endpoint de login en el backend.';
-          return;
-        }
-
-        if (httpError.status === 0) {
-          this.errormensaje = 'No hay conexión con el backend en http://localhost:8080.';
-          return;
-        }
-
-        this.errormensaje = 'No se pudo iniciar sesión. Inténtalo de nuevo.';
-      }
-    });
+      });
   }
 
   onOlvideMiPassword(): void {
     this.errormensaje = 'Recuperación de contraseña disponible próximamente.';
+  }
+
+  togglePassword(): void {
+    this.mostrarPassword = !this.mostrarPassword;
   }
 
   onRegistrarse(): void {

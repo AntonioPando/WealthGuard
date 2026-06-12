@@ -21,15 +21,8 @@
                 <div class="form-group">
                     <label for="usuario">Usuario</label>
                     <div class="entrada">
-                        <input
-                            type="text"
-                            id="usuario"
-                            name="usuario"
-                            [(ngModel)]="usuario"
-                            required
-                            autocomplete="username"
-                            placeholder="tu.usuario"
-                        />
+                        <input type="text" id="usuario" name="usuario" [(ngModel)]="usuario" required
+                            autocomplete="username" placeholder="Usuario" />
                         <span class="icono" aria-hidden="true">@</span>
                     </div>
                 </div>
@@ -37,16 +30,11 @@
                 <div class="form-group">
                     <label for="password">Contraseña</label>
                     <div class="entrada">
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            [(ngModel)]="password"
-                            required
-                            autocomplete="current-password"
-                            placeholder="••••••••"
-                        />
-                        <span class="icono" aria-hidden="true">*</span>
+                        <input [type]="mostrarPassword ? 'text' : 'password'" id="password" name="password"
+                            [(ngModel)]="password" required autocomplete="current-password" placeholder="••••••••" />
+                        <span class="icono icono-click" (click)="togglePassword()" aria-label="Mostrar contraseña">
+                            {{ mostrarPassword ? '👁' : '*' }}
+                        </span>
                     </div>
 
                     <button type="button" class="olvidar" (click)="onOlvideMiPassword()">
@@ -55,7 +43,7 @@
                 </div>
 
                 @if (errormensaje) {
-                    <p class="error" role="alert" aria-live="assertive">{{ errormensaje }}</p>
+                <p class="error" role="alert" aria-live="assertive">{{ errormensaje }}</p>
                 }
 
                 <div class="recordar">

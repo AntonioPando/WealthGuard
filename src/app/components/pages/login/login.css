@@ -138,6 +138,11 @@ label {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.icono-click {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
 .entrada input::placeholder {
     color: #94a3b8;
 }
