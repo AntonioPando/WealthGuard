@@ -81,7 +81,10 @@
 
     <div class="campo-form">
       <label>Usuario</label>
-      <input [(ngModel)]="formularioEditar.nickUsuario" type="text">
+      <input [(ngModel)]="formularioEditar.nickUsuario" type="text" (ngModelChange)="onNickEditarChange()" />
+      <span class="campo-error" *ngIf="nickRepetidoEditar">
+        Este nombre de usuario ya está en uso.
+      </span>
     </div>
 
     <div class="campo-form">
@@ -102,7 +105,10 @@
 
     <div class="campo-form">
       <label>Email</label>
-      <input [(ngModel)]="formularioEditar.email" type="email">
+      <input [(ngModel)]="formularioEditar.email" type="email" (ngModelChange)="onEmailEditarChange()" />
+      <span class="campo-error" *ngIf="emailRepetidoEditar">
+        Este correo electrónico ya está en uso.
+      </span>
     </div>
 
     <div class="campo-form">
@@ -131,7 +137,8 @@
 
     <div class="acciones-modal">
       <button class="boton-secundario" (click)="cerrarEditarPerfil()">Cancelar</button>
-      <button class="boton-primario" [disabled]="guardandoPerfil" (click)="guardarPerfil()">
+      <button class="boton-primario" [disabled]="guardandoPerfil || nickRepetidoEditar || emailRepetidoEditar"
+        (click)="guardarPerfil()">
         {{ guardandoPerfil ? 'Guardando...' : 'Guardar' }}
       </button>
     </div>

@@ -38,4 +38,12 @@ export class UsuarioService {
   eliminarCuenta(idUsuario: number): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/eliminar/${idUsuario}`);
   }
+
+  existeNick(nick: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/existe-nick`, { params: { nick } });
+  }
+
+  existeEmail(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/existe-email`, { params: { email } });
+  }
 }

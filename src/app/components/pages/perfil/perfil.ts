@@ -50,6 +50,9 @@ export class Perfil implements OnInit {
     fotoPerfil: null
   };
 
+  nickRepetidoEditar: boolean = false;
+  emailRepetidoEditar: boolean = false;
+
   passwordAntigua: string = '';
   passwordNueva: string = '';
   confirmarPasswordNueva: string = '';
@@ -75,6 +78,28 @@ export class Perfil implements OnInit {
   toggleNuevaPassword(): void { this.mostrarNuevaPassword = !this.mostrarNuevaPassword; }
   toggleConfirmarPassword(): void { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
   togglePasswordEditar(): void { this.mostrarPasswordEditar = !this.mostrarPasswordEditar; }
+
+  onNickEditarChange(): void {
+    this.nickRepetidoEditar = false;
+    const nick = this.formularioEditar.nickUsuario.trim();
+    if (nick.length >= 3 && nick !== this.usuario?.nickUsuario) {
+      this.usuarioService.existeNick(nick).subscribe({
+        next: (existe) => { this.nickRepetidoEditar = existe; },
+        error: () => { }
+      });
+    }
+  }
+
+  onEmailEditarChange(): void {
+    this.emailRepetidoEditar = false;
+    const email = this.formularioEditar.email.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email !== this.usuario?.email) {
+      this.usuarioService.existeEmail(email).subscribe({
+        next: (existe) => { this.emailRepetidoEditar = existe; },
+        error: () => { }
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.idUsuario = this.loginService.obtenerIdUsuario();
@@ -123,6 +148,8 @@ export class Perfil implements OnInit {
     this.limpiarMensajes();
     this.mensajeErrorEditarPerfil = '';
     this.mostrarPasswordEditar = false;
+    this.nickRepetidoEditar = false;
+    this.emailRepetidoEditar = false;
     this.formularioEditar = {
       nickUsuario: this.usuario.nickUsuario,
       nombre: this.usuario.nombre,
@@ -140,12 +167,24 @@ export class Perfil implements OnInit {
   cerrarEditarPerfil() {
     this.mensajeErrorEditarPerfil = '';
     this.mostrarPasswordEditar = false;
+    this.nickRepetidoEditar = false;
+    this.emailRepetidoEditar = false;
     this.mostrarPopupEditarPerfil = false;
   }
 
   guardarPerfil() {
     if (!this.formularioEditar.email || !this.formularioEditar.nombre || !this.formularioEditar.nickUsuario) {
       this.mensajeErrorEditarPerfil = 'Nombre, usuario y email son obligatorios.';
+      return;
+    }
+
+    if (this.nickRepetidoEditar) {
+      this.mensajeErrorEditarPerfil = 'El nombre de usuario ya está en uso.';
+      return;
+    }
+
+    if (this.emailRepetidoEditar) {
+      this.mensajeErrorEditarPerfil = 'El correo electrónico ya está en uso.';
       return;
     }
 
