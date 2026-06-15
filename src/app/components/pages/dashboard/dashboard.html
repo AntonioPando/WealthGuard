@@ -90,43 +90,56 @@
 
     <!-- Gráfico de Distribución (Doughnut) -->
     <div class="panel-grafico panel-grafico--secundario">
-      <h3 class="panel-grafico__titulo">Por Categoría</h3>
-      <div class="grafico-circular">
-        <svg class="grafico-circular__svg" viewBox="0 0 36 36" aria-hidden="true">
+      <header class="panel-grafico__encabezado">
+        <div class="panel-grafico__info">
+          <h3 class="panel-grafico__titulo">Distribución de Gastos</h3>
+          <p class="panel-grafico__subtitulo">Por categoría — Porcentaje del gasto mensual</p>
+        </div>
+      </header>
+
+      <div class="grafico-circular" role="img" aria-label="Distribución de gastos por categoría">
+        <svg class="grafico-circular__svg" viewBox="0 0 36 36" role="presentation">
           <circle class="grafico-circular__fondo" cx="18" cy="18" r="16"></circle>
-          <ng-container *ngFor="let seg of distribucionSegments; let i = index">
-            <circle
-              class="grafico-circular__segmento"
-              [class]="'grafico-color--' + seg.colorKey"
-              cx="18"
-              cy="18"
-              r="16"
-              [attr.stroke-dasharray]="seg.dashArray"
-              [attr.stroke-dashoffset]="seg.dashOffset"
-            ></circle>
+          <ng-container *ngFor="let s of distribucionSegments">
+            <path
+              [attr.d]="s.path"
+              class="grafico-circular__slice grafico-color--{{s.colorKey}}"
+              [attr.role]="'presentation'"
+              [attr.aria-label]="s.nombre + ' ' + (s.porcentaje | number:'1.0-1') + '%'">
+            </path>
           </ng-container>
+          <!-- Inner circle to simulate donut hole and keep central legend readable -->
+          <circle cx="18" cy="18" r="8" fill="#fff"></circle>
         </svg>
-        <div class="grafico-circular__leyenda-central" aria-label="Total">
-          <span class="leyenda-titulo">TOTAL GASTOS</span>
-          <span class="leyenda-valor">{{ cargandoGasto ? '...' : obtenerGastoMensual() }}</span>
+
+        <div class="grafico-circular__leyenda-central">
+          <span class="leyenda-titulo">Gastos</span>
+          <span class="leyenda-valor">{{ cargandoGasto ? 'Cargando...' : obtenerGastoMensual() }}</span>
         </div>
       </div>
-      <ul class="lista-leyendas">
-        <li class="lista-leyendas__item" *ngFor="let seg of distribucionSegments; let i = index">
+
+      <ul class="lista-leyendas" *ngIf="distribucionSegments && distribucionSegments.length > 0; else sinDatosDistrib">
+        <li *ngFor="let s of distribucionSegments" class="lista-leyendas__item">
           <div class="lista-leyendas__item-left">
-            <span [class]="'punto-color-square punto-color--' + seg.colorKey" aria-hidden="true"></span>
-            <span>{{ seg.nombre }}</span>
+            <span class="punto-color punto-color--{{s.colorKey}}" aria-hidden="true"></span>
+            <span>{{ s.nombre }}</span>
           </div>
-          <b>{{ seg.porcentaje | number: '1.2-2' }}%</b>
-        </li>
-        <li *ngIf="distribucionSegments.length === 0" class="lista-leyendas__item">
-          <div class="lista-leyendas__item-left">
-            <span class="punto-color-square punto-color--otros" aria-hidden="true"></span>
-            <span>Sin datos</span>
+          <div>
+            <span>{{ s.porcentaje | number:'1.0-1' }}%</span>
+            <small style="color:var(--muted); margin-left:8px">{{ s.valor | number:'1.2-2' }} €</small>
           </div>
-          <b>0%</b>
         </li>
       </ul>
+
+      <ng-template #sinDatosDistrib>
+        <div class="transaccion-item">
+          <div class="transaccion-item__perfil">
+            <div class="transaccion-item__detalles">
+              <h4 class="transaccion-item__nombre">No hay gastos en este mes</h4>
+            </div>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </section>
 

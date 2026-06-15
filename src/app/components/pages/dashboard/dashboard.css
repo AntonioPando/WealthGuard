@@ -175,14 +175,12 @@
   stroke: #f2f5f8;
   stroke-width: 4;
 }
-.grafico-circular__segmento {
-  fill: none;
-  stroke: #0b6cff;
-  stroke-width: 4;
-  stroke-dasharray: 60 40;
-  transform: rotate(-90deg);
-  transform-origin: center;
-  stroke-linecap: round;
+.grafico-circular__slice {
+  fill: currentColor;
+  stroke: #fff;
+  stroke-width: 0.5;
+  transition: transform 200ms ease;
+  transform-origin: 18px 18px;
 }
 .grafico-circular__segmento--1{ stroke:#0b7a4a }
 .grafico-circular__segmento--2{ stroke:#2f9bf0 }
@@ -198,7 +196,7 @@
 }
 .leyenda-valor {
   display: block;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
 }
 
