@@ -16,18 +16,30 @@ export class Tabla {
   @Input() tendencia: number = 0;
   @Input() categoriaPrincipal: string[] = ['sin datos', '0,0'];
   @Input() meta: number[] = [0.0, 0.0];
-  
+
   @Output() abrirEditar = new EventEmitter<any>();
   @Output() eliminar = new EventEmitter<number>();
+  @Output() abrirModalMeta = new EventEmitter<void>();
 
   // Calculamos el porcentaje de la meta alcanzada
   get totalMeta(): number {
-    // Evitamos división por cero
-    if (!this.meta || this.meta[1] === 0) {
+    // Verificamos que existan los datos
+    if (!this.meta || this.meta.length < 2) {
       return 0;
     }
-    // Si el backend ya nos devuelve el porcentaje calculado, lo usamos directamente, sino lo calculamos 
-    return this.meta[2] !== undefined ? this.meta[2] : Math.round((this.meta[0] / (this.meta[1]) * 100));
+
+    const ahorroActual = this.meta[0];
+    const objetivo = this.meta[1];
+
+    // Evitamos división por cero o metas negativas
+    if (objetivo <= 0) {
+      return 0;
+    }
+
+    // Calculamos el porcentaje
+    const porcentaje = (ahorroActual / objetivo) * 100;
+
+    return Math.floor(Math.max(0, Math.min(100, porcentaje)));
   }
 
   pagina: number = 1;
@@ -66,4 +78,15 @@ export class Tabla {
     }
 
   }
+
+  // Funcion para determinar si una transaccion es editable
+  esEditable(fecha: any): boolean {
+  if (!fecha) return false;
+  
+  const fechaTransaccion = new Date(fecha);
+  const fechaLimite = new Date();
+  fechaLimite.setMonth(fechaLimite.getMonth() - 3); // Restamos 3 meses
+  
+  return fechaTransaccion >= fechaLimite;
+}
 }

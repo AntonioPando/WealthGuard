@@ -105,7 +105,7 @@ export class Presupuestos implements OnInit {
   // Calculamos el porcentaje de consumo del presupuesto
   calcularPorcentaje(gastado: number, limite: number): number {
     if (!limite) return 0;
-    return Math.round((gastado / limite) * 100);
+    return Math.floor((gastado / limite) * 100);
   }
 
   obtenerEstado(gastado: number, limite: number): 'bueno' | 'advertencia' | 'peligro' {

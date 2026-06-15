@@ -19,7 +19,8 @@
 [categoriaPrincipal]="categoriaPrincipal"
 [meta]="meta"
 (abrirEditar)="abrirFormulario($event)"
-(eliminar)="eliminarMovimiento($event)">
+(eliminar)="eliminarMovimiento($event)"
+(abrirModalMeta)="abrirFormularioMeta()">
 </app-tabla>
 
 @if(mostrarPopup) {
@@ -29,6 +30,14 @@
     (cancelar)="mostrarPopup = false"
     (guardar)="guardarTransaccion($event)">
   </app-transaccion-form>
+}
+
+@if(mostrarModalMeta) {
+  <app-meta-form 
+    [metaEditar]="metaActivaEditar"
+    (cancelar)="mostrarModalMeta = false"
+    (guardar)="guardarMeta($event)">
+  </app-meta-form>
 }
 
 </div>

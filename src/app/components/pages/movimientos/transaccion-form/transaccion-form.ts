@@ -42,7 +42,7 @@ export class TransaccionForm implements OnInit {
     const datos = this.transaccionEditar;
 
     // Formateamos la fecha 
-    const fechaFormateada = datos?.fecha ? datos.fecha.substring(0, 10) : '';
+    const fechaFormateada = datos?.fecha ? datos.fecha.substring(0, 16) : '';
 
     // Si es edicion rellenamos los datos del formulario
     this.form.patchValue({
