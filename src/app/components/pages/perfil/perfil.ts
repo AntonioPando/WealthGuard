@@ -27,9 +27,11 @@ export class Perfil implements OnInit {
   cargandoPerfil: boolean = false;
   guardandoPerfil: boolean = false;
   actualizandoPassword: boolean = false;
+  eliminandoCuenta: boolean = false;
 
   mostrarPopupEditarPerfil: boolean = false;
   mostrarPopupPassword: boolean = false;
+  mostrarPopupEliminarCuenta: boolean = false;
 
   mensajeExito: string = '';
   mensajeError: string = '';
@@ -305,16 +307,30 @@ export class Perfil implements OnInit {
     });
   }
 
-  eliminarCuenta() {
-    if (!confirm('¿Estás seguro de que deseas eliminar la cuenta? Esta acción es irreversible.')) return;
+  abrirEliminarCuenta() {
+    if (this.cargandoPerfil || !this.usuario) return;
+    this.limpiarMensajes();
+    this.mostrarPopupEliminarCuenta = true;
+  }
+
+  cerrarEliminarCuenta() {
+    if (this.eliminandoCuenta) return;
+    this.mostrarPopupEliminarCuenta = false;
+  }
+
+  confirmarEliminarCuenta() {
+    if (this.eliminandoCuenta) return;
 
     const idUsuario = this.obtenerIdUsuarioActivo();
     if (idUsuario === null) return;
 
+    this.eliminandoCuenta = true;
     this.usuarioService.eliminarCuenta(idUsuario).subscribe({
       next: (eliminado) => {
+        this.eliminandoCuenta = false;
         if (eliminado) {
           this.usuario = null;
+          this.mostrarPopupEliminarCuenta = false;
           this.mensajeExito = 'Cuenta eliminada correctamente.';
           this.cdr.detectChanges();
           return;
@@ -323,6 +339,7 @@ export class Perfil implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
+        this.eliminandoCuenta = false;
         this.mensajeError = 'No se pudo eliminar la cuenta.';
         this.cdr.detectChanges();
       }
