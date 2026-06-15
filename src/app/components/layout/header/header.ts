@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FotoPerfilService } from '../../../services/foto-perfil.service';
+import { ScoreFinancieroService } from '../../../services/score-financiero.service';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,7 @@ export class Header implements OnInit, OnDestroy {
   private readonly loginService = inject(LoginService);
   private readonly usuarioService = inject(UsuarioService);
   private readonly fotoPerfilService = inject(FotoPerfilService);
+  private readonly scoreFinancieroService = inject(ScoreFinancieroService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -24,6 +26,7 @@ export class Header implements OnInit, OnDestroy {
   nombreUsuario: string = '';
   emailUsuario: string = '';
   menuAbierto: boolean = false;
+  score: number | null = null;
 
   private sub: Subscription | null = null;
 
@@ -54,6 +57,18 @@ export class Header implements OnInit, OnDestroy {
 
     const idUsuario = this.loginService.obtenerIdUsuario();
     if (idUsuario === null) return;
+
+    // Cargar score financiero
+    this.scoreFinancieroService.obtenerScoreMensual(idUsuario).subscribe({
+      next: (r) => {
+        this.score = r?.score ?? null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.score = null;
+        this.cdr.detectChanges();
+      }
+    });
 
     this.usuarioService.obtenerPerfil(idUsuario).subscribe({
       next: (usuario) => {
