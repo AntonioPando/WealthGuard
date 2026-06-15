@@ -39,6 +39,8 @@ export class Dashboard implements OnInit {
   cargandoIngreso: boolean = false;
 
   usuario: UsuarioResponse | null = null;
+  mesActual: string = '';
+  private readonly _mesesEspanol = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
   constructor(
     private router: Router
@@ -55,12 +57,14 @@ export class Dashboard implements OnInit {
     }
 
     // Cargamos datos principales
+    this.mesActual = this.obtenerMesActual();
     this.cargarPerfil();
     this.cargarSaldo();
     this.cargarGastoMensual();
     this.cargarIngresoMensual();
     this.cargarDistribucionCategorias();
     this.cargarUltimasTransacciones();
+    this.cargarEvolucionGastos();
   }
 
   // cargarDatosDashboard(): void {
@@ -245,7 +249,7 @@ export class Dashboard implements OnInit {
 
   obtenerGastoMensual(): string {
     const formatter = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    return `${formatter.format(this.gastoMensual)} €`;
+    return `${formatter.format(this.gastoMensual)}€`;
   }
 
   obtenerIngresoMensual(): string {
@@ -254,10 +258,13 @@ export class Dashboard implements OnInit {
   }
 
   // Distribución por categoría (gastos del mes)
-  distribucionSegments: Array<{ nombre: string; valor: number; porcentaje: number; dashArray: string; dashOffset: string; colorIndex: number; colorKey: string }> = [];
+  distribucionSegments: Array<{ nombre: string; valor: number; porcentaje: number; colorIndex: number; colorKey: string; startAngle?: number; endAngle?: number; path?: string }> = [];
 
   // Últimas transacciones (mostradas en dashboard)
   recentTransactions: TransaccionResponse[] = [];
+
+  // Datos para gráfico de evolución: un elemento por día
+  dailyExpenses: Array<{ date: string; label: string; value: number; heightPercent: number; colorClass: string }> = [];
 
   cargarDistribucionCategorias(): void {
     const idUsuario = this.obtenerIdUsuarioActivo();
@@ -298,24 +305,49 @@ export class Dashboard implements OnInit {
           top.push({ nombre: 'Otros', valor: sumaResto });
         }
 
-        // Generar segmentos: convertir porcentajes a longitudes sobre el perímetro del círculo
-        let acumulado = 0;
-        // Usamos una paleta ampliada c1..c8
+        // Generar segmentos tipo 'pie' (paths SVG) basados en ángulos
+        let acumulado = 0; // porcentaje acumulado
         const palette = ['c1','c2','c3','c4','c5','c6','c7','c8'];
-        // Radio usado en el SVG (r=16 en viewBox 0 0 36 36)
-        const r = 16;
-        const circumference = 2 * Math.PI * r;
+        const cx = 18, cy = 18, r = 16;
+
+        const polarToCartesian = (cx: number, cy: number, radius: number, angleInDegrees: number) => {
+          const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+          return {
+            x: cx + (radius * Math.cos(angleInRadians)),
+            y: cy + (radius * Math.sin(angleInRadians))
+          };
+        };
+
+        const describeSector = (cx: number, cy: number, radius: number, startAngle: number, endAngle: number) => {
+          const sweep = endAngle - startAngle;
+          // full circle case
+          if (Math.abs(sweep) >= 360 - 1e-6) {
+            return `M ${cx} ${cy - radius} A ${radius} ${radius} 0 1 1 ${cx - 0.001} ${cy - radius} A ${radius} ${radius} 0 1 1 ${cx} ${cy - radius}`;
+          }
+          const start = polarToCartesian(cx, cy, radius, startAngle);
+          const end = polarToCartesian(cx, cy, radius, endAngle);
+          const largeArcFlag = (endAngle - startAngle) % 360 > 180 ? 1 : 0;
+          return `M ${cx} ${cy} L ${start.x.toFixed(3)} ${start.y.toFixed(3)} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x.toFixed(3)} ${end.y.toFixed(3)} Z`;
+        };
+
         this.distribucionSegments = top.map((it, idx) => {
           const porcentaje = totalGastos > 0 ? (it.valor / totalGastos) * 100 : 0;
-          const dashLen = (porcentaje / 100) * circumference;
-          const gapLen = Math.max(0, circumference - dashLen);
-          const dashArray = `${dashLen.toFixed(3)} ${gapLen.toFixed(3)}`;
-          const dashOffset = `${-((acumulado / 100) * circumference).toFixed(3)}`;
-          acumulado += porcentaje;
+          const startAngle = (acumulado / 100) * 360;
+          const endAngle = ((acumulado + porcentaje) / 100) * 360;
           const colorIndex = (idx % palette.length) + 1; // 1..8
           const colorKey = palette[idx % palette.length];
-          return { nombre: it.nombre, valor: it.valor, porcentaje, dashArray, dashOffset, colorIndex, colorKey };
+          const path = describeSector(cx, cy, r, startAngle, endAngle);
+          acumulado += porcentaje;
+          return { nombre: it.nombre, valor: it.valor, porcentaje, colorIndex, colorKey, startAngle, endAngle, path };
         });
+
+        // Debug: imprimir distribucion en consola para inspección
+        try {
+          // eslint-disable-next-line no-console
+          console.table(this.distribucionSegments.map(s => ({ nombre: s.nombre, valor: s.valor, porcentaje: Number(s.porcentaje.toFixed(3)), startAngle: Number((s.startAngle ?? 0).toFixed(3)), endAngle: Number((s.endAngle ?? 0).toFixed(3)) })));
+        } catch (e) {
+          // ignore
+        }
 
         // Si no hay datos, dejar vacía la distribución
         if (this.distribucionSegments.length === 0 && totalGastos === 0) {
@@ -350,7 +382,69 @@ export class Dashboard implements OnInit {
     });
   }
 
+  cargarEvolucionGastos(): void {
+    const idUsuario = this.obtenerIdUsuarioActivo();
+    if (idUsuario === null) return;
+
+    const ahora = new Date();
+    const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0, 0);
+    const finMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const filtros: any = {
+      fechaInicio: inicioMes.toISOString(),
+      fechaFin: finMes.toISOString()
+    };
+
+    this.transaccionService.listarTransaccionesConFiltros(idUsuario, filtros).subscribe({
+      next: (txs: TransaccionResponse[]) => {
+        // Mapear por día YYYY-MM-DD
+        const map = new Map<string, number>();
+        for (const t of txs || []) {
+          if (t.tipoTransaccion === false) {
+            const d = t.fecha ? new Date(t.fecha) : null;
+            if (!d) continue;
+            const key = d.toISOString().slice(0,10); // YYYY-MM-DD
+            map.set(key, (map.get(key) ?? 0) + Number(t.cantidad ?? 0));
+          }
+        }
+
+        // Construir array de todos los días del mes
+        const days: Array<{ date: string; label: string; value: number }> = [];
+        for (let d = new Date(inicioMes); d <= finMes; d.setDate(d.getDate() + 1)) {
+          const key = new Date(d).toISOString().slice(0,10);
+          const value = map.get(key) ?? 0;
+          days.push({ date: key, label: String(d.getDate()), value });
+        }
+
+        // Escalar alturas según máximo
+        const max = days.reduce((m, it) => Math.max(m, it.value), 0);
+        this.dailyExpenses = days.map(it => {
+          const heightPercent = max > 0 ? (it.value / max) * 100 : 0;
+          let colorClass = 'barra--verde';
+          if (it.value >= 300) colorClass = 'barra--roja';
+          else if (it.value >= 100) colorClass = 'barra--amarilla';
+          return { date: it.date, label: it.label, value: it.value, heightPercent, colorClass };
+        });
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar evolución de gastos', err);
+      }
+    });
+  }
+
   obtenerIngresosMensuales(): string {
     return '0,00 €';
+  }
+
+  obtenerMesActual(): string {
+    try {
+      const idx = new Date().getMonth();
+      const raw = this._mesesEspanol[idx] ?? '';
+      return raw ? (raw.charAt(0).toUpperCase() + raw.slice(1)) : '';
+    } catch (e) {
+      return '';
+    }
   }
 }
