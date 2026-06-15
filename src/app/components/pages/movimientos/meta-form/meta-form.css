@@ -1,0 +1,25 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white; padding: 30px; border-radius: 12px;
+  width: 100%; max-width: 400px;
+}
+
+.form-group { margin-bottom: 20px; }
+
+.input-meta {
+  width: 100%; padding: 10px; border: 1px solid #ccc;
+  border-radius: 6px; box-sizing: border-box;
+}
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+.btn-cancelar { background: none; border: none; cursor: pointer; color: #666; }
+.btn-guardar { background: black; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+.btn-guardar:disabled { background: #ccc; }

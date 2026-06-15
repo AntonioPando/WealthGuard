@@ -11,25 +11,26 @@
 
   <tbody>
     <tr *ngFor="let m of movimientosPaginados">
-      <td>{{ m.fecha |date: 'dd/MM/yyyy' }}</td>
+      <td>{{ m.fecha |date: 'dd/MM/yyyy HH:mm' }}</td>
 
       <td>{{ m.nombreCategoria }}</td>
 
       <td>{{ m.descripcion }}</td>
 
-      <td [class.ingreso]="m.tipoTransaccion === true"
-          [class.gasto]="m.tipoTransaccion === false">
+      <td [class.ingreso]="m.tipoTransaccion === true" [class.gasto]="m.tipoTransaccion === false">
         {{ m.tipoTransaccion ? '+ ' : '- ' }}{{ m.cantidad | number: '1.2-2' }} €
       </td>
 
       <td class="acciones">
-        <button class="btn-icon" (click)="abrirEditar.emit(m)">
+        <button *ngIf="esEditable(m.fecha)" class="btn-icon" (click)="abrirEditar.emit(m)">
           <span class="material-symbols-outlined">edit</span>
         </button>
 
-        <button class="btn-icon delete" (click)="eliminar.emit(m.id)">
+        <button *ngIf="esEditable(m.fecha)" class="btn-icon delete" (click)="eliminar.emit(m.id)">
           <span class="material-symbols-outlined">delete</span>
         </button>
+
+        <span *ngIf="!esEditable(m.fecha)" class="material-symbols-outlined" style="opacity: 0.3;">lock</span>
       </td>
     </tr>
   </tbody>
@@ -38,9 +39,7 @@
 <div class="paginacion">
   <button (click)="anterior()" [disabled]="pagina === 1">Anterior</button>
 
-  <button *ngFor="let p of paginas"
-          (click)="irAPagina(p)"
-          [class.activa]="pagina === p">
+  <button *ngFor="let p of paginas" (click)="irAPagina(p)" [class.activa]="pagina === p">
     {{ p }}
   </button>
 
@@ -61,15 +60,20 @@
     <p class="sub">{{categoriaPrincipal[1]}}% de los gastos totales</p>
   </div>
 
-  <div class="card primary">
-    <p class="label">META DE AHORRO: {{ totalMeta | number: '1.0-0' }} €</p>
-    <h4>{{meta[0] | number:'1.2-2'}} €</h4>
+  <div class="card primary" (click)="abrirModalMeta.emit()" style="cursor: pointer;">
 
-    <div class="progress">
-      <div class="bar" [style.width.%]="meta[1]"></div>
-    </div>
+    <button class="btn-editar-meta" (click)="$event.stopPropagation(); abrirModalMeta.emit()">
+      <span class="material-symbols-outlined" style="font-size: 1.2vw;">edit</span>
+    </button>
 
-    <p class="sub">{{meta[1] | number: '1.0-1'}}% de la meta alcanzada</p>
+    <p class="label">META DE AHORRO: {{ (meta[1] < 0 ? meta[1] * -1 : meta[1]) | number: '1.2-2' }} €</p>
+
+        <h4>{{ meta[0] | number:'1.2-2' }} €</h4>
+
+        <div class="progress">
+          <div class="bar" [style.width.%]="totalMeta"></div>
+        </div>
+
+        <p class="sub">{{ totalMeta | number: '1.0-1' }}% de la meta alcanzada</p>
   </div>
-
 </div>

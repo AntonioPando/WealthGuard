@@ -1,5 +1,4 @@
 
-// Lo que enviamos a los formularios
 export interface TransaccionRequest {
     idUsuario: number;
     idCategoria: number;
@@ -9,7 +8,6 @@ export interface TransaccionRequest {
     tipoTransaccion: boolean;
 }
 
-// Lo que devuelve el backend
 export interface TransaccionResponse {
     id: number;
     idUsuario: number;

@@ -10,6 +10,8 @@ import { TransaccionForm } from './transaccion-form/transaccion-form';
 import { CategoriaService } from '../../../services/categoria.service';
 import { LoginService } from '../../../services/login.service';
 import { ActivatedRoute } from '@angular/router';
+import { ObjetivoService } from '../../../services/objetivo.service';
+import { MetaForm } from './meta-form/meta-form';
 
 @Component({
   selector: 'app-movimientos',
@@ -20,7 +22,8 @@ import { ActivatedRoute } from '@angular/router';
     Tabla,
     MenuLateral,
     Header,
-    TransaccionForm
+    TransaccionForm,
+    MetaForm
   ],
   templateUrl: './movimientos.html',
   styleUrls: ['./movimientos.css'],
@@ -47,9 +50,13 @@ export class Movimientos implements OnInit {
   mostrarPopup: boolean = false;
   transaccionSeleccionada: any = null;
 
+  // variables para el objetivo
+  mostrarModalMeta: boolean = false;
+  metaActivaEditar: any = null;
+
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
-  constructor(private route: ActivatedRoute, private transaccionService: TransaccionService, private categoriaService: CategoriaService, private loginService: LoginService,
+  constructor(private route: ActivatedRoute, private objetivoService: ObjetivoService, private transaccionService: TransaccionService, private categoriaService: CategoriaService, private loginService: LoginService,
     private cdr: ChangeDetectorRef) { }
 
 
@@ -251,6 +258,48 @@ export class Movimientos implements OnInit {
         error: (err) => console.error('Error al intentar eliminar de la BD:', err)
       });
 
+    }
+  }
+
+  abrirFormularioMeta() {
+    this.objetivoService.obtenerMetaActiva(this.idUsuario).subscribe({
+      next: (meta) => {
+        this.metaActivaEditar = meta;
+        this.mostrarModalMeta = true;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.metaActivaEditar = null;
+        this.mostrarModalMeta = true;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  guardarMeta(nuevaCantidad: number) {
+    const request = {
+      usuarioId: this.idUsuario,
+      cantidadObjetivo: nuevaCantidad
+    };
+
+    if (this.metaActivaEditar && this.metaActivaEditar.id) {
+      this.objetivoService.editarObjetivo(this.metaActivaEditar.id, request).subscribe({
+        next: () => {
+          this.mostrarModalMeta = false;
+          this.cargarDatos();
+
+        },
+        error: (err) => console.error('Error al editar:', err) 
+      });
+    } else {
+      this.objetivoService.crearObjetivo(request).subscribe({
+        next: () => {
+          this.mostrarModalMeta = false;
+          this.cargarDatos();
+
+        },
+        error: (err) => console.error('Error al crear:', err) 
+      });
     }
   }
 }

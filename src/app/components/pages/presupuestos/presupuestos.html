@@ -82,7 +82,7 @@
         <div class="panel panel-analisis">
             <div class="cabecera-panel">
                 <h2>Análisis de Gastos</h2>
-                <span>Últimos 30 días</span>
+                <span>Último mes</span>
             </div>
 
             <div class="fila-analisis" style="margin-bottom: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
@@ -90,7 +90,7 @@
                 <div class="info-fila">
                     <h4>Más gasto: {{ categoriaMasGasto?.categoria }}</h4>
                 </div>
-                <div class="monto" style="color: #b91c1c; font-weight: 600; margin-left: auto;">{{ categoriaMasGasto?.gastado | number:'1.2-2' }} €</div>
+                <div class="monto" style="font-weight: 600; margin-left: auto;">{{ categoriaMasGasto?.gastado | number:'1.2-2' }} €</div>
             </div>
 
             <div class="fila-analisis" style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
@@ -98,7 +98,7 @@
                 <div class="info-fila">
                     <h4>Menos gasto: {{ categoriaMenosGasto?.categoria }}</h4>
                 </div>
-                <div class="monto" style="color: #16803d; font-weight: 600; margin-left: auto;">{{ categoriaMenosGasto?.gastado | number:'1.2-2' }} €</div>
+                <div class="monto" style="font-weight: 600; margin-left: auto;">{{ categoriaMenosGasto?.gastado | number:'1.2-2' }} €</div>
             </div>
         </div>
     </section>
