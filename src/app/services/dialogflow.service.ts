@@ -12,12 +12,11 @@ export interface MensajeChat {
 export class DialogflowService {
 
   private readonly PROJECT_ID = 'wealthguard-bot';
-  private readonly API_KEY = 'AIzaSyBtYQNTKHE7hPkArdr0vjN0J0k3r1UFT2Y';
+  private readonly API_KEY = 'AIzaSyBmT5Y_KWOcOo2r09SVbsKh_VuHdA8XXrI';
   private readonly LANGUAGE = 'es';
   private sessionId: string;
 
   constructor(private http: HttpClient) {
-    // Genera un ID de sesión sin dependencias externas
     this.sessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
   }
 

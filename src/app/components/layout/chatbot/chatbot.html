@@ -1,50 +1,10 @@
-<!-- Botón flotante -->
-<button class="chat-fab" (click)="toggleChat()" [class.abierto]="abierto" aria-label="Abrir asistente">
-  <span class="chat-fab-icon">{{ abierto ? '✕' : '💬' }}</span>
-</button>
-
-<!-- Ventana de chat -->
-<div class="chat-ventana" [class.visible]="abierto">
-
-  <div class="chat-header">
-    <div class="chat-header-info">
-      <div class="chat-avatar">🤖</div>
-      <div>
-        <p class="chat-nombre">Asistente WealthGuard</p>
-        <p class="chat-estado">En línea</p>
-      </div>
-    </div>
-    <button class="chat-cerrar" (click)="cerrar()">✕</button>
-  </div>
-
-  <div class="chat-mensajes" #mensajesContainer>
-    <div
-      *ngFor="let m of mensajes"
-      class="chat-mensaje"
-      [class.usuario]="m.esUsuario"
-      [class.bot]="!m.esUsuario">
-      <div class="chat-burbuja">{{ m.texto }}</div>
-      <span class="chat-hora">{{ m.hora | date:'HH:mm' }}</span>
-    </div>
-
-    <div class="chat-mensaje bot" *ngIf="cargando">
-      <div class="chat-burbuja chat-typing">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="chat-input-area">
-    <input
-      type="text"
-      class="chat-input"
-      [(ngModel)]="textoUsuario"
-      (keydown)="onEnter($event)"
-      placeholder="Escribe un mensaje..."
-      [disabled]="cargando" />
-    <button class="chat-enviar" (click)="enviar()" [disabled]="!textoUsuario.trim() || cargando">
-      ➤
-    </button>
-  </div>
-
-</div>
+<ng-container *ngIf="estaLogueado">
+  <df-messenger
+    intent="WELCOME"
+    chat-title= "Asistente WealthGuard"
+    chat-subtitle="En línea"
+    chat-icon="https://cdn-icons-png.flaticon.com/512/4712/4712027.png"
+    agent-id="16de24c1-54b8-440d-86ef-112030f34d5f"
+    language-code="es">
+  </df-messenger>
+</ng-container>
