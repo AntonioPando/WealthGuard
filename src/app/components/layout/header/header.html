@@ -8,7 +8,7 @@
 
         <div class="balance-display">
             <span class="balance-label">SCORE FINANCIERO</span>
-            <span class="balance-amount score">760</span>
+            <span class="balance-amount score">{{ score !== null ? (score | number:'1.0-0') : '—' }}</span>
         </div>
 
         <div class="user-menu-wrapper">
