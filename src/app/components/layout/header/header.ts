@@ -6,6 +6,7 @@ import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FotoPerfilService } from '../../../services/foto-perfil.service';
 import { ScoreFinancieroService } from '../../../services/score-financiero.service';
+import { TransaccionService } from '../../../services/transaccion.service';
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,7 @@ export class Header implements OnInit, OnDestroy {
   private readonly usuarioService = inject(UsuarioService);
   private readonly fotoPerfilService = inject(FotoPerfilService);
   private readonly scoreFinancieroService = inject(ScoreFinancieroService);
+  private readonly transaccionService = inject(TransaccionService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -27,6 +29,22 @@ export class Header implements OnInit, OnDestroy {
   emailUsuario: string = '';
   menuAbierto: boolean = false;
   score: number | null = null;
+  saldo: number | null = null;
+
+  get scoreClass(): string {
+    const s = this.score;
+    if (s === null || s === undefined) return '';
+    if (s < 200) return 'score-rojo';
+    if (s >= 200 && s < 400) return 'score-naranja';
+    if (s >= 400 && s < 600) return 'score-amarillo';
+    if (s >= 600 && s < 900) return 'score-verde';
+    return 'score-dorado';
+  }
+
+  get saldoClass(): string {
+    if (this.saldo === null || this.saldo === undefined) return '';
+    return this.saldo < 0 ? 'saldo-negativo' : '';
+  }
 
   private sub: Subscription | null = null;
 
@@ -57,6 +75,23 @@ export class Header implements OnInit, OnDestroy {
 
     const idUsuario = this.loginService.obtenerIdUsuario();
     if (idUsuario === null) return;
+
+    // Cargar saldo (sumando transacciones)
+    this.transaccionService.listarTransacciones(idUsuario).subscribe({
+      next: (txs) => {
+        let total = 0;
+        for (const t of txs || []) {
+          if (t.tipoTransaccion) total += Number(t.cantidad ?? 0);
+          else total -= Number(t.cantidad ?? 0);
+        }
+        this.saldo = total;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.saldo = null;
+        this.cdr.detectChanges();
+      }
+    });
 
     // Cargar score financiero
     this.scoreFinancieroService.obtenerScoreMensual(idUsuario).subscribe({

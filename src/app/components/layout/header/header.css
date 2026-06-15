@@ -41,9 +41,23 @@
   font-variant-numeric: tabular-nums;
 }
 
-.balance-amount.score {
-  color: #10b981;
-}
+/* Saldo negativo */
+.balance-amount.saldo-negativo { color: #ef4444; }
+.balance-display .balance-amount.saldo-negativo { color: #ef4444; }
+
+/* Score color states */
+.score-rojo { color: #ef4444; }
+.score-naranja { color: #fb923c; }
+.score-amarillo { color: #f59e0b; }
+.score-verde { color: #10b981; }
+.score-dorado { color: #d4af37; }
+
+/* More specific selectors to override .balance-amount.score specificity */
+.balance-amount.score.score-rojo { color: #ef4444; }
+.balance-amount.score.score-naranja { color: #fb923c; }
+.balance-amount.score.score-amarillo { color: #f59e0b; }
+.balance-amount.score.score-verde { color: #10b981; }
+.balance-amount.score.score-dorado { color: #d4af37; }
 
 .icono-header {
   width: 22px;

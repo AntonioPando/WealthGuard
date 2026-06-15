@@ -3,12 +3,12 @@
     <div class="header-actions">
         <div class="balance-display">
             <span class="balance-label">SALDO TOTAL</span>
-            <span class="balance-amount">$24,500.00</span>
+            <span class="balance-amount" [ngClass]="saldoClass">{{ saldo !== null ? (saldo | number:'1.2-2') + ' €' : '—' }}</span>
         </div>
 
         <div class="balance-display">
             <span class="balance-label">SCORE FINANCIERO</span>
-            <span class="balance-amount score">{{ score !== null ? (score | number:'1.0-0') : '—' }}</span>
+            <span class="balance-amount score" [ngClass]="scoreClass">{{ score !== null ? (score | number:'1.0-0') : '—' }}</span>
         </div>
 
         <div class="user-menu-wrapper">
