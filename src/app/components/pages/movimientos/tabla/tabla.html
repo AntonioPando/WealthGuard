@@ -11,7 +11,7 @@
 
   <tbody>
     <tr *ngFor="let m of movimientosPaginados">
-      <td>{{ m.fecha |date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td> {{ m.fecha | date: 'dd/MM/yyyy' }} | {{ m.fecha | date: ' HH:mm' }} </td>
 
       <td>{{ m.nombreCategoria }}</td>
 
