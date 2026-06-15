@@ -65,7 +65,7 @@
           <h3>Eliminar Cuenta</h3>
           <p>La eliminación de la cuenta es permanente y borrará todo tu historial financiero.</p>
         </div>
-        <button class="boton-eliminar-cuenta" (click)="eliminarCuenta()">
+        <button class="boton-eliminar-cuenta" [disabled]="cargandoPerfil || !usuario" (click)="abrirEliminarCuenta()">
           Eliminar Cuenta
         </button>
       </section>
@@ -140,6 +140,27 @@
       <button class="boton-primario" [disabled]="guardandoPerfil || nickRepetidoEditar || emailRepetidoEditar"
         (click)="guardarPerfil()">
         {{ guardandoPerfil ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </section>
+</div>
+}
+
+@if (mostrarPopupEliminarCuenta) {
+<div class="overlay-modal" (click)="cerrarEliminarCuenta()">
+  <section class="modal-perfil modal-eliminar-cuenta" role="dialog" aria-modal="true"
+    aria-labelledby="titulo-eliminar-cuenta" aria-describedby="descripcion-eliminar-cuenta"
+    [attr.aria-busy]="eliminandoCuenta" (click)="$event.stopPropagation()">
+    <div class="icono-alerta-eliminar" aria-hidden="true">!</div>
+    <h3 id="titulo-eliminar-cuenta">¿Eliminar tu cuenta?</h3>
+    <p id="descripcion-eliminar-cuenta">
+      Esta acción es irreversible. Se eliminarán tu perfil, tus presupuestos y tus movimientos registrados.
+    </p>
+
+    <div class="acciones-modal acciones-modal-eliminar">
+      <button class="boton-secundario" [disabled]="eliminandoCuenta" (click)="cerrarEliminarCuenta()">Cancelar</button>
+      <button class="boton-peligro" [disabled]="eliminandoCuenta" (click)="confirmarEliminarCuenta()">
+        {{ eliminandoCuenta ? 'Eliminando...' : 'Sí, eliminar cuenta' }}
       </button>
     </div>
   </section>
