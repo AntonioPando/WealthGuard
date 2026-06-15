@@ -111,7 +111,7 @@ export class Presupuestos implements OnInit {
   obtenerEstado(gastado: number, limite: number): 'bueno' | 'advertencia' | 'peligro' {
     const porcentaje = (gastado / limite) * 100;
     if (porcentaje >= 100) return 'peligro';
-    if (porcentaje >= 80) return 'advertencia'; // Alerta amarilla al llegar al 80%
+    if (porcentaje >= 80) return 'advertencia'; 
     return 'bueno';
   }
 
@@ -195,6 +195,12 @@ export class Presupuestos implements OnInit {
     });
 
   }
+
+  get nombreMesActual(): string {
+  const fecha = new Date();
+  const nombre = fecha.toLocaleString('es-ES', { month: 'long' });
+  return nombre.charAt(0).toUpperCase() + nombre.slice(1);
+}
 
 }
 
