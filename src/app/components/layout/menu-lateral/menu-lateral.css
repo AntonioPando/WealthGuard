@@ -25,7 +25,7 @@
 .logo-contenedor{
 	width:calc(var(--sidebar-width) * 0.175);
 	height:calc(var(--sidebar-width) * 0.175);
-	background: #0b1720;
+	background: #f7f7f8;
 	border-radius:12px;
 	display:flex;
 	align-items:center;
@@ -35,7 +35,7 @@
 }
 
 .logo-contenedor__logo{
-	width: 60%;
+	width: 90%;
 }
 
 
