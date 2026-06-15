@@ -1,0 +1,57 @@
+df-messenger {
+  position: fixed;
+  bottom: 1.667vw;
+  right: 1.667vw;
+  z-index: 9999;
+
+  /* Botón flotante */
+  --df-messenger-button-titlebar-color: #0f172a;
+  --df-messenger-button-titlebar-font-color: #ffffff;
+  --df-messenger-minimized-icon-size: 52px;
+
+  /* Header ventana */
+  --df-messenger-titlebar-background: #1a2744;
+  --df-messenger-titlebar-font-color: #ffffff;
+  --df-messenger-titlebar-icon-color: #ffffff;
+  --df-messenger-titlebar-padding: 14px 16px;
+  --df-messenger-titlebar-font-size: 15px;
+
+  /* Fondo chat */
+  --df-messenger-chat-background-color: #f0f2f5;
+
+  /* Mensajes bot */
+  --df-messenger-bot-message: #ffffff;
+  --df-messenger-bot-message-border-radius: 18px 18px 18px 4px;
+  --df-messenger-bot-message-bot-font-color: #1e293b;
+
+  /* Mensajes usuario */
+
+  --df-messenger-user-message-border-radius: 18px 18px 4px 18px;
+  --df-messenger-user-font-color: #ffffff;
+
+  /* Input — sin borde azul de focus */
+  --df-messenger-input-background: #ffffff;
+  --df-messenger-input-font-color: #1e293b;
+  --df-messenger-input-placeholder-font-color: #94a3b8;
+  --df-messenger-input-border-top: 1px solid #e2e8f0;
+  --df-messenger-input-border-color: transparent;
+  --df-messenger-input-focus-outline: none;
+  --df-messenger-input-box-shadow: none;
+  --df-messenger-send-icon: #6b7280;
+  --df-messenger-send-icon-color: #6b7280;
+
+  /* Chips */
+  --df-messenger-chip-background: #ffffff;
+  --df-messenger-chip-border-color: #1a2744;
+  --df-messenger-chip-font-color: #0f172a;
+  --df-messenger-chip-border-radius: 999px;
+
+  /* Tamaño ventana */
+  --df-messenger-chat-window-height: 520px;
+  --df-messenger-chat-window-width: 360px;
+
+  /* Bordes ventana */
+  --df-messenger-chat-border-radius: 16px;
+  --df-messenger-chat-box-shadow: 0 16px 40px rgba(15, 23, 42, 0.25);
+
+}
