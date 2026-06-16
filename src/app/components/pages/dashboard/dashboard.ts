@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
-import { RecomendacionPopupComponent } from '../recomendaciones/recomendacion-popup/recomendacion-popup';
 import { UsuarioService } from '../../../services/usuario.service';
 import { LoginService } from '../../../services/login.service';
 import { UsuarioResponse } from '../../../models/usuario.model';
@@ -12,7 +11,7 @@ import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, Header, MenuLateral, RecomendacionPopupComponent, RouterLink],
+  imports: [CommonModule, Header, MenuLateral, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../../../services/login.service';
+import { ScoreFinancieroService } from '../../../services/score-financiero.service';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
 
@@ -16,7 +17,7 @@ export interface RecomendacionResponseDTO {
 @Component({
   selector: 'app-recomendaciones',
   standalone: true,
-  imports: [Header,MenuLateral, CommonModule],
+  imports: [Header, MenuLateral, CommonModule],
   templateUrl: './recomendaciones.html',
   styleUrl: './recomendaciones.css',
 })
@@ -34,8 +35,9 @@ export class RecomendacionesComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private loginService: LoginService
-  ) {}
+    private loginService: LoginService,
+    private scoreFinancieroService: ScoreFinancieroService
+  ) { }
 
   ngOnInit(): void {
     this.idUsuario = this.loginService.obtenerIdUsuario();
@@ -43,7 +45,38 @@ export class RecomendacionesComponent implements OnInit {
       this.cargando = false;
       return;
     }
-    this.cargarRecomendaciones();
+    this.generarYCargarRecomendaciones();
+  }
+
+  generarYCargarRecomendaciones(): void {
+    this.cargando = true;
+
+    this.scoreFinancieroService.obtenerScoreMensual(this.idUsuario!).subscribe({
+      next: (resultado) => {
+        const score = resultado.score;
+
+        this.http
+          .post<RecomendacionResponseDTO[]>(
+            `${this.API}/generar?idUsuario=${this.idUsuario}&score=${score}`,
+            {}
+          )
+          .subscribe({
+            next: (data) => {
+              this.recomendaciones = data;
+              this.cargando = false;
+              if (data.length > 0) {
+                this.recomendacionActual = data[0];
+                this.mostrarPopup = true;
+              }
+            },
+            error: () => { this.cargando = false; },
+          });
+      },
+      error: () => {
+        // Si falla el cálculo del score, al menos mostramos el historial existente
+        this.cargarRecomendaciones();
+      }
+    });
   }
 
   cargarRecomendaciones(): void {
@@ -54,10 +87,6 @@ export class RecomendacionesComponent implements OnInit {
         next: (data) => {
           this.recomendaciones = data;
           this.cargando = false;
-          if (data.length > 0) {
-            this.recomendacionActual = data[0];
-            this.mostrarPopup = true;
-          }
         },
         error: () => { this.cargando = false; },
       });
@@ -107,8 +136,8 @@ export class RecomendacionesComponent implements OnInit {
   badgeClase(scoreRango: string): string {
     if (!scoreRango) return '';
     const inicio = parseInt(scoreRango.split('-')[0], 10);
-    if (inicio >= 71) return 'alto';
-    if (inicio >= 41) return 'medio';
+    if (inicio >= 700) return 'alto';
+    if (inicio >= 400) return 'medio';
     return 'bajo';
   }
 }
