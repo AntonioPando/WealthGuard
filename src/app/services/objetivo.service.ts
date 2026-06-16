@@ -23,4 +23,8 @@ export class ObjetivoService {
   editarObjetivo(id: number, objetivo: ObjetivoRequest): Observable<ObjetivoResponse> {
     return this.http.put<ObjetivoResponse>(`${this.apiUrl}/editar/${id}`, objetivo);
   }
+
+  obtenerMetaPasada(idUsuario: number): Observable<ObjetivoResponse> {
+    return this.http.get<ObjetivoResponse>(`${this.apiUrl}/ultimo/${idUsuario}`);
+  }
 }
