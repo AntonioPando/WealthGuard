@@ -8,6 +8,7 @@ import { LoginService } from '../../../services/login.service';
 import { UsuarioResponse } from '../../../models/usuario.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionResponse } from '../../../models/transaccion.model';
+import { UtilsService } from '../../../services/utils.service';
 import { Router, RouterLink } from "@angular/router";
 
 @Component({
@@ -20,6 +21,7 @@ export class Dashboard implements OnInit {
   private readonly usuarioService = inject(UsuarioService);
   private readonly loginService = inject(LoginService);
   private readonly transaccionService = inject(TransaccionService);
+  private readonly utilsService = inject(UtilsService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   mensajeError: string = '';
@@ -57,7 +59,7 @@ export class Dashboard implements OnInit {
     }
 
     // Cargamos datos principales
-    this.mesActual = this.obtenerMesActual();
+    this.mesActual = this.utilsService.obtenerMesActual();
     this.cargarPerfil();
     this.cargarSaldo();
     this.cargarGastoMensual();
@@ -436,15 +438,5 @@ export class Dashboard implements OnInit {
 
   obtenerIngresosMensuales(): string {
     return '0,00 €';
-  }
-
-  obtenerMesActual(): string {
-    try {
-      const idx = new Date().getMonth();
-      const raw = this._mesesEspanol[idx] ?? '';
-      return raw ? (raw.charAt(0).toUpperCase() + raw.slice(1)) : '';
-    } catch (e) {
-      return '';
-    }
   }
 }
