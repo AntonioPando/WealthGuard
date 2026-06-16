@@ -41,6 +41,7 @@ export class Movimientos implements OnInit {
   tendencia: number = 0;
   categoriaPrincipal: string[] = ['sin datos', '0,0'];
   meta: number[] = [0.0, 0.0];
+  metaPasada: any = null;
 
   // variables para el filtro de categorias
   categorias: string[] = [];
@@ -84,6 +85,7 @@ export class Movimientos implements OnInit {
   }
 
   cargarDatos() {
+
     // Cargamos las categorías globales para el formulario
     this.categoriaService.obtenerTodas().subscribe({
       next: (cats) => {
@@ -134,6 +136,14 @@ export class Movimientos implements OnInit {
         this.cdr.detectChanges();
       },
       error: (e) => console.error('Error al obtener meta:', e)
+    });
+
+    this.objetivoService.obtenerMetaPasada(this.idUsuario).subscribe({
+      next: (resultado) => {
+        this.metaPasada = resultado;
+        this.cdr.detectChanges();
+      },
+      error: (e) => console.error('Error al obtener meta pasada:', e)
     });
   }
 

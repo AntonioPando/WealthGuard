@@ -76,4 +76,13 @@
 
         <p class="sub">{{ totalMeta | number: '1.0-1' }}% de la meta alcanzada</p>
   </div>
+  
+  <div *ngIf="metaPasada" class="meta-pasada-banner">
+  <div class="banner-content">
+    <span class="material-symbols-outlined icon-lamp">lightbulb</span>
+    <p class="banner-text">
+      ¿Quieres mantener tu ritmo? Tu meta de ahorro del mes anterior fue de <strong>{{ metaPasada.cantidadObjetivo | number: '1.2-2' }} €</strong>
+    </p>
+  </div>
+
 </div>

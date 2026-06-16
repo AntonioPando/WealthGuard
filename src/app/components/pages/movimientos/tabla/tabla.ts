@@ -16,6 +16,7 @@ export class Tabla {
   @Input() tendencia: number = 0;
   @Input() categoriaPrincipal: string[] = ['sin datos', '0,0'];
   @Input() meta: number[] = [0.0, 0.0];
+  @Input() metaPasada: any = null;
 
   @Output() abrirEditar = new EventEmitter<any>();
   @Output() eliminar = new EventEmitter<number>();
