@@ -23,6 +23,7 @@ export class UtilsService {
     const idUsuario = localStorage.getItem('id_usuario') ?? sessionStorage.getItem('id_usuario');
 
     if (!idUsuario) {
+      console.warn('WealthGuard Alerta: No se encontró un usuario logeado.');
       return null;
     }
 
@@ -42,6 +43,4 @@ export class UtilsService {
       return '';
     }
   }
-
-  
 }

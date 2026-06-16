@@ -8,10 +8,10 @@ import { TransaccionResponse } from '../../../models/transaccion.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionForm } from './transaccion-form/transaccion-form';
 import { CategoriaService } from '../../../services/categoria.service';
-import { LoginService } from '../../../services/login.service';
 import { ActivatedRoute } from '@angular/router';
 import { ObjetivoService } from '../../../services/objetivo.service';
 import { MetaForm } from './meta-form/meta-form';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -57,7 +57,7 @@ export class Movimientos implements OnInit {
 
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
-  constructor(private route: ActivatedRoute, private objetivoService: ObjetivoService, private transaccionService: TransaccionService, private categoriaService: CategoriaService, private loginService: LoginService,
+  constructor(private route: ActivatedRoute, private objetivoService: ObjetivoService, private transaccionService: TransaccionService, private categoriaService: CategoriaService, private utilsService: UtilsService,
     private cdr: ChangeDetectorRef) { }
 
 
@@ -74,7 +74,7 @@ export class Movimientos implements OnInit {
 
   private comprobarUsuarioLogeado(): void {
 
-    const id = this.loginService.obtenerIdUsuario();
+    const id = this.utilsService.obtenerIdUsuario();
 
     if (id !== null) {
       this.idUsuario = id;
