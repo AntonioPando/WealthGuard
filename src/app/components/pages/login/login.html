@@ -46,11 +46,7 @@
                 <p class="error" role="alert" aria-live="assertive">{{ errormensaje }}</p>
                 }
 
-                <div class="recordar">
-                    <input type="checkbox" id="recordar" name="recordar" [(ngModel)]="recordar" />
-                    <label for="recordar">Recordarme en este dispositivo</label>
-                </div>
-
+    
                 <button type="submit" class="iniciarsesion" [disabled]="cargando">
                     {{ cargando ? 'Validando acceso...' : 'Iniciar sesión' }}
                 </button>
