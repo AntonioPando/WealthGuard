@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../../../services/login.service';
@@ -36,7 +36,8 @@ export class RecomendacionesComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private loginService: LoginService,
-    private scoreFinancieroService: ScoreFinancieroService
+    private scoreFinancieroService: ScoreFinancieroService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -68,12 +69,15 @@ export class RecomendacionesComponent implements OnInit {
                 this.recomendacionActual = data[0];
                 this.mostrarPopup = true;
               }
+              this.cdr.markForCheck();
             },
-            error: () => { this.cargando = false; },
+            error: () => {
+              this.cargando = false;
+              this.cdr.markForCheck();
+            },
           });
       },
       error: () => {
-        // Si falla el cálculo del score, al menos mostramos el historial existente
         this.cargarRecomendaciones();
       }
     });
@@ -87,8 +91,12 @@ export class RecomendacionesComponent implements OnInit {
         next: (data) => {
           this.recomendaciones = data;
           this.cargando = false;
+          this.cdr.markForCheck();
         },
-        error: () => { this.cargando = false; },
+        error: () => {
+          this.cargando = false;
+          this.cdr.markForCheck();
+        },
       });
   }
 
@@ -96,7 +104,20 @@ export class RecomendacionesComponent implements OnInit {
     this.mostrarPopup = false;
   }
 
+  esActual(r: RecomendacionResponseDTO): boolean {
+    return this.recomendaciones.length > 0
+      && r.idRecomendacion === this.recomendaciones[0].idRecomendacion;
+  }
+
+  private esActualId(id: number): boolean {
+    return this.recomendaciones.length > 0
+      && this.recomendaciones[0].idRecomendacion === id;
+  }
+
   toggleSeleccion(id: number): void {
+    if (this.esActualId(id)) {
+      return;
+    }
     if (this.seleccionadas.has(id)) {
       this.seleccionadas.delete(id);
     } else {
@@ -106,6 +127,9 @@ export class RecomendacionesComponent implements OnInit {
   }
 
   eliminarUna(id: number): void {
+    if (this.esActualId(id)) {
+      return;
+    }
     this.http.delete<boolean>(`${this.API}/${id}`).subscribe({
       next: (ok) => {
         if (ok) {
@@ -113,16 +137,32 @@ export class RecomendacionesComponent implements OnInit {
           this.seleccionadas.delete(id);
           this.seleccionadas = new Set(this.seleccionadas);
         }
+        this.cdr.markForCheck();
       },
+      error: (err) => console.error('Error al eliminar recomendación', err),
     });
   }
 
   eliminarSeleccionadas(): void {
-    const ids = Array.from(this.seleccionadas);
+    const idActual = this.recomendaciones[0]?.idRecomendacion;
+    const ids = Array.from(this.seleccionadas).filter(id => id !== idActual);
+
+    if (ids.length === 0) {
+      return;
+    }
+
     let pendientes = ids.length;
     ids.forEach((id) => {
       this.http.delete<boolean>(`${this.API}/${id}`).subscribe({
         next: () => {
+          pendientes--;
+          if (pendientes === 0) {
+            this.seleccionadas.clear();
+            this.cargarRecomendaciones();
+          }
+        },
+        error: (err) => {
+          console.error('Error al eliminar recomendación', err);
           pendientes--;
           if (pendientes === 0) {
             this.seleccionadas.clear();

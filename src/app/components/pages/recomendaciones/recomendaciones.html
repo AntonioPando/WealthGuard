@@ -1,5 +1,6 @@
 <app-header></app-header>
 <app-menu-lateral></app-menu-lateral>
+
 <div class="container">
 
   <div class="overlay-modal" *ngIf="mostrarPopup" (click)="cerrarPopup()">
@@ -8,7 +9,7 @@
       <div class="popup-icon-wrap">
         <img src="/historial.svg" alt="" class="popup-icon">
       </div>
-      <p class="popup-eyebrow">Recomendación para ti</p>
+      <p class="popup-eyebrow">Tenemos una recomendación para ti</p>
       <h3 class="popup-titulo">{{ recomendacionActual?.titulo }}</h3>
       <p class="popup-desc">{{ recomendacionActual?.descripcion }}</p>
       <div class="popup-meta">
@@ -26,10 +27,7 @@
       <h2 class="rec-titulo">Recomendaciones</h2>
       <p class="rec-subtitulo">Historial generado según tu score financiero</p>
     </div>
-    <button
-      class="boton-eliminar-sel"
-      [disabled]="seleccionadas.size === 0"
-      (click)="eliminarSeleccionadas()">
+    <button class="boton-eliminar-sel" [disabled]="seleccionadas.size === 0" (click)="eliminarSeleccionadas()">
       Eliminar seleccionadas ({{ seleccionadas.size }})
     </button>
   </div>
@@ -45,18 +43,19 @@
   </div>
 
   <div class="rec-lista" *ngIf="!cargando && recomendaciones.length > 0">
-    <div
-      class="rec-card"
-      *ngFor="let r of recomendaciones"
-      [class.seleccionada]="seleccionadas.has(r.idRecomendacion)">
+    <div *ngFor="let r of recomendaciones" class="rec-card" [ngClass]="{
+        'score-alto': badgeClase(r.scoreRango) === 'alto',
+        'score-medio': badgeClase(r.scoreRango) === 'medio',
+        'score-bajo': badgeClase(r.scoreRango) === 'bajo',
+        'seleccionada': seleccionadas.has(r.idRecomendacion),
+        'es-vigente': esActual(r)
+      }">
 
-      <label class="rec-check-wrap">
-        <input
-          type="checkbox"
-          class="rec-check"
-          [checked]="seleccionadas.has(r.idRecomendacion)"
-          (change)="toggleSeleccion(r.idRecomendacion)">
-        <span class="checkmark"></span>
+      <label class="rec-check-wrap" [class.disabled]="esActual(r)" [class.tooltip-disabled]="esActual(r)"
+        [attr.data-tooltip]="esActual(r) ? 'No puedes eliminar la recomendación vigente' : null">
+        <input type="checkbox" class="rec-check" [checked]="seleccionadas.has(r.idRecomendacion)"
+          [disabled]="esActual(r)" (change)="toggleSeleccion(r.idRecomendacion)">
+        <span class="checkmark" [class.checked]="seleccionadas.has(r.idRecomendacion)"></span>
       </label>
 
       <div class="rec-card-body">
@@ -64,13 +63,13 @@
           <span class="badge-score" [ngClass]="badgeClase(r.scoreRango)">
             Score {{ r.scoreRango }}
           </span>
+          <span class="badge-vigente" *ngIf="esActual(r)">Actual</span>
           <span class="rec-fecha">{{ r.fechaRecomendacion | date:'d MMM yyyy · HH:mm' }}</span>
         </div>
         <h3 class="rec-card-titulo">{{ r.titulo }}</h3>
         <p class="rec-card-desc">{{ r.descripcion }}</p>
       </div>
 
-      <button class="btn-eliminar-uno" (click)="eliminarUna(r.idRecomendacion)" title="Eliminar">🗑</button>
     </div>
   </div>
 

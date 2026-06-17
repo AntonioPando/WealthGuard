@@ -36,7 +36,7 @@
     font-size: 0.833vw;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
+    transition: background 0.2s, opacity 0.2s, transform 0.1s;
     white-space: nowrap;
 }
 
@@ -49,6 +49,10 @@
     background: #fecaca;
 }
 
+.boton-eliminar-sel:not(:disabled):active {
+    transform: scale(0.97);
+}
+
 .rec-lista {
     display: flex;
     flex-direction: column;
@@ -57,37 +61,86 @@
     margin: 0 auto;
 }
 
+/* ---------- TARJETA ---------- */
 .rec-card {
+    position: relative;
     display: flex;
     align-items: flex-start;
     gap: 1.111vw;
-    padding: 1.111vw 1.389vw;
+    padding: 1.111vw 1.389vw 1.111vw 1.667vw;
     background: var(--white);
     border: 0.069vw solid var(--border);
     border-radius: 0.833vw;
     box-shadow: 0 0.278vw 0.417vw -0.069vw rgba(0, 0, 0, 0.04);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s, transform 0.15s;
+    overflow: hidden;
+}
+
+/* Barra lateral de color según score */
+.rec-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0.333vw;
+    min-width: 4px;
+    background: transparent;
+    z-index: 2;
+}
+
+.rec-card.score-alto::before {
+    background: var(--accent, #10b981);
+}
+
+.rec-card.score-medio::before {
+    background: #eab308;
+}
+
+.rec-card.score-bajo::before {
+    background: var(--danger, #ef4444);
 }
 
 .rec-card:hover {
     border-color: #cbd5e1;
-    box-shadow: 0 0.417vw 0.833vw -0.139vw rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0.625vw 1.25vw -0.208vw rgba(0, 0, 0, 0.1);
+    transform: translateY(-0.069vw);
 }
 
 .rec-card.seleccionada {
     border-color: var(--accent);
     background: var(--accent-light);
+    box-shadow: 0 0 0 0.139vw rgba(16, 185, 129, 0.18), 0 0.417vw 0.833vw -0.139vw rgba(0, 0, 0, 0.08);
 }
 
+.rec-card.es-vigente {
+    background: #fafbff;
+    border-color: #e0e7ff;
+}
+
+.rec-card.es-vigente::after {
+    content: '⭐';
+    position: absolute;
+    top: 0.694vw;
+    right: 0.833vw;
+    font-size: 0.972vw;
+    opacity: 0.85;
+}
+
+/* ---------- SELECTOR CIRCULAR ---------- */
 .rec-check-wrap {
     flex-shrink: 0;
     position: relative;
-    width: 1.111vw;
-    height: 1.111vw;
-    min-width: 16px;
-    min-height: 16px;
+    width: 1.389vw;
+    height: 1.389vw;
+    min-width: 20px;
+    min-height: 20px;
     margin-top: 0.139vw;
     cursor: pointer;
+}
+
+.rec-check-wrap.disabled {
+    cursor: not-allowed;
 }
 
 .rec-check {
@@ -100,28 +153,51 @@
 .checkmark {
     position: absolute;
     inset: 0;
-    border-radius: 0.278vw;
-    border: 0.104vw solid #cbd5e1;
+    border-radius: 50%;
+    border: 0.125vw solid #cbd5e1;
     background: var(--white);
-    transition: background 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s, border-color 0.18s, transform 0.12s;
 }
 
-.rec-check:checked~.checkmark {
-    background: var(--accent);
+.checkmark::after {
+    content: '';
+    width: 0.625vw;
+    height: 0.625vw;
+    min-width: 8px;
+    min-height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 0.15s, transform 0.15s;
+    transform: scale(0.4);
+}
+
+.rec-check-wrap:not(.disabled):hover .checkmark {
     border-color: var(--accent);
 }
 
-.rec-check:checked~.checkmark::after {
-    content: '';
-    position: absolute;
-    left: 28%;
-    top: 8%;
-    width: 30%;
-    height: 55%;
-    border: 0.139vw solid #fff;
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg);
+.rec-check:checked~.checkmark,
+.checkmark.checked {
+    background: var(--white);
+    border-color: var(--accent);
+}
+
+.rec-check:checked~.checkmark::after,
+.checkmark.checked::after {
+    background: var(--accent);
+    transform: scale(1);
+}
+
+.rec-check-wrap.disabled .checkmark {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+.rec-check-wrap.disabled .checkmark::after {
+    background: #cbd5e1;
+    transform: scale(1);
 }
 
 .rec-card-body {
@@ -134,6 +210,7 @@
     align-items: center;
     gap: 0.694vw;
     margin-bottom: 0.417vw;
+    flex-wrap: wrap;
 }
 
 .badge-score {
@@ -162,6 +239,18 @@
     border: 0.069vw solid #fecaca;
 }
 
+.badge-vigente {
+    font-size: 0.694vw;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.208vw 0.556vw;
+    border-radius: 0.278vw;
+    background: #eef2ff;
+    color: #4338ca;
+    border: 0.069vw solid #c7d2fe;
+    white-space: nowrap;
+}
+
 .rec-fecha {
     font-size: 0.764vw;
     color: var(--text-muted);
@@ -183,10 +272,11 @@
 
 .btn-eliminar-uno {
     flex-shrink: 0;
-    width: 2.222vw;
-    height: 2.222vw;
-    min-width: 32px;
-    min-height: 32px;
+    position: relative;
+    width: 2.778vw;
+    height: 2.778vw;
+    min-width: 40px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -196,7 +286,7 @@
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.15s, background 0.15s;
-    font-size: 0.903vw;
+    font-size: 1.111vw;
 }
 
 .rec-card:hover .btn-eliminar-uno {
@@ -206,6 +296,56 @@
 .btn-eliminar-uno:hover {
     background: var(--danger-bg);
     border-color: #fecaca;
+}
+
+.btn-eliminar-uno:disabled {
+    cursor: not-allowed;
+    color: #94a3b8;
+}
+
+.btn-eliminar-uno:disabled:hover {
+    background: #f8fafc;
+    border-color: var(--border);
+}
+
+/* ---------- TOOLTIP ---------- */
+.tooltip-disabled {
+    position: relative;
+}
+
+.tooltip-disabled:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 0.556vw);
+    left: 0;
+    transform: none;
+    width: 11.111vw;
+    min-width: 140px;
+    max-width: 220px;
+    white-space: normal;
+    text-align: left;
+    background: var(--primary, #1e293b);
+    color: #ffffff;
+    font-size: 0.694vw;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 0.5vw 0.694vw;
+    border-radius: 0.347vw;
+    box-shadow: 0 0.278vw 0.556vw -0.139vw rgba(15, 23, 42, 0.25);
+    pointer-events: none;
+    z-index: 20;
+}
+
+.tooltip-disabled:hover::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0.556vw;
+    transform: none;
+    border: 0.278vw solid transparent;
+    border-bottom-color: var(--primary, #1e293b);
+    pointer-events: none;
+    z-index: 20;
 }
 
 .rec-vacio {
@@ -263,22 +403,25 @@
 .overlay-modal {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999;
+    animation: overlayFadeIn 0.2s ease-out;
 }
 
 .modal-recomendacion {
     position: relative;
     width: min(90vw, 34.722vw);
-    background: var(--white);
+    background: #ffffff;
     border-radius: 1.111vw;
-    border: 0.069vw solid var(--border);
-    box-shadow: 0 0.972vw 2.083vw -1.042vw rgba(15, 23, 42, 0.35);
-    padding: 1.667vw;
+    border: none;
+    box-shadow: 0 1.667vw 3.333vw -0.833vw rgba(15, 23, 42, 0.45), 0 0 0 0.069vw rgba(15, 23, 42, 0.04);
+    padding: 1.944vw 1.667vw;
     text-align: center;
+    animation: modalPopIn 0.25s ease-out;
 }
 
 .popup-close {
@@ -290,31 +433,34 @@
     min-width: 28px;
     min-height: 28px;
     border-radius: 0.417vw;
-    border: 0.069vw solid var(--border);
+    border: 0.069vw solid #e2e8f0;
     background: #f8fafc;
-    color: var(--text-muted);
+    color: #64748b;
     font-size: 0.764vw;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
 }
 
 .popup-close:hover {
-    background: var(--border);
+    background: #eef2f7;
+    border-color: #cbd5e1;
 }
 
 .popup-icon-wrap {
-    width: 3.472vw;
-    height: 3.472vw;
-    min-width: 48px;
-    min-height: 48px;
-    border-radius: 0.833vw;
-    background: var(--accent-light);
+    width: 3.889vw;
+    height: 3.889vw;
+    min-width: 52px;
+    min-height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-light, #d1fae5), #ecfdf5);
+    box-shadow: 0 0 0 0.417vw rgba(16, 185, 129, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.111vw;
+    margin: 0 auto 1.25vw;
 }
 
 .popup-icon {
@@ -326,25 +472,25 @@
 .popup-eyebrow {
     font-size: 0.694vw;
     font-weight: 700;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin: 0 0 0.556vw 0;
+    color: var(--accent, #059669);
+    margin: 0 0 0.694vw 0;
 }
 
 .popup-titulo {
-    font-size: 1.111vw;
+    font-size: 1.25vw;
     font-weight: 700;
-    color: var(--primary);
-    margin: 0 0 0.556vw 0;
+    color: var(--primary, #1e293b);
+    margin: 0 0 0.694vw 0;
     line-height: 1.3;
 }
 
 .popup-desc {
-    font-size: 0.833vw;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin: 0 0 1.111vw 0;
+    font-size: 0.875vw;
+    color: #64748b;
+    line-height: 1.65;
+    margin: 0 0 1.25vw 0;
 }
 
 .popup-meta {
@@ -352,33 +498,71 @@
     align-items: center;
     justify-content: center;
     gap: 0.694vw;
-    margin-bottom: 1.389vw;
+    margin-bottom: 1.528vw;
+    padding-bottom: 1.25vw;
+    border-bottom: 0.069vw solid #f1f5f9;
 }
 
 .popup-fecha {
     font-size: 0.764vw;
-    color: var(--text-muted);
+    color: #94a3b8;
 }
 
 .boton-primario {
     border: none;
     color: white;
-    background: var(--primary);
-    border-radius: 0.556vw;
-    padding: 0.625vw 1.111vw;
+    background: var(--primary, #1e293b);
+    border-radius: 0.625vw;
+    padding: 0.764vw 1.111vw;
+    font-size: 0.903vw;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.1s;
 }
 
 .boton-primario:hover {
-    opacity: 0.88;
+    opacity: 0.9;
+}
+
+.boton-primario:active {
+    transform: scale(0.98);
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.556vw) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .overlay-modal,
+    .modal-recomendacion {
+        animation: none;
+    }
 }
 
 .w-full {
     width: 100%;
 }
 
+/* ---------- RESPONSIVE ---------- */
 @media (max-width: 1024px) {
     .container {
         margin-left: 0;
@@ -404,7 +588,8 @@
         font-size: 3.2vw;
     }
 
-    .badge-score {
+    .badge-score,
+    .badge-vigente {
         font-size: 2.8vw;
         padding: 1vw 2vw;
     }
@@ -424,5 +609,16 @@
 
     .popup-desc {
         font-size: 3.5vw;
+    }
+
+    .tooltip-disabled:hover::after,
+    .tooltip-disabled:hover::before {
+        display: none;
+    }
+
+    .rec-card.es-vigente::after {
+        font-size: 4vw;
+        top: 2.5vw;
+        right: 3vw;
     }
 }
