@@ -92,9 +92,9 @@ export class Login {
       });
   }
 
-  onOlvideMiPassword(): void {
-    this.errormensaje = 'Recuperación de contraseña disponible próximamente.';
-  }
+onOlvideMiPassword(): void {
+  this.router.navigate(['/recuperar-password']);
+}
 
   togglePassword(): void {
     this.mostrarPassword = !this.mostrarPassword;

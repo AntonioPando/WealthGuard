@@ -22,6 +22,12 @@ export const routes: Routes = [
     path: 'registro',
     component: Registro
   },
+{
+  path: 'recuperar-password',
+  loadComponent: () =>
+    import('./components/pages/recuperar-password/recuperar-password')
+      .then(m => m.RecuperarPassword)
+},
   {
     path: 'dashboard',
     component: Dashboard
