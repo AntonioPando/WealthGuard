@@ -18,7 +18,7 @@
     min-height: 100dvh;
     display: grid;
     place-items: center;
-    padding: 1.875vw;
+    padding: 24px;
     background:
         radial-gradient(circle at 12% 10%, rgb(16 185 129 / 10%), transparent 34%),
         radial-gradient(circle at 88% 90%, rgb(15 23 42 / 8%), transparent 36%),
@@ -27,18 +27,19 @@
 }
 
 .registro-card {
-    width: min(76.5vw, 100%);
+    width: min(980px, 100%);
+    min-height: min(620px, 100dvh - 48px);
     display: grid;
     grid-template-columns: 1.05fr 1fr;
-    border-radius: 1.5625vw;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 2.1875vw 4.6875vw rgb(9 23 46 / 28%);
+    box-shadow: 0 28px 60px rgb(9 23 46 / 28%);
     border: 1px solid var(--color-border);
     background-color: var(--color-white);
 }
 
 .registro-brand {
-    padding: 4.21875vw 3.4375vw;
+    padding: 54px 44px;
     color: #f4f8ff;
     background:
         linear-gradient(170deg, rgb(255 255 255 / 8%), transparent 55%),
@@ -46,17 +47,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 1.25vw;
+    gap: 16px;
 }
 
 .brand-pill {
     margin: 0;
     width: fit-content;
-    font-size: 0.9375vw;
+    font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     font-weight: 700;
-    padding: 0.546875vw 0.9375vw;
+    padding: 7px 12px;
     border-radius: 999px;
     background-color: rgb(16 185 129 / 20%);
     color: #d1fae5;
@@ -64,7 +65,7 @@
 
 .logo {
     margin: 0;
-    font-size: clamp(1.875vw, 4.2vw, 3.4375vw);
+    font-size: clamp(34px, 4.2vw, 44px);
     line-height: 1.1;
 }
 
@@ -72,20 +73,19 @@
     margin: 0;
     color: rgb(219 234 252 / 92%);
     line-height: 1.55;
-    font-size: 1.09375vw;
 }
 
 .caracteristicas {
-    margin: 0.78125vw 0 0;
-    padding: 0 0 0 1.40625vw;
+    margin: 10px 0 0;
+    padding: 0 0 0 18px;
     display: grid;
-    gap: 0.625vw;
+    gap: 8px;
     color: rgb(199 217 240 / 92%);
-    font-size: 1.09375vw;
+    font-size: 14px;
 }
 
 .registro-panel {
-    padding: 3.125vw 3.4375vw;
+    padding: 54px 44px;
     background-color: var(--color-white);
     display: flex;
     flex-direction: column;
@@ -95,37 +95,36 @@
 .registro-panel h2 {
     margin: 0;
     color: var(--color-text-main);
-    font-size: 2.1875vw;
+    font-size: 30px;
     line-height: 1.2;
 }
 
 .credenciales {
-    margin: 0.78125vw 0 1.25vw;
+    margin: 10px 0 28px;
     color: var(--color-text-muted);
-    font-size: 1.09375vw;
 }
 
 .stepper {
     display: flex;
     align-items: center;
-    margin-bottom: 1.5625vw;
+    margin-bottom: 20px;
 }
 
 .step {
     display: flex;
     align-items: center;
-    gap: 0.625vw;
+    gap: 8px;
 }
 
 .step-numero {
-    width: 1.875vw;
-    height: 1.875vw;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     border: 2px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.859375vw;
+    font-size: 14px;
     font-weight: 700;
     color: var(--color-text-muted);
     background-color: #fff;
@@ -141,7 +140,7 @@
 }
 
 .step-label {
-    font-size: 0.859375vw;
+    font-size: 14px;
     font-weight: 600;
     color: var(--color-text-muted);
     transition: color 0.2s ease;
@@ -156,7 +155,7 @@
     flex: 1;
     height: 2px;
     background-color: var(--color-border);
-    margin: 0 0.625vw;
+    margin: 0 8px;
     transition: background-color 0.3s ease;
 }
 
@@ -170,22 +169,22 @@
 
 .paso-contenido {
     display: grid;
-    gap: 1.09375vw;
+    gap: 12px;
 }
 
 .fila-doble {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.09375vw;
+    gap: 12px;
 }
 
 .form-group {
     display: grid;
-    gap: 0.46875vw;
+    gap: 6px;
 }
 
 label {
-    font-size: 1.09375vw;
+    font-size: 14px;
     font-weight: 700;
     color: var(--color-text-main);
 }
@@ -193,7 +192,7 @@ label {
 .opcional {
     font-weight: 400;
     color: var(--color-text-muted);
-    font-size: 1.015625vw;
+    font-size: 14px;
 }
 
 .entrada {
@@ -205,11 +204,11 @@ label {
 .entrada input,
 .entrada select {
     width: 100%;
-    min-height: 3.4375vw;
+    min-height: 46px;
     border: 1px solid var(--color-border);
-    border-radius: 0.78125vw;
-    padding: 0.78125vw 2.96875vw 0.78125vw 0.9375vw;
-    font-size: 1.09375vw;
+    border-radius: 10px;
+    padding: 10px 38px 10px 12px;
+    font-size: 15px;
     color: var(--color-text-main);
     background-color: #ffffff;
     box-sizing: border-box;
@@ -218,7 +217,7 @@ label {
 }
 
 .entrada select {
-    padding-right: 0.9375vw;
+    padding-right: 12px;
     appearance: auto;
 }
 
@@ -230,16 +229,16 @@ label {
 .entrada select:focus {
     outline: none;
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 0.234375vw rgb(16 185 129 / 22%);
+    box-shadow: 0 0 0 3px rgb(16 185 129 / 22%);
 }
 
 .icono {
     position: absolute;
-    right: 0.9375vw;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: #64748b;
-    font-size: 1.09375vw;
+    font-size: 16px;
     pointer-events: none;
 }
 
@@ -250,9 +249,9 @@ label {
 
 .requisitos-password {
     display: grid;
-    gap: 0.3125vw;
-    margin-top: 0.3125vw;
-    font-size: 0.9375vw;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 14px;
 }
 
 .requisitos-password .cumplido {
@@ -264,44 +263,44 @@ label {
 }
 
 .campo-error {
-    font-size: 0.9375vw;
+    font-size: 14px;
     color: #b91c1c;
 }
 
 .campo-exito {
-    font-size: 0.9375vw;
+    font-size: 14px;
     color: #15803d;
 }
 
 .error {
     margin: 0;
-    padding: 0.78125vw 0.9375vw;
-    border-radius: 0.78125vw;
+    padding: 10px 12px;
+    border-radius: 10px;
     border: 1px solid #fecaca;
     background-color: var(--color-danger-bg);
     color: #b91c1c;
-    font-size: 1.09375vw;
+    font-size: 14px;
 }
 
 .exito {
     margin: 0;
-    padding: 0.78125vw 0.9375vw;
-    border-radius: 0.78125vw;
+    padding: 10px 12px;
+    border-radius: 10px;
     border: 1px solid #bbf7d0;
     background-color: var(--color-success-bg);
     color: var(--color-success);
-    font-size: 1.09375vw;
+    font-size: 14px;
 }
 
 .btn-siguiente,
 .registrarse {
-    min-height: 3.75vw;
+    min-height: 48px;
     border: 0;
-    border-radius: 0.859375vw;
+    border-radius: 11px;
     background: linear-gradient(135deg, #0f172a, #1e293b);
     color: #fff;
     font-weight: 700;
-    font-size: 1.25vw;
+    font-size: 16px;
     cursor: pointer;
     transition: transform 0.18s ease, filter 0.18s ease;
     font-family: inherit;
@@ -321,25 +320,25 @@ label {
 
 .btn-siguiente:focus-visible,
 .registrarse:focus-visible {
-    outline: 0.234375vw solid rgb(16 185 129 / 35%);
-    outline-offset: 0.234375vw;
+    outline: 3px solid rgb(16 185 129 / 35%);
+    outline-offset: 3px;
 }
 
 .fila-botones {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.9375vw;
+    gap: 12px;
 }
 
 .btn-volver {
-    min-height: 3.75vw;
-    padding: 0 1.5625vw;
+    min-height: 48px;
+    padding: 0 16px;
     border: 1px solid var(--color-border);
-    border-radius: 0.859375vw;
+    border-radius: 11px;
     background: transparent;
     color: var(--color-text-main);
     font-weight: 600;
-    font-size: 1.09375vw;
+    font-size: 14px;
     cursor: pointer;
     transition: background-color 0.18s ease;
     font-family: inherit;
@@ -351,8 +350,8 @@ label {
 }
 
 .btn-volver:focus-visible {
-    outline: 0.234375vw solid rgb(16 185 129 / 35%);
-    outline-offset: 0.234375vw;
+    outline: 3px solid rgb(16 185 129 / 35%);
+    outline-offset: 3px;
 }
 
 .login {
@@ -361,6 +360,11 @@ label {
     font-size: 1.09375vw;
 }
 
+.login {
+    margin: 22px 0 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
 .login-link {
     border: 0;
     background: none;
@@ -369,27 +373,22 @@ label {
     cursor: pointer;
     padding: 0;
     font-family: inherit;
-    font-size: 1.09375vw;
+    font-size: 14px;
 }
-
-.login-link:hover {
-    text-decoration: underline;
-}
-
 /* ── Avatar upload ── */
 .form-group-avatar {
     display: flex;
     flex-direction: column;
-    gap: 0.46875vw;
+    gap: 6px;
 }
 
 .avatar-upload-container {
     display: flex;
     align-items: center;
-    gap: 0.9375vw;
-    padding: 0.703125vw 0.9375vw;
+    gap: 12px;
+    padding: 8px 12px;
     border: 1px dashed var(--color-border);
-    border-radius: 0.78125vw;
+    border-radius: 10px;
     cursor: pointer;
     transition: border-color 0.2s ease, background-color 0.2s ease;
     background-color: #fafbfc;
@@ -400,9 +399,25 @@ label {
     background-color: #f0fdf4;
 }
 
+@media (max-width: 920px) {
+    .registro-shell {
+        padding: 14px;
+    }
+
+    .registro-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .registro-brand,
+    .registro-panel {
+        padding: 34px 24px;
+    }
+}
+
 .avatar-preview {
-    width: 2.8125vw;
-    height: 2.8125vw;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     flex-shrink: 0;
     overflow: hidden;
@@ -420,7 +435,7 @@ label {
 }
 
 .avatar-inicial {
-    font-size: 1.09375vw;
+    font-size: 16px;
     color: #94a3b8;
     font-weight: 600;
     line-height: 1;
@@ -436,18 +451,18 @@ label {
 .avatar-texto {
     display: flex;
     flex-direction: column;
-    gap: 0.15625vw;
+    gap: 6px;
     overflow: hidden;
 }
 
 .avatar-label {
-    font-size: 1.09375vw;
+    font-size: 14px;
     font-weight: 700;
     color: var(--color-text-main);
 }
 
 .avatar-nombre {
-    font-size: 0.9375vw;
+    font-size: 13px;
     color: var(--color-text-main);
     white-space: nowrap;
     overflow: hidden;
@@ -455,7 +470,7 @@ label {
 }
 
 .avatar-hint {
-    font-size: 0.8203125vw;
+    font-size: 12px;
     color: var(--color-text-muted);
     line-height: 1.4;
 }
