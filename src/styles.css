@@ -18,3 +18,34 @@ html{
 	background: var(--background);
 	font-family: 'Inter', sans-serif;
 }
+
+.mat-datepicker-popup .mat-datepicker-content {
+  background-color: white;
+}
+
+.contenedor-filtros-global .mat-mdc-text-field-wrapper {
+  border-radius: 12px ;
+  border: 1px solid #e5e5e5;
+  background: white;
+}
+
+.contenedor-filtros-global .mdc-notched-outline__leading,
+.contenedor-filtros-global .mdc-notched-outline__notch,
+.contenedor-filtros-global .mdc-notched-outline__trailing {
+  border-color: #e5e5e5 !important;
+}
+
+.contenedor-filtros-global .mat-mdc-text-field-wrapper:hover {
+  border-color: #ccc;
+}
+
+.contenedor-filtros-global .mat-mdc-text-field-wrapper.mdc-text-field--focused {
+  border-color: #999;
+}
+
+.contenedor-filtros-global .mat-date-range-input-container {
+  padding-left: 12px;
+  padding-right: 12px;
+  gap: 8px;
+}
+

@@ -88,7 +88,7 @@ export class Presupuestos implements OnInit {
     });
 
     // Cargamos las categorías globales para el dropdown del formulario
-    this.categoriaService.obtenerTodas().subscribe({
+    this.categoriaService.obtenerCategorias().subscribe({
       next: (data) => {
         this.listaCategorias = data.map(cat => ({
           id: cat.id,

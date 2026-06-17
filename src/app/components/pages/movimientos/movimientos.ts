@@ -87,7 +87,7 @@ export class Movimientos implements OnInit {
   cargarDatos() {
 
     // Cargamos las categorías globales para el formulario
-    this.categoriaService.obtenerTodas().subscribe({
+    this.categoriaService.obtenerCategorias().subscribe({
       next: (cats) => {
         this.categoriasDesdeBackend = cats.map(c => ({
           id: c.id,

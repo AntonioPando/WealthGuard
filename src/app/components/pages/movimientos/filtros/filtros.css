@@ -1,4 +1,3 @@
-/* CONTENEDOR */
 .filtros {
   display: flex;
   align-items: center;
@@ -9,17 +8,14 @@
   flex-wrap: wrap;
 }
 
-/* ANGULAR MATERIAL FIELD */
 mat-form-field {
   min-width: 220px;
 }
 
-/* bordes redondeados estilo app */
 .mat-mdc-text-field-wrapper {
   border-radius: 10px !important;
 }
 
-/* INPUT Y SELECT */
 .filtros select {
   padding: 8px 12px;
   border: 1px solid #ddd;
@@ -31,13 +27,11 @@ mat-form-field {
   min-width: 160px;
 }
 
-/* focus */
 .filtros select:focus {
   border-color: #999;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
 }
 
-/* BOTONES */
 .filtros button {
   border: none;
   background: transparent;
@@ -52,45 +46,13 @@ mat-form-field {
   background: #f2f2f2;
 }
 
-/* GRUPO TIPO */
 .tipo {
   display: flex;
   gap: 5px;
 }
 
 
-::ng-deep .mat-datepicker-content {
-  background: white !important;
-}
-
-/* INPUT DEL DATE RANGE */
-::ng-deep .mat-mdc-text-field-wrapper {
-  border-radius: 12px !important; /* más redondeado */
-  border: 1px solid #e5e5e5 !important; /* borde más claro */
-  background: white;
-}
-
-/* QUITAR BORDE NEGRO POR DEFECTO */
-::ng-deep .mdc-notched-outline__leading,
-::ng-deep .mdc-notched-outline__notch,
-::ng-deep .mdc-notched-outline__trailing {
-  border-color: #e5e5e5 !important;
-}
 
 
-/* HOVER */
-::ng-deep .mat-mdc-text-field-wrapper:hover {
-  border-color: #ccc !important;
-}
 
-/* FOCUS */
-::ng-deep .mat-mdc-text-field-wrapper.mdc-text-field--focused {
-  border-color: #999 !important;
-}
-
-::ng-deep .mat-date-range-input-container {
-  padding-left: 12px;
-  padding-right: 12px;
-  gap: 8px;
-}
 
