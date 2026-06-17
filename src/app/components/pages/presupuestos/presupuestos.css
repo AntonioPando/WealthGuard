@@ -1,4 +1,3 @@
-
 :root {
     --fondo-color: #f8f9fc;
     --tarjeta-bg: #ffffff;
@@ -12,7 +11,6 @@
     --borde-radio: 16px;
     --sidebar-width: 250px;
 }
-
 
 .contenedor-presupuestos {
     max-width: 1200px;
@@ -37,17 +35,6 @@
     font-weight: 700;
 }
 
-.titulos-cabecera p {
-    color: var(--texto-atenuado);
-    margin: 0;
-    font-size: 0.95rem;
-}
-
-.acciones-cabecera {
-    display: flex;
-    gap: 1rem;
-}
-
 .btn {
     display: flex;
     align-items: center;
@@ -60,7 +47,6 @@
     border: 1px solid transparent;
     transition: all 0.2s ease;
 }
-
 
 .btn-lineas {
     border-color: var(--borde-color);
@@ -121,6 +107,60 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+.tarjeta-peligro {
+    border-color: #fca5a5;
+    background-color: #fef2f2;
+}
+
+.tarjeta-advertencia {
+    border-color: #fde047;
+    background-color: #fffdf2;
+}
+
+.tarjeta-bueno {
+    border-color: #bbf7d0;
+    background-color: #f0fdf4;
+}
+
+.icono-peligro {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.icono-advertencia {
+    background-color: #fef08a;
+    color: #b45309;
+}
+
+.icono-bueno {
+    background-color: #dcfce7;
+    color: #16803d;
+}
+
+.texto-peligro {
+    color: #b91c1c;
+}
+
+.texto-advertencia {
+    color: #d97706;
+}
+
+.texto-bueno {
+    color: #16803d;
+}
+
+.relleno-peligro {
+    background-color: #b91c1c;
+}
+
+.relleno-advertencia {
+    background-color: #f59e0b;
+}
+
+.relleno-bueno {
+    background-color: #16803d;
+}
+
 .overlay {
     position: fixed;
     top: 0;
@@ -152,7 +192,6 @@
     box-sizing: border-box;
 }
 
-
 .cabecera-tarjeta {
     display: flex;
     justify-content: space-between;
@@ -170,7 +209,6 @@
     font-size: 1.3rem;
 }
 
-
 .insignia {
     padding: 0.35rem 0.6rem;
     border-radius: 6px;
@@ -184,13 +222,6 @@
     margin: 0 0 0.3rem 0;
     font-size: 1.2rem;
     font-weight: 600;
-}
-
-.cuerpo-tarjeta p {
-    color: var(--texto-atenuado);
-    margin: 0 0 1.5rem 0;
-    font-size: 0.85rem;
-    line-height: 1.4;
 }
 
 .pie-tarjeta {
@@ -228,7 +259,6 @@
     transition: width 0.5s ease-in-out;
 }
 
-
 .texto-excedido {
     color: var(--peligro);
     font-size: 0.8rem;
@@ -264,14 +294,11 @@
     margin-bottom: 1rem;
 }
 
-
 .paneles-inferiores {
     display: grid;
     grid-template-columns: 2fr 1.2fr;
     gap: 1.5rem;
-
 }
-
 
 @media (max-width: 900px) {
     .paneles-inferiores {
