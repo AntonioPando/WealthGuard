@@ -5,14 +5,7 @@ import { LoginService } from '../../../services/login.service';
 import { ScoreFinancieroService } from '../../../services/score-financiero.service';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
-
-export interface RecomendacionResponseDTO {
-  idRecomendacion: number;
-  titulo: string;
-  descripcion: string;
-  scoreRango: string;
-  fechaRecomendacion: string;
-}
+import { RecomendacionResponseDTO } from '../../../models/recomendacion.model';
 
 @Component({
   selector: 'app-recomendaciones',

@@ -7,7 +7,16 @@ import { PresupuestoForm } from './presupuesto-form/presupuesto-form';
 import { PresupuestosService } from '../../../services/presupuesto.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { LoginService } from '../../../services/login.service';
+import { PresupuestoResponse } from '../../../models/presupuestos.model';
 
+interface PresupuestoInterfaz {
+  id: number;
+  idCategoria: number;
+  categoria: string;
+  icono: string;
+  gastado: number;
+  limite: number;
+}
 
 @Component({
   selector: 'app-presupuestos',
@@ -22,10 +31,10 @@ export class Presupuestos implements OnInit {
   public idUsuario!: number;
 
 
-  public presupuestoEditando: any = null;
+  public presupuestoEditando: PresupuestoInterfaz | null = null;
   public mostrarFormulario: boolean = false;
 
-  public listaPresupuestos: any[] = []
+  public listaPresupuestos: PresupuestoInterfaz[] = []
   public listaCategorias: { id: number, nombre: string }[] = [];
 
 
@@ -73,12 +82,12 @@ export class Presupuestos implements OnInit {
   cargarDatos() {
     // Cargamos los presupuestos 
     this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
-      next: (data) => {
+      next: (data: PresupuestoResponse[]) => {
         this.listaPresupuestos = data.map(p => ({
           id: p.id,
           idCategoria: p.categoria.id,
           categoria: p.categoria.nombre,
-          icono: (p.categoria as any).icono || '📦',
+          icono: p.categoria.icono || 'category',
           gastado: p.gastoActual,
           limite: p.limite
         }));
@@ -111,13 +120,13 @@ export class Presupuestos implements OnInit {
   obtenerEstado(gastado: number, limite: number): 'bueno' | 'advertencia' | 'peligro' {
     const porcentaje = (gastado / limite) * 100;
     if (porcentaje >= 100) return 'peligro';
-    if (porcentaje >= 80) return 'advertencia'; 
+    if (porcentaje >= 80) return 'advertencia';
     return 'bueno';
   }
 
 
   // Categoría con mayor gasto
-  get categoriaMasGasto() {
+  get categoriaMasGasto(): PresupuestoInterfaz | null {
     if (this.listaPresupuestos.length === 0) return null;
     return [...this.listaPresupuestos].sort((a, b) => b.gastado - a.gastado)[0];
   }
@@ -129,7 +138,7 @@ export class Presupuestos implements OnInit {
   }
 
   //Editar
-  abrirEdicion(presupuesto: any) {
+  abrirEdicion(presupuesto: PresupuestoInterfaz) {
     // Hacemos una copia para no modificar el original hasta guardar
     this.presupuestoEditando = { ...presupuesto };
   }
@@ -139,6 +148,8 @@ export class Presupuestos implements OnInit {
   }
 
   guardarCambios() {
+    if (!this.presupuestoEditando) return;
+
     this.presupuestoService.editarPresupuesto(
       this.presupuestoEditando.id,
       this.presupuestoEditando.idCategoria,
@@ -157,6 +168,8 @@ export class Presupuestos implements OnInit {
   }
 
   eliminarPresupuesto() {
+    if (!this.presupuestoEditando) return;
+
     if (confirm('¿Estás seguro de que quieres eliminar este presupuesto?')) {
       this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
         next: (eliminado) => {
@@ -177,7 +190,7 @@ export class Presupuestos implements OnInit {
     this.mostrarFormulario = true;
   }
 
-  guardarNuevoPresupuesto(datos: any) {
+  guardarNuevoPresupuesto(datos: { idCategoria: number; limite: number }) {
     const nuevoPresupuesto = {
       usuario: { id: this.idUsuario },
       categoria: { id: datos.idCategoria },
@@ -197,10 +210,10 @@ export class Presupuestos implements OnInit {
   }
 
   get nombreMesActual(): string {
-  const fecha = new Date();
-  const nombre = fecha.toLocaleString('es-ES', { month: 'long' });
-  return nombre.charAt(0).toUpperCase() + nombre.slice(1);
-}
+    const fecha = new Date();
+    const nombre = fecha.toLocaleString('es-ES', { month: 'long' });
+    return nombre.charAt(0).toUpperCase() + nombre.slice(1);
+  }
 
 }
 
