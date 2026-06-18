@@ -4,7 +4,7 @@ import { Tabla } from './tabla/tabla';
 import { HeaderMovimientos } from './header-movimientos/header-movimientos';
 import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
 import { Header } from "../../layout/header/header";
-import { TransaccionResponse } from '../../../models/transaccion.model';
+import { TransaccionRequest, TransaccionResponse } from '../../../models/transaccion.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionForm } from './transaccion-form/transaccion-form';
 import { CategoriaService } from '../../../services/categoria.service';
@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ObjetivoService } from '../../../services/objetivo.service';
 import { MetaForm } from './meta-form/meta-form';
 import { UtilsService } from '../../../services/utils.service';
+import { ObjetivoRequest, ObjetivoResponse } from '../../../models/objetivo.model';
 
 @Component({
   selector: 'app-movimientos',
@@ -41,7 +42,7 @@ export class Movimientos implements OnInit {
   tendencia: number = 0;
   categoriaPrincipal: string[] = ['sin datos', '0,0'];
   meta: number[] = [0.0, 0.0];
-  metaPasada: any = null;
+  metaPasada: ObjetivoResponse | null = null;
 
   // variables para el filtro de categorias
   categorias: string[] = [];
@@ -49,11 +50,11 @@ export class Movimientos implements OnInit {
 
   // variables para el formulario
   mostrarPopup: boolean = false;
-  transaccionSeleccionada: any = null;
+  transaccionSeleccionada: TransaccionResponse | null = null;
 
   // variables para el objetivo
   mostrarModalMeta: boolean = false;
-  metaActivaEditar: any = null;
+  metaActivaEditar: ObjetivoResponse | null = null;
 
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
@@ -139,7 +140,7 @@ export class Movimientos implements OnInit {
     });
 
     this.objetivoService.obtenerMetaPasada(this.idUsuario).subscribe({
-      next: (resultado) => {
+      next: (resultado : ObjetivoResponse) => {
         this.metaPasada = resultado;
         this.cdr.detectChanges();
       },
@@ -202,7 +203,7 @@ export class Movimientos implements OnInit {
     this.aplicarFiltros();
   }
 
-  abrirFormulario(transaccion: any = null) {
+  abrirFormulario(transaccion: TransaccionResponse | null = null) {
     this.transaccionSeleccionada = transaccion;
     this.mostrarPopup = true;
   }
@@ -211,7 +212,7 @@ export class Movimientos implements OnInit {
     this.mostrarPopup = false;
   }
 
-  guardarTransaccion(datosFormulario: any) {
+  guardarTransaccion(datosFormulario: Omit<TransaccionRequest, 'idUsuario'>) {
 
     // Formateamos la fecha para que Java lo acepte como LocalDateTime
     const fechaParaJava = datosFormulario.fecha.includes('T')
@@ -273,7 +274,7 @@ export class Movimientos implements OnInit {
 
   abrirFormularioMeta() {
     this.objetivoService.obtenerMetaActiva(this.idUsuario).subscribe({
-      next: (meta) => {
+      next: (meta: ObjetivoResponse) => {
         this.metaActivaEditar = meta;
         this.mostrarModalMeta = true;
         this.cdr.detectChanges();
@@ -287,7 +288,7 @@ export class Movimientos implements OnInit {
   }
 
   guardarMeta(nuevaCantidad: number) {
-    const request = {
+    const request: ObjetivoRequest = {
       usuarioId: this.idUsuario,
       cantidadObjetivo: nuevaCantidad
     };
