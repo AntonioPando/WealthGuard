@@ -2,6 +2,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { A11yModule } from "@angular/cdk/a11y";
+import { TransaccionResponse } from '../../../../models/transaccion.model';
+import { ObjetivoResponse } from '../../../../models/objetivo.model';
 
 @Component({
   selector: 'app-tabla',
@@ -12,13 +14,13 @@ import { A11yModule } from "@angular/cdk/a11y";
 })
 export class Tabla {
 
-  @Input() movimientos: any[] = [];
+  @Input() movimientos: TransaccionResponse[] = [];
   @Input() tendencia: number = 0;
   @Input() categoriaPrincipal: string[] = ['sin datos', '0,0'];
   @Input() meta: number[] = [0.0, 0.0];
-  @Input() metaPasada: any = null;
+  @Input() metaPasada: ObjetivoResponse | null = null;
 
-  @Output() abrirEditar = new EventEmitter<any>();
+  @Output() abrirEditar = new EventEmitter<TransaccionResponse>();
   @Output() eliminar = new EventEmitter<number>();
   @Output() abrirModalMeta = new EventEmitter<void>();
 
@@ -81,7 +83,7 @@ export class Tabla {
   }
 
   // Funcion para determinar si una transaccion es editable
-  esEditable(fecha: any): boolean {
+  esEditable(fecha: string): boolean {
   if (!fecha) return false;
   
   const fechaTransaccion = new Date(fecha);
