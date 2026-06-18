@@ -4,6 +4,14 @@
 	--header-height: 5dvh; /* default header height for desktop */
 
 	--background: '#f8f9ff';
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --muted: #8b98a9;
+  --border: #e6e9ee;
+  --accent: #0b7a4a;
+  --danger: #e54b4b;
+  --primary: #0b6cff;
+  --glass: rgba(11, 12, 15, 0.03);
 }
 
 @media (max-width: 900px){
@@ -17,6 +25,11 @@
 html{
 	background: var(--background);
 	font-family: 'Inter', sans-serif;
+
+}
+
+body{
+  background: #f3f3f3;
 }
 
 .mat-datepicker-popup .mat-datepicker-content {
