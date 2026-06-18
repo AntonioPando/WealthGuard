@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -31,7 +31,8 @@ export class RecuperarPassword {
 
   constructor(
     private router: Router,
-    private recuperarPasswordService: RecuperarPasswordService
+    private recuperarPasswordService: RecuperarPasswordService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   get tieneMinCaracteres() {
@@ -66,6 +67,7 @@ export class RecuperarPassword {
         this.cargando = false;
         this.pregunta = respuesta.pregunta;
         this.paso = 2;
+        this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
         this.cargando = false;
