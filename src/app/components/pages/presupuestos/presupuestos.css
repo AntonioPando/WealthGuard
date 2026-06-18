@@ -13,6 +13,7 @@
 }
 
 .contenedor-presupuestos {
+    margin-top: 4dvh;
     max-width: 1200px;
     margin-left: calc(var(--sidebar-width) + 20px);
     padding-left: 40px;

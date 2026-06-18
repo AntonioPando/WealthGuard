@@ -17,7 +17,6 @@
 .rec-titulo {
     font-size: 1.667vw;
     font-weight: 700;
-    color: var(--primary);
     margin: 0 0 0.278vw 0;
 }
 
@@ -259,7 +258,6 @@
 .rec-card-titulo {
     font-size: 0.972vw;
     font-weight: 600;
-    color: var(--primary);
     margin: 0 0 0.278vw 0;
 }
 
@@ -481,7 +479,6 @@
 .popup-titulo {
     font-size: 1.25vw;
     font-weight: 700;
-    color: var(--primary, #1e293b);
     margin: 0 0 0.694vw 0;
     line-height: 1.3;
 }
