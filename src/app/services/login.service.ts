@@ -2,22 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, timeout, tap } from 'rxjs';
 import { UsuarioResponse } from '../models/usuario.model';
-
-interface LoginRequest {
-	usuario: string;
-	pass: string;
-}
-
-interface LoginResponse {
-	mensaje: string;
-	token: string;
-	idUsuario: number;
-	nickUsuario: string;
-	nombre: string;
-	email: string;
-	esAdmin: boolean;
-	activo: boolean;
-}
+import { LoginResponse, LoginRequest } from '../models/login.model';
 
 @Injectable({
 	providedIn: 'root'
