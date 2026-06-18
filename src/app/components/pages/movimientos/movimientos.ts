@@ -13,6 +13,7 @@ import { ObjetivoService } from '../../../services/objetivo.service';
 import { UtilsService } from '../../../services/utils.service';
 import { ObjetivoRequest, ObjetivoResponse } from '../../../models/objetivo.model';
 import { UiAlertsService } from '../../../services/ui-alerts.service';
+import { MetaForm } from './meta-form/meta-form';
 
 @Component({
   selector: 'app-movimientos',
@@ -23,7 +24,8 @@ import { UiAlertsService } from '../../../services/ui-alerts.service';
     Tabla,
     MenuLateral,
     Header,
-    TransaccionForm
+    TransaccionForm,
+    MetaForm
   ],
   templateUrl: './movimientos.html',
   styleUrls: ['./movimientos.css'],
