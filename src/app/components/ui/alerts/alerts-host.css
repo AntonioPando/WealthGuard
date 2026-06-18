@@ -1,0 +1,149 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  pointer-events: none;
+}
+
+.overlay-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(0.25rem);
+  pointer-events: auto;
+  padding: 1.5rem;
+}
+
+.modal-alerta {
+  width: min(90vw, 34rem);
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1.25rem 2.5rem -1.25rem rgba(15, 23, 42, 0.38);
+  padding: 1.6rem;
+  box-sizing: border-box;
+}
+
+.modal-alerta--success {
+  border-top: 0.35rem solid #10b981;
+}
+
+.modal-alerta--warning {
+  border-top: 0.35rem solid #f59e0b;
+}
+
+.modal-alerta--danger {
+  border-top: 0.35rem solid #ef4444;
+}
+
+.icono-alerta {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  margin-bottom: 0.9rem;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.modal-alerta--success .icono-alerta {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.modal-alerta--warning .icono-alerta {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.modal-alerta--danger .icono-alerta {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.modal-alerta h3 {
+  margin: 0 0 0.75rem;
+  color: #0f172a;
+  font-size: 1.35rem;
+}
+
+.modal-alerta p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.acciones-modal-alerta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+
+.boton-secundario,
+.boton-principal {
+  border-radius: 0.65rem;
+  padding: 0.7rem 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.boton-secundario {
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.boton-principal {
+  border: 1px solid transparent;
+  color: #ffffff;
+}
+
+.boton-principal--info {
+  background: #0f172a;
+}
+
+.boton-principal--success {
+  background: #059669;
+}
+
+.boton-principal--warning {
+  background: #d97706;
+}
+
+.boton-principal--danger {
+  background: #dc2626;
+}
+
+.boton-secundario:hover,
+.boton-principal:hover {
+  transform: translateY(-0.05rem);
+}
+
+@media (max-width: 768px) {
+  .overlay-modal {
+    padding: 1rem;
+  }
+
+  .modal-alerta {
+    width: 100%;
+    padding: 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .acciones-modal-alerta {
+    flex-direction: column-reverse;
+  }
+
+  .boton-secundario,
+  .boton-principal {
+    width: 100%;
+  }
+}

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Header } from "../../layout/header/header";
 import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { PresupuestosService } from '../../../services/presupuesto.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { LoginService } from '../../../services/login.service';
 import { PresupuestoResponse } from '../../../models/presupuestos.model';
+import { UiAlertsService } from '../../../services/ui-alerts.service';
 
 interface PresupuestoInterfaz {
   id: number;
@@ -27,9 +28,9 @@ interface PresupuestoInterfaz {
 })
 
 export class Presupuestos implements OnInit {
+  private readonly uiAlertsService = inject(UiAlertsService);
 
   public idUsuario!: number;
-
 
   public presupuestoEditando: PresupuestoInterfaz | null = null;
   public mostrarFormulario: boolean = false;
@@ -167,23 +168,45 @@ export class Presupuestos implements OnInit {
     });
   }
 
-  eliminarPresupuesto() {
+  async eliminarPresupuesto() {
     if (!this.presupuestoEditando) return;
 
-    if (confirm('¿Estás seguro de que quieres eliminar este presupuesto?')) {
-      this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
-        next: (eliminado) => {
-          if (eliminado) {
-            this.cargarDatos();
-            this.cerrarEdicion();
-            console.log('Presupuesto eliminado de la BD');
-          } else {
-            alert('No se pudo eliminar el presupuesto.');
-          }
-        },
-        error: (err) => console.error('Error al intentar eliminar de la BD:', err)
-      });
-    }
+    const confirmado = await this.uiAlertsService.confirm({
+      title: 'Eliminar presupuesto',
+      message: '¿Estás seguro de que quieres eliminar este presupuesto?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      severity: 'danger'
+    });
+
+    if (!confirmado) return;
+
+    this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
+      next: async (eliminado) => {
+        if (eliminado) {
+          this.cargarDatos();
+          this.cerrarEdicion();
+          console.log('Presupuesto eliminado de la BD');
+          return;
+        }
+
+        await this.uiAlertsService.alert({
+          title: 'No se pudo eliminar',
+          message: 'No se pudo eliminar el presupuesto.',
+          confirmText: 'Entendido',
+          severity: 'danger'
+        });
+      },
+      error: async (err) => {
+        console.error('Error al intentar eliminar de la BD:', err);
+        await this.uiAlertsService.alert({
+          title: 'Error al eliminar',
+          message: 'Se produjo un problema al intentar eliminar el presupuesto.',
+          confirmText: 'Entendido',
+          severity: 'danger'
+        });
+      }
+    });
   }
 
   abrirCrear() {

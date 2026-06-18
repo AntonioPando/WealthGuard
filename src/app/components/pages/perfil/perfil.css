@@ -421,52 +421,6 @@
   background: white;
 }
 
-.modal-eliminar-cuenta {
-  width: min(90vw, 31.25vw);
-  text-align: left;
-}
-
-.icono-alerta-eliminar {
-  width: 2.5vw;
-  height: 2.5vw;
-  min-width: 2.5vw;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--danger-bg);
-  color: var(--danger);
-  border: 0.069vw solid #fecaca;
-  font-weight: 800;
-  margin-bottom: 0.833vw;
-}
-
-.modal-eliminar-cuenta p {
-  margin: 0;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-.acciones-modal-eliminar {
-  justify-content: flex-end;
-  margin-top: 1.389vw;
-}
-
-.boton-peligro {
-  border: 0.069vw solid #ef4444;
-  color: white;
-  background: var(--danger);
-  border-radius: 0.556vw;
-  padding: 0.625vw 1.111vw;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.boton-peligro:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
 @media (max-width: 1024px) {
   .contenedor-principal {
     grid-template-columns: 1fr;
@@ -501,10 +455,6 @@
     padding: 4.444vw;
   }
 
-  .modal-eliminar-cuenta {
-    width: min(92vw, 35.417vw);
-  }
-
   .campo-doble {
     grid-template-columns: 1fr;
   }
@@ -536,12 +486,4 @@
     right: 2.5vw;
   }
 
-  .icono-alerta-eliminar {
-    width: 10vw;
-    height: 10vw;
-    min-width: 10vw;
-    margin-bottom: 2.5vw;
-    border-radius: 50%;
-    font-size: 4.5vw;
-  }
 }
