@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -24,6 +24,7 @@ export class Login {
   constructor(
     private loginService: LoginService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   onSubmit(): void {
@@ -56,6 +57,7 @@ export class Login {
           }
 
           this.cargando = false;
+          this.cdr.detectChanges();
         })
       )
       .subscribe({
@@ -66,6 +68,7 @@ export class Login {
 
           if (error instanceof TimeoutError) {
             this.errormensaje = 'El servidor tardó demasiado en responder. Inténtalo de nuevo.';
+            this.cdr.detectChanges();
             return;
           }
 
@@ -74,20 +77,24 @@ export class Login {
           if (httpError.status === 401) {
             const mensajeBackend = (httpError.error as { mensaje?: string })?.mensaje;
             this.errormensaje = mensajeBackend || 'Usuario o contraseña incorrectos.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (httpError.status === 404) {
             this.errormensaje = 'No se encontró el endpoint de login en el backend.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (httpError.status === 0) {
             this.errormensaje = 'No hay conexión con el backend en http://localhost:8080.';
+            this.cdr.detectChanges();
             return;
           }
 
           this.errormensaje = 'No se pudo iniciar sesión. Inténtalo de nuevo.';
+          this.cdr.detectChanges();
         }
       });
   }
