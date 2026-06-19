@@ -16,7 +16,7 @@
 
 .container {
   margin-top: 11dvh;
-  margin-left: 10dvw;
+  margin-left: calc(var(--sidebar-width) + 20px);
 }
 
 .alerta {
@@ -166,7 +166,7 @@
   color: white;
   padding: 1.667rem;
   border-radius: 1.111rem;
-  height: fit-content;
+  align-self: stretch;
   position: sticky;
   top: 10rem;
 }
