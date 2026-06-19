@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
 import { UsuarioRequest, UsuarioResponse } from '../../../models/usuario.model';
@@ -20,6 +21,7 @@ import { UiAlertsService } from '../../../services/ui-alerts.service';
 export class Perfil implements OnInit {
   private readonly usuarioService = inject(UsuarioService);
   private readonly loginService = inject(LoginService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly fotoPerfilService = inject(FotoPerfilService);
   private readonly uiAlertsService = inject(UiAlertsService);
@@ -328,8 +330,14 @@ export class Perfil implements OnInit {
       next: async (eliminado) => {
         if (eliminado) {
           this.usuario = null;
-          this.mensajeExito = 'Cuenta eliminada correctamente.';
-          this.cdr.detectChanges();
+          await this.uiAlertsService.alert({
+            title: 'Cuenta eliminada',
+            message: 'Cuenta eliminada correctamente.',
+            confirmText: 'Aceptar',
+            severity: 'success'
+          });
+          this.loginService.cerrarSesion();
+          await this.router.navigate(['/login']);
           return;
         }
         await this.uiAlertsService.alert({
