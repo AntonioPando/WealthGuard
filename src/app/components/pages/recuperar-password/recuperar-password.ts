@@ -77,29 +77,31 @@ export class RecuperarPassword {
     });
   }
 
-  comprobarRespuesta(): void {
-    this.errorMensaje = '';
-    if (!this.respuesta.trim()) {
-      this.errorMensaje = 'Debes escribir una respuesta.';
-      return;
-    }
-    this.cargando = true;
-    this.recuperarPasswordService.verificarRespuesta(this.usuario.trim(), this.respuesta.trim()).subscribe({
-      next: (esCorrecta) => {
-        this.cargando = false;
-        if (esCorrecta) {
-          this.paso = 3;
-        } else {
-          this.errorMensaje = 'Respuesta incorrecta.';
-        }
-      },
-      error: () => {
-        this.cargando = false;
-        this.errorMensaje = 'No se pudo comprobar la respuesta. Inténtalo de nuevo.';
-      }
-    });
+comprobarRespuesta(): void {
+  this.errorMensaje = '';
+  if (!this.respuesta.trim()) {
+    this.errorMensaje = 'Debes escribir una respuesta.';
+    return;
   }
-
+  this.cargando = true;
+  this.recuperarPasswordService.verificarRespuesta(this.usuario.trim(), this.respuesta.trim()).subscribe({
+    next: (esCorrecta) => {
+      this.cargando = false;
+      if (esCorrecta === true || esCorrecta as unknown === 'true') {
+        this.paso = 3;
+        this.cdr.detectChanges(); // 👈 esto faltaba
+      } else {
+        this.errorMensaje = 'Respuesta incorrecta.';
+        this.cdr.detectChanges();
+      }
+    },
+    error: () => {
+      this.cargando = false;
+      this.errorMensaje = 'No se pudo comprobar la respuesta. Inténtalo de nuevo.';
+      this.cdr.detectChanges();
+    }
+  });
+}
   onSubmit(): void {
     this.formularioEnviado = true;
     this.errorMensaje = '';
