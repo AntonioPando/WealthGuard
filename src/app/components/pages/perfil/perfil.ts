@@ -7,6 +7,7 @@ import { UsuarioRequest, UsuarioResponse } from '../../../models/usuario.model';
 import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FotoPerfilService } from '../../../services/foto-perfil.service';
+import { UiAlertsService } from '../../../services/ui-alerts.service';
 
 @Component({
   selector: 'app-perfil',
@@ -21,17 +22,16 @@ export class Perfil implements OnInit {
   private readonly loginService = inject(LoginService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly fotoPerfilService = inject(FotoPerfilService);
+  private readonly uiAlertsService = inject(UiAlertsService);
 
   idUsuario: number | null = null;
 
   cargandoPerfil: boolean = false;
   guardandoPerfil: boolean = false;
   actualizandoPassword: boolean = false;
-  eliminandoCuenta: boolean = false;
 
   mostrarPopupEditarPerfil: boolean = false;
   mostrarPopupPassword: boolean = false;
-  mostrarPopupEliminarCuenta: boolean = false;
 
   mensajeExito: string = '';
   mensajeError: string = '';
@@ -307,41 +307,43 @@ export class Perfil implements OnInit {
     });
   }
 
-  abrirEliminarCuenta() {
+  async eliminarCuenta() {
     if (this.cargandoPerfil || !this.usuario) return;
-    this.limpiarMensajes();
-    this.mostrarPopupEliminarCuenta = true;
-  }
 
-  cerrarEliminarCuenta() {
-    if (this.eliminandoCuenta) return;
-    this.mostrarPopupEliminarCuenta = false;
-  }
+    const confirmado = await this.uiAlertsService.confirm({
+      title: '¿Eliminar tu cuenta?',
+      message: 'Esta acción es irreversible. Se eliminarán tu perfil, tus presupuestos y tus movimientos registrados.',
+      confirmText: 'Sí, eliminar cuenta',
+      cancelText: 'Cancelar',
+      severity: 'danger'
+    });
 
-  confirmarEliminarCuenta() {
-    if (this.eliminandoCuenta) return;
+    if (!confirmado) return;
 
     const idUsuario = this.obtenerIdUsuarioActivo();
     if (idUsuario === null) return;
 
-    this.eliminandoCuenta = true;
+    this.limpiarMensajes();
     this.usuarioService.eliminarCuenta(idUsuario).subscribe({
-      next: (eliminado) => {
-        this.eliminandoCuenta = false;
+      next: async (eliminado) => {
         if (eliminado) {
           this.usuario = null;
-          this.mostrarPopupEliminarCuenta = false;
           this.mensajeExito = 'Cuenta eliminada correctamente.';
           this.cdr.detectChanges();
           return;
         }
-        this.mensajeError = 'No se pudo eliminar la cuenta.';
-        this.cdr.detectChanges();
+        await this.uiAlertsService.alert({
+          title: 'No se pudo eliminar',
+          message: 'No se pudo eliminar la cuenta. Inténtalo de nuevo.',
+          severity: 'danger'
+        });
       },
-      error: () => {
-        this.eliminandoCuenta = false;
-        this.mensajeError = 'No se pudo eliminar la cuenta.';
-        this.cdr.detectChanges();
+      error: async () => {
+        await this.uiAlertsService.alert({
+          title: 'Error al eliminar',
+          message: 'Se produjo un problema al intentar eliminar la cuenta.',
+          severity: 'danger'
+        });
       }
     });
   }

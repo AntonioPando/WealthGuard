@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ObjetivoResponse } from '../../../../models/objetivo.model';
 
 @Component({
   selector: 'app-meta-form',
@@ -10,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class MetaForm implements OnInit {
 
-  @Input() metaEditar: any = null;
+  @Input() metaEditar: ObjetivoResponse | null = null;
   @Output() guardar = new EventEmitter<number>();
   @Output() cancelar = new EventEmitter<void>();
 

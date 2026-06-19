@@ -1,17 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { Filtros } from './filtros/filtros';
 import { Tabla } from './tabla/tabla';
 import { HeaderMovimientos } from './header-movimientos/header-movimientos';
 import { MenuLateral } from "../../layout/menu-lateral/menu-lateral";
 import { Header } from "../../layout/header/header";
-import { TransaccionResponse } from '../../../models/transaccion.model';
+import { TransaccionRequest, TransaccionResponse } from '../../../models/transaccion.model';
 import { TransaccionService } from '../../../services/transaccion.service';
 import { TransaccionForm } from './transaccion-form/transaccion-form';
 import { CategoriaService } from '../../../services/categoria.service';
 import { ActivatedRoute } from '@angular/router';
 import { ObjetivoService } from '../../../services/objetivo.service';
-import { MetaForm } from './meta-form/meta-form';
 import { UtilsService } from '../../../services/utils.service';
+import { ObjetivoRequest, ObjetivoResponse } from '../../../models/objetivo.model';
+import { UiAlertsService } from '../../../services/ui-alerts.service';
+import { MetaForm } from './meta-form/meta-form';
 
 @Component({
   selector: 'app-movimientos',
@@ -29,7 +31,7 @@ import { UtilsService } from '../../../services/utils.service';
   styleUrls: ['./movimientos.css'],
 })
 export class Movimientos implements OnInit {
-
+  private readonly uiAlertsService = inject(UiAlertsService);
 
   public idUsuario!: number;
 
@@ -41,7 +43,7 @@ export class Movimientos implements OnInit {
   tendencia: number = 0;
   categoriaPrincipal: string[] = ['sin datos', '0,0'];
   meta: number[] = [0.0, 0.0];
-  metaPasada: any = null;
+  metaPasada: ObjetivoResponse | null = null;
 
   // variables para el filtro de categorias
   categorias: string[] = [];
@@ -49,11 +51,11 @@ export class Movimientos implements OnInit {
 
   // variables para el formulario
   mostrarPopup: boolean = false;
-  transaccionSeleccionada: any = null;
+  transaccionSeleccionada: TransaccionResponse | null = null;
 
   // variables para el objetivo
   mostrarModalMeta: boolean = false;
-  metaActivaEditar: any = null;
+  metaActivaEditar: ObjetivoResponse | null = null;
 
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
@@ -139,7 +141,7 @@ export class Movimientos implements OnInit {
     });
 
     this.objetivoService.obtenerMetaPasada(this.idUsuario).subscribe({
-      next: (resultado) => {
+      next: (resultado : ObjetivoResponse) => {
         this.metaPasada = resultado;
         this.cdr.detectChanges();
       },
@@ -202,7 +204,7 @@ export class Movimientos implements OnInit {
     this.aplicarFiltros();
   }
 
-  abrirFormulario(transaccion: any = null) {
+  abrirFormulario(transaccion: TransaccionResponse | null = null) {
     this.transaccionSeleccionada = transaccion;
     this.mostrarPopup = true;
   }
@@ -211,7 +213,7 @@ export class Movimientos implements OnInit {
     this.mostrarPopup = false;
   }
 
-  guardarTransaccion(datosFormulario: any) {
+  guardarTransaccion(datosFormulario: Omit<TransaccionRequest, 'idUsuario'>) {
 
     // Formateamos la fecha para que Java lo acepte como LocalDateTime
     const fechaParaJava = datosFormulario.fecha.includes('T')
@@ -252,28 +254,48 @@ export class Movimientos implements OnInit {
     }
   }
 
-  eliminarMovimiento(idTransaccion: number) {
-    if (confirm('¿Estás seguro de que deseas eliminar este movimiento?')) {
+  async eliminarMovimiento(idTransaccion: number) {
+    const confirmado = await this.uiAlertsService.confirm({
+      title: 'Eliminar movimiento',
+      message: '¿Estás seguro de que deseas eliminar este movimiento?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      severity: 'danger'
+    });
 
-      // Llamamos al método eliminarTransaccion
-      this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
-        next: (eliminado) => {
-          if (eliminado) {
-            // Si Java responde true, volvemos a cargar los datos reales
-            this.cargarDatos();
-          } else {
-            alert('No se pudo eliminar el movimiento.');
-          }
-        },
-        error: (err) => console.error('Error al intentar eliminar de la BD:', err)
-      });
+    if (!confirmado) return;
 
-    }
+    // Llamamos al método eliminarTransaccion
+    this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
+      next: async (eliminado) => {
+        if (eliminado) {
+          // Si Java responde true, volvemos a cargar los datos reales
+          this.cargarDatos();
+          return;
+        }
+
+        await this.uiAlertsService.alert({
+          title: 'No se pudo eliminar',
+          message: 'No se pudo eliminar el movimiento.',
+          confirmText: 'Entendido',
+          severity: 'danger'
+        });
+      },
+      error: async (err) => {
+        console.error('Error al intentar eliminar de la BD:', err);
+        await this.uiAlertsService.alert({
+          title: 'Error al eliminar',
+          message: 'Se produjo un problema al intentar eliminar el movimiento.',
+          confirmText: 'Entendido',
+          severity: 'danger'
+        });
+      }
+    });
   }
 
   abrirFormularioMeta() {
     this.objetivoService.obtenerMetaActiva(this.idUsuario).subscribe({
-      next: (meta) => {
+      next: (meta: ObjetivoResponse) => {
         this.metaActivaEditar = meta;
         this.mostrarModalMeta = true;
         this.cdr.detectChanges();
@@ -287,7 +309,7 @@ export class Movimientos implements OnInit {
   }
 
   guardarMeta(nuevaCantidad: number) {
-    const request = {
+    const request: ObjetivoRequest = {
       usuarioId: this.idUsuario,
       cantidadObjetivo: nuevaCantidad
     };
