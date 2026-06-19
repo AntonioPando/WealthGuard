@@ -10,24 +10,22 @@
   --danger: #ef4444;
   --danger-bg: #fef2f2;
 
-  --sidebar-space: 18.06vw;
-  --header-space: 7.78vh;
+  --sidebar-space: 18.06rem;
+  --header-space: 7.78rem;
 }
 
 .container {
-  margin-left: calc(var(--sidebar-width) + 1.389vw);
-  padding-left: 2.778vw;
-  padding-right: 2.778vw;
-  padding-top: 8.889vh;
+  margin-top: 10dvh;
+  margin-left: 0dvw;
 }
 
 .alerta {
-  max-width: 83.333vw;
-  margin: 0 auto 1.111vw auto;
-  padding: 0.833vw 1.111vw;
-  border-radius: 0.556vw;
+  max-width: 83.333rem;
+  margin: 0 auto 1.111rem auto;
+  padding: 0.833rem 1.111rem;
+  border-radius: 0.556rem;
   font-weight: 600;
-  border: 0.069vw solid transparent;
+  border: 0.069rem solid transparent;
 }
 
 .alerta-exito {
@@ -44,34 +42,34 @@
 
 .contenedor-principal {
   display: grid;
-  grid-template-columns: 1fr 22.222vw;
+  grid-template-columns: 1fr 22.222rem;
   grid-template-areas:
     "perfil perfil"
     "config ads";
-  gap: 1.667vw;
-  max-width: 83.333vw;
+  gap: 1.667rem;
+  max-width: 83.333rem;
   margin: 0 auto;
 }
 
 .tarjeta-perfil {
   grid-area: perfil;
   background: var(--white);
-  padding: 2.222vw;
-  border-radius: 1.111vw;
-  border: 0.069vw solid var(--border);
-  box-shadow: 0 0.278vw 0.417vw -0.069vw rgba(0, 0, 0, 0.05);
+  padding: 2.222rem;
+  border-radius: 1.111rem;
+  border: 0.069rem solid var(--border);
+  box-shadow: 0 0.278rem 0.417rem -0.069rem rgba(0, 0, 0, 0.05);
 }
 
 .contenido-perfil {
   display: flex;
   align-items: center;
-  gap: 2.222vw;
+  gap: 2.222rem;
 }
 
 .contenedor-avatar {
   position: relative;
-  width: 8.333vw;
-  height: 8.333vw;
+  width: 8.333rem;
+  height: 8.333rem;
 }
 
 .imagen-perfil {
@@ -79,19 +77,19 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 0.278vw solid var(--white);
-  box-shadow: 0 0 0 0.069vw var(--border);
+  border: 0.278rem solid var(--white);
+  box-shadow: 0 0 0 0.069rem var(--border);
 }
 
 .boton-editar-avatar {
   position: absolute;
-  bottom: 0.347vw;
-  right: 0.347vw;
-  width: 2.5vw;
-  height: 2.5vw;
+  bottom: 0.347rem;
+  right: 0.347rem;
+  width: 2.5rem;
+  height: 2.5rem;
   background: var(--primary);
   color: white;
-  border: 0.208vw solid var(--white);
+  border: 0.208rem solid var(--white);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -109,8 +107,8 @@
 }
 
 .datos-usuario h2 {
-  font-size: 1.667vw;
-  margin: 0 0 0.278vw 0;
+  font-size: 1.667rem;
+  margin: 0 0 0.278rem 0;
   color: var(--primary);
 }
 
@@ -122,23 +120,23 @@
 .etiqueta-fecha-registro {
   background: var(--accent-light);
   color: var(--accent);
-  padding: 0.417vw 0.833vw;
-  border-radius: 0.556vw;
-  font-size: 0.833vw;
+  padding: 0.417rem 0.833rem;
+  border-radius: 0.556rem;
+  font-size: 0.833rem;
   font-weight: 700;
-  border: 0.069vw solid #d1fae5;
+  border: 0.069rem solid #d1fae5;
 }
 
 .acciones-usuario {
   margin-left: auto;
   display: flex;
-  gap: 0.833vw;
+  gap: 0.833rem;
 }
 
 .boton-editar-perfil,
 .boton-exportar-datos {
-  padding: 0.694vw 1.389vw;
-  border-radius: 0.556vw;
+  padding: 0.694rem 1.389rem;
+  border-radius: 0.556rem;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -152,7 +150,7 @@
 
 .boton-exportar-datos {
   background: white;
-  border: 0.069vw solid var(--border);
+  border: 0.069rem solid var(--border);
   color: var(--text-main);
 }
 
@@ -166,67 +164,67 @@
   grid-area: ads;
   background: var(--primary);
   color: white;
-  padding: 1.667vw;
-  border-radius: 1.111vw;
+  padding: 1.667rem;
+  border-radius: 1.111rem;
   height: fit-content;
   position: sticky;
-  top: 10vh;
+  top: 10rem;
 }
 
 .badge-nuevo {
   background: var(--accent);
   display: inline-block;
-  padding: 0.278vw 0.556vw;
-  border-radius: 0.278vw;
-  font-size: 0.694vw;
+  padding: 0.278rem 0.556rem;
+  border-radius: 0.278rem;
+  font-size: 0.694rem;
   font-weight: 800;
-  margin-bottom: 1.111vw;
+  margin-bottom: 1.111rem;
 }
 
 .boton-proximamente {
   width: 100%;
-  margin-top: 2.222vw;
-  padding: 0.833vw;
+  margin-top: 2.222rem;
+  padding: 0.833rem;
   background: rgba(255, 255, 255, 0.1);
-  border: 0.069vw dashed rgba(255, 255, 255, 0.3);
+  border: 0.069rem dashed rgba(255, 255, 255, 0.3);
   color: white;
-  border-radius: 0.556vw;
-  font-size: 0.833vw;
+  border-radius: 0.556rem;
+  font-size: 0.833rem;
 }
 
 .grid-configuracion {
   grid-area: config;
   display: flex;
   flex-direction: column;
-  gap: 1.667vw;
+  gap: 1.667rem;
 }
 
 .seccion-ajustes,
 .seccion-desactivar-cuenta {
   background: var(--white);
-  padding: 1.667vw;
-  border-radius: 1.111vw;
-  border: 0.069vw solid var(--border);
+  padding: 1.667rem;
+  border-radius: 1.111rem;
+  border: 0.069rem solid var(--border);
 }
 
 .item-ajuste {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.111vw;
-  border: 0.069vw solid var(--border);
-  border-radius: 0.833vw;
-  margin-top: 1.111vw;
+  padding: 1.111rem;
+  border: 0.069rem solid var(--border);
+  border-radius: 0.833rem;
+  margin-top: 1.111rem;
 }
 
 .texto-item strong {
   display: block;
-  margin-bottom: 0.278vw;
+  margin-bottom: 0.278rem;
 }
 
 .texto-item p {
   margin: 0;
-  font-size: 0.903vw;
+  font-size: 0.903rem;
   color: var(--text-muted);
 }
 
@@ -243,7 +241,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.389vw;
+  gap: 1.389rem;
 }
 
 .texto-desactivar-cuenta h3 {
@@ -252,17 +250,17 @@
 }
 
 .texto-desactivar-cuenta p {
-  font-size: 0.903vw;
+  font-size: 0.903rem;
   color: var(--text-muted);
-  margin: 0.278vw 0 0 0;
+  margin: 0.278rem 0 0 0;
 }
 
 .boton-eliminar-cuenta {
   background: var(--danger-bg);
   color: var(--danger);
-  border: 0.069vw solid #fecaca;
-  padding: 0.694vw 1.389vw;
-  border-radius: 0.556vw;
+  border: 0.069rem solid #fecaca;
+  padding: 0.694rem 1.389rem;
+  border-radius: 0.556rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -280,49 +278,49 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 10001;
 }
 
 .modal-perfil {
-  width: min(90vw, 34.722vw);
+  width: min(90vw, 34.722rem);
   background: var(--white);
-  border-radius: 1.111vw;
-  border: 0.069vw solid var(--border);
-  box-shadow: 0 0.972vw 2.083vw -1.042vw rgba(15, 23, 42, 0.35);
-  padding: 1.667vw;
+  border-radius: 1.111rem;
+  border: 0.069rem solid var(--border);
+  box-shadow: 0 0.972rem 2.083rem -1.042rem rgba(15, 23, 42, 0.35);
+  padding: 1.667rem;
   box-sizing: border-box;
-  max-height: 90vh;
+  max-height: 90rem;
   overflow-y: auto;
 }
 
 .modal-perfil h3 {
-  margin: 0 0 1.111vw 0;
+  margin: 0 0 1.111rem 0;
   color: var(--primary);
 }
 
 .campo-form {
-  margin-bottom: 0.833vw;
+  margin-bottom: 0.833rem;
 }
 
 .campo-form label {
   display: block;
-  margin-bottom: 0.347vw;
+  margin-bottom: 0.347rem;
   color: var(--text-main);
   font-weight: 600;
 }
 
 .campo-form input {
   width: 100%;
-  border: 0.069vw solid var(--border);
-  border-radius: 0.556vw;
-  padding: 0.625vw 0.833vw;
+  border: 0.069rem solid var(--border);
+  border-radius: 0.556rem;
+  padding: 0.625rem 0.833rem;
   box-sizing: border-box;
-  font-size: 0.972vw;
+  font-size: 0.972rem;
 }
 
 .campo-doble {
   display: grid;
-  gap: 0.833vw;
+  gap: 0.833rem;
   grid-template-columns: 1fr 1fr;
 }
 
@@ -334,11 +332,11 @@
 
 .modal-perfil .entrada input {
   width: 100%;
-  border: 0.069vw solid var(--border);
-  border-radius: 0.556vw;
-  padding: 0.625vw 2.5vw 0.625vw 0.833vw;
+  border: 0.069rem solid var(--border);
+  border-radius: 0.556rem;
+  padding: 0.625rem 2.5rem 0.625rem 0.833rem;
   box-sizing: border-box;
-  font-size: 0.972vw;
+  font-size: 0.972rem;
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -346,16 +344,16 @@
 .modal-perfil .entrada input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 0.208vw rgb(16 185 129 / 22%);
+  box-shadow: 0 0 0 0.208rem rgb(16 185 129 / 22%);
 }
 
 .modal-perfil .icono {
   position: absolute;
-  right: 0.694vw;
+  right: 0.694rem;
   top: 50%;
   transform: translateY(-50%);
   color: #64748b;
-  font-size: 0.972vw;
+  font-size: 0.972rem;
   pointer-events: none;
 }
 
@@ -366,9 +364,9 @@
 
 .requisitos-password {
   display: grid;
-  gap: 0.278vw;
-  margin-top: 0.347vw;
-  font-size: 0.833vw;
+  gap: 0.278rem;
+  margin-top: 0.347rem;
+  font-size: 0.833rem;
 }
 
 .requisitos-password .cumplido {
@@ -380,20 +378,20 @@
 }
 
 .campo-error {
-  font-size: 0.833vw;
+  font-size: 0.833rem;
   color: #b91c1c;
 }
 
 .campo-exito {
-  font-size: 0.833vw;
+  font-size: 0.833rem;
   color: #15803d;
 }
 
 .acciones-modal {
   display: flex;
   justify-content: flex-end;
-  gap: 0.694vw;
-  margin-top: 1.111vw;
+  gap: 0.694rem;
+  margin-top: 1.111rem;
 }
 
 .boton-primario,
