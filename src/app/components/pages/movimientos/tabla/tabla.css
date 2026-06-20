@@ -180,6 +180,7 @@
 }
 
 .meta-pasada-banner {
+  grid-column: 1 / -1;
   margin-top: 24px;
   background-color: #ffffff;
   padding: 12px 20px;
@@ -213,4 +214,9 @@
 .banner-text strong {
   color: #1a202c;
   font-weight: 600;
+}
+
+.icon-candado {
+  opacity: 0.3;
+  cursor: help; 
 }
