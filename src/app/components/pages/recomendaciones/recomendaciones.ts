@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../../../services/login.service';
 import { ScoreFinancieroService } from '../../../services/score-financiero.service';
+import { RecomendacionService } from '../../../services/recomendaciones.service';
 import { Header } from '../../layout/header/header';
 import { MenuLateral } from '../../layout/menu-lateral/menu-lateral';
 import { RecomendacionResponseDTO } from '../../../models/recomendacion.model';
@@ -16,7 +16,6 @@ import { RecomendacionResponseDTO } from '../../../models/recomendacion.model';
 })
 export class RecomendacionesComponent implements OnInit {
 
-  private readonly API = 'http://localhost:8080/api/recomendaciones';
   private idUsuario: number | null = null;
 
   recomendaciones: RecomendacionResponseDTO[] = [];
@@ -27,9 +26,9 @@ export class RecomendacionesComponent implements OnInit {
   recomendacionActual: RecomendacionResponseDTO | null = null;
 
   constructor(
-    private http: HttpClient,
     private loginService: LoginService,
     private scoreFinancieroService: ScoreFinancieroService,
+    private recomendacionService: RecomendacionService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -47,28 +46,21 @@ export class RecomendacionesComponent implements OnInit {
 
     this.scoreFinancieroService.obtenerScoreMensual(this.idUsuario!).subscribe({
       next: (resultado) => {
-        const score = resultado.score;
-
-        this.http
-          .post<RecomendacionResponseDTO[]>(
-            `${this.API}/generar?idUsuario=${this.idUsuario}&score=${score}`,
-            {}
-          )
-          .subscribe({
-            next: (data) => {
-              this.recomendaciones = data;
-              this.cargando = false;
-              if (data.length > 0) {
-                this.recomendacionActual = data[0];
-                this.mostrarPopup = true;
-              }
-              this.cdr.markForCheck();
-            },
-            error: () => {
-              this.cargando = false;
-              this.cdr.markForCheck();
-            },
-          });
+        this.recomendacionService.generar(this.idUsuario!, resultado.score).subscribe({
+          next: (data) => {
+            this.recomendaciones = data;
+            this.cargando = false;
+            if (data.length > 0) {
+              this.recomendacionActual = data[0];
+              this.mostrarPopup = true;
+            }
+            this.cdr.markForCheck();
+          },
+          error: () => {
+            this.cargando = false;
+            this.cdr.markForCheck();
+          },
+        });
       },
       error: () => {
         this.cargarRecomendaciones();
@@ -78,19 +70,17 @@ export class RecomendacionesComponent implements OnInit {
 
   cargarRecomendaciones(): void {
     this.cargando = true;
-    this.http
-      .get<RecomendacionResponseDTO[]>(`${this.API}/usuario/${this.idUsuario}`)
-      .subscribe({
-        next: (data) => {
-          this.recomendaciones = data;
-          this.cargando = false;
-          this.cdr.markForCheck();
-        },
-        error: () => {
-          this.cargando = false;
-          this.cdr.markForCheck();
-        },
-      });
+    this.recomendacionService.obtenerPorUsuario(this.idUsuario!).subscribe({
+      next: (data) => {
+        this.recomendaciones = data;
+        this.cargando = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.cargando = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   cerrarPopup(): void {
@@ -108,9 +98,7 @@ export class RecomendacionesComponent implements OnInit {
   }
 
   toggleSeleccion(id: number): void {
-    if (this.esActualId(id)) {
-      return;
-    }
+    if (this.esActualId(id)) return;
     if (this.seleccionadas.has(id)) {
       this.seleccionadas.delete(id);
     } else {
@@ -120,10 +108,8 @@ export class RecomendacionesComponent implements OnInit {
   }
 
   eliminarUna(id: number): void {
-    if (this.esActualId(id)) {
-      return;
-    }
-    this.http.delete<boolean>(`${this.API}/${id}`).subscribe({
+    if (this.esActualId(id)) return;
+    this.recomendacionService.eliminar(id).subscribe({
       next: (ok) => {
         if (ok) {
           this.recomendaciones = this.recomendaciones.filter(r => r.idRecomendacion !== id);
@@ -140,13 +126,11 @@ export class RecomendacionesComponent implements OnInit {
     const idActual = this.recomendaciones[0]?.idRecomendacion;
     const ids = Array.from(this.seleccionadas).filter(id => id !== idActual);
 
-    if (ids.length === 0) {
-      return;
-    }
+    if (ids.length === 0) return;
 
     let pendientes = ids.length;
     ids.forEach((id) => {
-      this.http.delete<boolean>(`${this.API}/${id}`).subscribe({
+      this.recomendacionService.eliminar(id).subscribe({
         next: () => {
           pendientes--;
           if (pendientes === 0) {
