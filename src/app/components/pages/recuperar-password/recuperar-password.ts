@@ -89,7 +89,7 @@ comprobarRespuesta(): void {
       this.cargando = false;
       if (esCorrecta === true || esCorrecta as unknown === 'true') {
         this.paso = 3;
-        this.cdr.detectChanges(); // 👈 esto faltaba
+        this.cdr.detectChanges(); 
       } else {
         this.errorMensaje = 'Respuesta incorrecta.';
         this.cdr.detectChanges();
