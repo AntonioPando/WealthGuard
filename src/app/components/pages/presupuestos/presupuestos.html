@@ -3,6 +3,14 @@
 
 <div class="contenedor-presupuestos">
 
+    @if (mensajeError) {
+    <p class="error" role="alert" aria-live="assertive">{{ mensajeError }}</p>
+    }
+
+    @if (mensajeExito) {
+    <p class="exito" role="status" aria-live="polite">{{ mensajeExito }}</p>
+    }
+
     <header class="cabecera-presupuestos">
         <div class="titulos-cabecera">
             <h1>Presupuestos Mensuales</h1>

@@ -9,6 +9,7 @@ import { CategoriaService } from '../../../services/categoria.service';
 import { LoginService } from '../../../services/login.service';
 import { PresupuestoResponse } from '../../../models/presupuestos.model';
 import { UiAlertsService } from '../../../services/ui-alerts.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface PresupuestoInterfaz {
   id: number;
@@ -29,6 +30,7 @@ interface PresupuestoInterfaz {
 
 export class Presupuestos implements OnInit {
   private readonly uiAlertsService = inject(UiAlertsService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public idUsuario!: number;
 
@@ -37,13 +39,16 @@ export class Presupuestos implements OnInit {
 
   public listaPresupuestos: PresupuestoInterfaz[] = []
   public listaCategorias: { id: number, nombre: string }[] = [];
+  
+  public mensajeError: string = '';
+  public mensajeExito: string = '';
+  public cargandoDatos: boolean = false;
 
 
   constructor(
     private presupuestoService: PresupuestosService,
     private categoriaService: CategoriaService,
-    private loginService: LoginService,
-    private cdr: ChangeDetectorRef // Se fuerza el renderizado si Angular no detecta los cambios
+    private loginService: LoginService
   ) { }
 
   ngOnInit(): void {
@@ -51,14 +56,14 @@ export class Presupuestos implements OnInit {
   }
 
   private comprobarUsuarioLogeado(): void {
-
     const id = this.loginService.obtenerIdUsuario();
 
     if (id !== null) {
       this.idUsuario = id;
       this.cargarDatos();
     } else {
-      console.warn('WealthGuard Alerta: No se encontró un usuario logeado.');
+      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tus presupuestos.';
+      this.cdr.detectChanges();
     }
   }
 
@@ -81,6 +86,15 @@ export class Presupuestos implements OnInit {
   }
 
   cargarDatos() {
+    if (!this.idUsuario) {
+      this.mensajeError = 'No se pudo identificar el usuario. Inicia sesión nuevamente.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.mensajeError = '';
+    this.cargandoDatos = true;
+
     // Cargamos los presupuestos 
     this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
       next: (data: PresupuestoResponse[]) => {
@@ -92,9 +106,25 @@ export class Presupuestos implements OnInit {
           gastado: p.gastoActual,
           limite: p.limite
         }));
+        this.cargandoDatos = false;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al cargar presupuestos:', e)
+      error: (err: unknown) => {
+        this.cargandoDatos = false;
+        const httpError = err as HttpErrorResponse;
+
+        if (httpError.status === 0) {
+          this.mensajeError = 'No hay conexión con el backend. Revisa que http://localhost:8080 esté disponible.';
+        } else if (httpError.status === 401) {
+          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        } else if (httpError.status === 404) {
+          this.mensajeError = 'No se encontró el endpoint de presupuestos en el backend.';
+        } else {
+          this.mensajeError = 'No se pudieron cargar los presupuestos. Inténtalo de nuevo.';
+        }
+
+        this.cdr.detectChanges();
+      }
     });
 
     // Cargamos las categorías globales para el dropdown del formulario
@@ -102,14 +132,22 @@ export class Presupuestos implements OnInit {
       next: (data) => {
         this.listaCategorias = data.map(cat => ({
           id: cat.id,
-          nombre: cat.nombre,
-          icono: cat.icono
+          nombre: cat.nombre
         }));
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al cargar el catálogo de categorías:', e)
+      error: (err: unknown) => {
+        const httpError = err as HttpErrorResponse;
+        if (httpError.status === 0) {
+          this.mensajeError = 'No hay conexión con el backend. Revisa que http://localhost:8080 esté disponible.';
+        } else if (httpError.status === 401) {
+          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        } else {
+          this.mensajeError = 'No se pudieron cargar las categorías. Inténtalo de nuevo.';
+        }
+        this.cdr.detectChanges();
+      }
     });
-
   }
 
   // Calculamos el porcentaje de consumo del presupuesto
@@ -151,6 +189,7 @@ export class Presupuestos implements OnInit {
   guardarCambios() {
     if (!this.presupuestoEditando) return;
 
+    this.mensajeError = '';
     this.presupuestoService.editarPresupuesto(
       this.presupuestoEditando.id,
       this.presupuestoEditando.idCategoria,
@@ -160,11 +199,26 @@ export class Presupuestos implements OnInit {
     ).subscribe({
       next: (editado) => {
         if (editado) {
+          this.mensajeExito = 'Presupuesto actualizado correctamente.';
           this.cargarDatos();
           this.cerrarEdicion();
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         }
       },
-      error: (err) => console.error('Error al actualizar presupuesto en BD:', err)
+      error: (err: unknown) => {
+        const httpError = err as HttpErrorResponse;
+        if (httpError.status === 0) {
+          this.mensajeError = 'No hay conexión con el backend.';
+        } else if (httpError.status === 401) {
+          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        } else if (httpError.status === 400) {
+          this.mensajeError = 'Los datos del presupuesto no son válidos.';
+        } else {
+          this.mensajeError = 'No se pudo actualizar el presupuesto. Inténtalo de nuevo.';
+        }
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -181,12 +235,15 @@ export class Presupuestos implements OnInit {
 
     if (!confirmado) return;
 
+    this.mensajeError = '';
     this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
       next: async (eliminado) => {
         if (eliminado) {
+          this.mensajeExito = 'Presupuesto eliminado correctamente.';
           this.cargarDatos();
           this.cerrarEdicion();
-          console.log('Presupuesto eliminado de la BD');
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
           return;
         }
 
@@ -197,11 +254,22 @@ export class Presupuestos implements OnInit {
           severity: 'danger'
         });
       },
-      error: async (err) => {
-        console.error('Error al intentar eliminar de la BD:', err);
+      error: async (err: unknown) => {
+        const httpError = err as HttpErrorResponse;
+        let mensaje = 'Se produjo un problema al intentar eliminar el presupuesto.';
+        
+        if (httpError.status === 0) {
+          mensaje = 'No hay conexión con el backend.';
+        } else if (httpError.status === 401) {
+          mensaje = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        }
+
+        this.mensajeError = mensaje;
+        this.cdr.detectChanges();
+
         await this.uiAlertsService.alert({
           title: 'Error al eliminar',
-          message: 'Se produjo un problema al intentar eliminar el presupuesto.',
+          message: mensaje,
           confirmText: 'Entendido',
           severity: 'danger'
         });
@@ -214,6 +282,7 @@ export class Presupuestos implements OnInit {
   }
 
   guardarNuevoPresupuesto(datos: { idCategoria: number; limite: number }) {
+    this.mensajeError = '';
     const nuevoPresupuesto = {
       usuario: { id: this.idUsuario },
       categoria: { id: datos.idCategoria },
@@ -224,12 +293,26 @@ export class Presupuestos implements OnInit {
 
     this.presupuestoService.crearPresupuesto(nuevoPresupuesto).subscribe({
       next: () => {
+        this.mensajeExito = 'Presupuesto creado correctamente.';
         this.cargarDatos();
         this.mostrarFormulario = false;
+        this.cdr.detectChanges();
+        setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
       },
-      error: (err) => console.error('Error al guardar nuevo presupuesto:', err)
+      error: (err: unknown) => {
+        const httpError = err as HttpErrorResponse;
+        if (httpError.status === 0) {
+          this.mensajeError = 'No hay conexión con el backend.';
+        } else if (httpError.status === 401) {
+          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        } else if (httpError.status === 400) {
+          this.mensajeError = 'Los datos del presupuesto no son válidos.';
+        } else {
+          this.mensajeError = 'No se pudo crear el presupuesto. Inténtalo de nuevo.';
+        }
+        this.cdr.detectChanges();
+      }
     });
-
   }
 
   get nombreMesActual(): string {

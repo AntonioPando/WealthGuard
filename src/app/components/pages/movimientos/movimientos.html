@@ -4,6 +4,14 @@
 <div class="container">
 <app-header-movimientos (abrirCrearTransaccion)="abrirFormulario()"></app-header-movimientos>
 
+@if (mensajeError) {
+<p class="error" role="alert" aria-live="assertive">{{ mensajeError }}</p>
+}
+
+@if (mensajeExito) {
+<p class="exito" role="status" aria-live="polite">{{ mensajeExito }}</p>
+}
+
 <app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" 
 (limpiar)="limpiarFiltros()" 
 (tipoSeleccionado)="filtrarPorTipo($event)"
@@ -42,5 +50,3 @@
 }
 
 </div>
-
-

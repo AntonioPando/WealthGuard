@@ -14,6 +14,8 @@ import { UtilsService } from '../../../services/utils.service';
 import { ObjetivoRequest, ObjetivoResponse } from '../../../models/objetivo.model';
 import { UiAlertsService } from '../../../services/ui-alerts.service';
 import { MetaForm } from './meta-form/meta-form';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -32,6 +34,8 @@ import { MetaForm } from './meta-form/meta-form';
 })
 export class Movimientos implements OnInit {
   private readonly uiAlertsService = inject(UiAlertsService);
+  private readonly loginService = inject(LoginService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public idUsuario!: number;
 
@@ -59,8 +63,12 @@ export class Movimientos implements OnInit {
 
   categoriasDesdeBackend: { id: number, nombre: string }[] = [];
 
-  constructor(private route: ActivatedRoute, private objetivoService: ObjetivoService, private transaccionService: TransaccionService, private categoriaService: CategoriaService, private utilsService: UtilsService,
-    private cdr: ChangeDetectorRef) { }
+  // Variables de error
+  mensajeError: string = '';
+  mensajeExito: string = '';
+  cargandoDatos: boolean = false;
+
+  constructor(private route: ActivatedRoute, private objetivoService: ObjetivoService, private transaccionService: TransaccionService, private categoriaService: CategoriaService, private utilsService: UtilsService) { }
 
 
   ngOnInit(): void {
@@ -75,18 +83,26 @@ export class Movimientos implements OnInit {
   }
 
   private comprobarUsuarioLogeado(): void {
-
-    const id = this.utilsService.obtenerIdUsuario();
+    const id = this.loginService.obtenerIdUsuario();
 
     if (id !== null) {
       this.idUsuario = id;
       this.cargarDatos();
     } else {
-      console.warn('WealthGuard Alerta: No se encontró un usuario logeado.');
+      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tus movimientos.';
+      this.cdr.detectChanges();
     }
   }
 
   cargarDatos() {
+    if (!this.idUsuario) {
+      this.mensajeError = 'No se pudo identificar el usuario. Inicia sesión nuevamente.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.mensajeError = '';
+    this.cargandoDatos = true;
 
     // Cargamos las categorías globales para el formulario
     this.categoriaService.obtenerCategorias().subscribe({
@@ -97,21 +113,40 @@ export class Movimientos implements OnInit {
         }));
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al traer categorías:', e)
+      error: (err: unknown) => {
+        const httpError = err as HttpErrorResponse;
+        if (httpError.status === 0) {
+          this.mensajeError = 'No hay conexión con el backend. Revisa que http://localhost:8080 esté disponible.';
+        } else if (httpError.status === 401) {
+          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        } else {
+          this.mensajeError = 'No se pudieron cargar las categorías.';
+        }
+        this.cdr.detectChanges();
+      }
     });
 
     // Cargamos el historial completo de las transacciones
     this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
       next: (data) => {
-
         this.movimientos = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
-
         this.categorias = [...new Set(data.map(m => m.nombreCategoria).filter(Boolean))] as string[];
-
         this.limpiarFiltros(); 
+        this.cargandoDatos = false;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al cargar movimientos:', e)
+      error: (err: unknown) => {
+        this.cargandoDatos = false;
+        const httpError = err as HttpErrorResponse;
+        if (httpError.status === 0) {
+          this.mensajeError = 'No hay conexión con el backend.';
+        } else if (httpError.status === 401) {
+          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        } else {
+          this.mensajeError = 'No se pudieron cargar los movimientos. Inténtalo de nuevo.';
+        }
+        this.cdr.detectChanges();
+      }
     });
 
     // Cargamos los insights (Tendencia, Categoría Principal y Meta)
@@ -120,7 +155,9 @@ export class Movimientos implements OnInit {
         this.tendencia = resultado;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al obtener tendencia:', e)
+      error: () => {
+        this.tendencia = 0;
+      }
     });
 
     this.transaccionService.obtenerCategoriaPrincipal(this.idUsuario).subscribe({
@@ -128,7 +165,9 @@ export class Movimientos implements OnInit {
         this.categoriaPrincipal = resultado;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al obtener categoría principal:', e)
+      error: () => {
+        this.categoriaPrincipal = ['sin datos', '0,0'];
+      }
     });
 
     this.transaccionService.obtenerMeta(this.idUsuario).subscribe({
@@ -136,7 +175,9 @@ export class Movimientos implements OnInit {
         this.meta = resultado;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al obtener meta:', e)
+      error: () => {
+        this.meta = [0.0, 0.0];
+      }
     });
 
     this.objetivoService.obtenerMetaPasada(this.idUsuario).subscribe({
@@ -144,7 +185,9 @@ export class Movimientos implements OnInit {
         this.metaPasada = resultado;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al obtener meta pasada:', e)
+      error: () => {
+        this.metaPasada = null;
+      }
     });
   }
 
@@ -213,6 +256,7 @@ export class Movimientos implements OnInit {
   }
 
   guardarTransaccion(datosFormulario: Omit<TransaccionRequest, 'idUsuario'>) {
+    this.mensajeError = '';
 
     // Formateamos la fecha para que Java lo acepte como LocalDateTime
     const fechaParaJava = datosFormulario.fecha.includes('T')
@@ -234,10 +278,25 @@ export class Movimientos implements OnInit {
 
       this.transaccionService.editarTransaccion(idTransaccion, transaccionParaJava).subscribe({
         next: () => {
-          this.cargarDatos(); // Recarga la tabla
-          this.cerrarFormulario(); // Cierra el popup
+          this.mensajeExito = 'Movimiento actualizado correctamente.';
+          this.cargarDatos();
+          this.cerrarFormulario();
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
-        error: (err) => console.error('Error al actualizar:', err)
+        error: (err: unknown) => {
+          const httpError = err as HttpErrorResponse;
+          if (httpError.status === 0) {
+            this.mensajeError = 'No hay conexión con el backend.';
+          } else if (httpError.status === 401) {
+            this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+          } else if (httpError.status === 400) {
+            this.mensajeError = 'Los datos del movimiento no son válidos.';
+          } else {
+            this.mensajeError = 'No se pudo actualizar el movimiento. Inténtalo de nuevo.';
+          }
+          this.cdr.detectChanges();
+        }
       });
 
     } else {
@@ -245,10 +304,25 @@ export class Movimientos implements OnInit {
       // Para el modo crear
       this.transaccionService.crearTransaccion(transaccionParaJava).subscribe({
         next: () => {
+          this.mensajeExito = 'Movimiento creado correctamente.';
           this.cargarDatos();
           this.cerrarFormulario();
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
-        error: (err) => console.error('Error al guardar:', err)
+        error: (err: unknown) => {
+          const httpError = err as HttpErrorResponse;
+          if (httpError.status === 0) {
+            this.mensajeError = 'No hay conexión con el backend.';
+          } else if (httpError.status === 401) {
+            this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+          } else if (httpError.status === 400) {
+            this.mensajeError = 'Los datos del movimiento no son válidos.';
+          } else {
+            this.mensajeError = 'No se pudo crear el movimiento. Inténtalo de nuevo.';
+          }
+          this.cdr.detectChanges();
+        }
       });
     }
   }
@@ -264,12 +338,15 @@ export class Movimientos implements OnInit {
 
     if (!confirmado) return;
 
+    this.mensajeError = '';
     // Llamamos al método eliminarTransaccion
     this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
       next: async (eliminado) => {
         if (eliminado) {
-          // Si Java responde true, volvemos a cargar los datos reales
+          this.mensajeExito = 'Movimiento eliminado correctamente.';
           this.cargarDatos();
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
           return;
         }
 
@@ -280,11 +357,22 @@ export class Movimientos implements OnInit {
           severity: 'danger'
         });
       },
-      error: async (err) => {
-        console.error('Error al intentar eliminar de la BD:', err);
+      error: async (err: unknown) => {
+        const httpError = err as HttpErrorResponse;
+        let mensaje = 'Se produjo un problema al intentar eliminar el movimiento.';
+        
+        if (httpError.status === 0) {
+          mensaje = 'No hay conexión con el backend.';
+        } else if (httpError.status === 401) {
+          mensaje = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+        }
+
+        this.mensajeError = mensaje;
+        this.cdr.detectChanges();
+
         await this.uiAlertsService.alert({
           title: 'Error al eliminar',
-          message: 'Se produjo un problema al intentar eliminar el movimiento.',
+          message: mensaje,
           confirmText: 'Entendido',
           severity: 'danger'
         });
@@ -308,6 +396,7 @@ export class Movimientos implements OnInit {
   }
 
   guardarMeta(nuevaCantidad: number) {
+    this.mensajeError = '';
     const request: ObjetivoRequest = {
       usuarioId: this.idUsuario,
       cantidadObjetivo: nuevaCantidad
@@ -316,20 +405,44 @@ export class Movimientos implements OnInit {
     if (this.metaActivaEditar && this.metaActivaEditar.id) {
       this.objetivoService.editarObjetivo(this.metaActivaEditar.id, request).subscribe({
         next: () => {
+          this.mensajeExito = 'Meta actualizada correctamente.';
           this.mostrarModalMeta = false;
           this.cargarDatos();
-
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
-        error: (err) => console.error('Error al editar:', err) 
+        error: (err: unknown) => {
+          const httpError = err as HttpErrorResponse;
+          if (httpError.status === 0) {
+            this.mensajeError = 'No hay conexión con el backend.';
+          } else if (httpError.status === 401) {
+            this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+          } else {
+            this.mensajeError = 'No se pudo actualizar la meta. Inténtalo de nuevo.';
+          }
+          this.cdr.detectChanges();
+        }
       });
     } else {
       this.objetivoService.crearObjetivo(request).subscribe({
         next: () => {
+          this.mensajeExito = 'Meta creada correctamente.';
           this.mostrarModalMeta = false;
           this.cargarDatos();
-
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
-        error: (err) => console.error('Error al crear:', err) 
+        error: (err: unknown) => {
+          const httpError = err as HttpErrorResponse;
+          if (httpError.status === 0) {
+            this.mensajeError = 'No hay conexión con el backend.';
+          } else if (httpError.status === 401) {
+            this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+          } else {
+            this.mensajeError = 'No se pudo crear la meta. Inténtalo de nuevo.';
+          }
+          this.cdr.detectChanges();
+        }
       });
     }
   }
