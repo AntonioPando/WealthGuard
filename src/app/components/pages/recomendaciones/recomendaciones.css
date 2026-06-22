@@ -58,7 +58,6 @@
     margin: 0 auto;
 }
 
-/* ---------- TARJETA ---------- */
 .rec-card {
     position: relative;
     display: flex;
@@ -73,7 +72,6 @@
     overflow: hidden;
 }
 
-/* Barra lateral de color según score */
 .rec-card::before {
     content: '';
     position: absolute;

@@ -150,11 +150,11 @@ export class RecomendacionesComponent implements OnInit {
     });
   }
 
-  badgeClase(scoreRango: string): string {
-    if (!scoreRango) return '';
-    const inicio = parseInt(scoreRango.split('-')[0], 10);
-    if (inicio >= 700) return 'alto';
-    if (inicio >= 400) return 'medio';
-    return 'bajo';
-  }
+badgeClase(scoreRango: string): string {
+  if (!scoreRango) return '';
+  const inicio = parseInt(scoreRango.split('-')[0], 10);
+  if (inicio >= 600) return 'alto';   
+  if (inicio >= 200) return 'medio';  
+  return 'bajo';                       
+}
 }
