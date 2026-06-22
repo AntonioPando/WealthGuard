@@ -151,13 +151,7 @@ export class Dashboard implements OnInit {
 
   private obtenerIdUsuarioActivo(): number | null {
     if (this.idUsuario !== null) return this.idUsuario;
-
     this.idUsuario = this.utilsService.obtenerIdUsuario();
-    if (this.idUsuario === null) {
-      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para continuar.';
-      this.cdr.detectChanges();
-      return null;
-    }
     return this.idUsuario;
   }
 

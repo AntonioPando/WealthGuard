@@ -4,11 +4,11 @@
 <div class="contenedor-presupuestos">
 
     @if (mensajeError) {
-    <p class="error" role="alert" aria-live="assertive">{{ mensajeError }}</p>
+    <div class="alerta alerta-error" role="alert" aria-live="assertive">{{ mensajeError }}</div>
     }
 
     @if (mensajeExito) {
-    <p class="exito" role="status" aria-live="polite">{{ mensajeExito }}</p>
+    <div class="alerta alerta-exito" role="status" aria-live="polite">{{ mensajeExito }}</div>
     }
 
     <header class="cabecera-presupuestos">

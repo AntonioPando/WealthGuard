@@ -481,14 +481,17 @@
   cursor: pointer;
 }
 
-.error {
-  margin-bottom: 20px;
-  padding: 12px;
-  border-radius: 10px;
+.error,
+.alerta-error {
+  display: block;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
   border: 1px solid #fecaca;
-  background-color: #fef2f2;
+  background: #fef2f2;
   color: #b91c1c;
-  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 /* Responsive */

@@ -3,13 +3,14 @@
 <div class="pagina-dashboard">
   <app-menu-lateral></app-menu-lateral>
 
+
+
   <!-- Área de Contenido Principal -->
   <main class="contenedor-principal">
-    @if (mensajeError) {
-    <p class="error" role="alert" aria-live="assertive">
-      {{ mensajeError }}
-    </p>
-    }
+      @if (mensajeError) {
+  <div class="alerta alerta-error">{{ mensajeError }}</div>
+  }
+ 
     <!-- Sección: Indicadores Clave de Rendimiento (KPIs) -->
     <section class="rejilla-kpi" aria-label="Resumen financiero rápido">
       <!-- Tarjeta KPI: Saldo -->

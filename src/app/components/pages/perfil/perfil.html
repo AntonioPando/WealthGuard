@@ -56,7 +56,7 @@
             <strong>Contraseña</strong>
             <p>{{ formatearFechaPassword() }}</p>
           </div>
-          <button class="boton-flecha" (click)="abrirCambiarPassword()">Actualizar ›</button>
+          <button class="boton-flecha" [disabled]="!idUsuario" (click)="abrirCambiarPassword()">Actualizar ›</button>
         </div>
       </section>
 

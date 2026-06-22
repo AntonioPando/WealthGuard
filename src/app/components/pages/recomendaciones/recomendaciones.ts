@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginService } from '../../../services/login.service';
 import { ScoreFinancieroService } from '../../../services/score-financiero.service';
 import { RecomendacionService } from '../../../services/recomendaciones.service';
 import { UtilsService } from '../../../services/utils.service';
@@ -22,12 +21,12 @@ export class RecomendacionesComponent implements OnInit {
   recomendaciones: RecomendacionResponseDTO[] = [];
   seleccionadas = new Set<number>();
   cargando = true;
+  mensajeError: string = '';
 
   mostrarPopup = false;
   recomendacionActual: RecomendacionResponseDTO | null = null;
 
   constructor(
-    private loginService: LoginService,
     private scoreFinancieroService: ScoreFinancieroService,
     private recomendacionService: RecomendacionService,
     private utilsService: UtilsService,
@@ -38,6 +37,8 @@ export class RecomendacionesComponent implements OnInit {
     this.idUsuario = this.utilsService.obtenerIdUsuario();
     if (this.idUsuario === null) {
       this.cargando = false;
+      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tus recomendaciones.';
+      this.cdr.markForCheck();
       return;
     }
     this.generarYCargarRecomendaciones();
@@ -45,6 +46,7 @@ export class RecomendacionesComponent implements OnInit {
 
   generarYCargarRecomendaciones(): void {
     this.cargando = true;
+    this.mensajeError = '';
 
     this.scoreFinancieroService.obtenerScoreMensual(this.idUsuario!).subscribe({
       next: (resultado) => {
@@ -58,8 +60,9 @@ export class RecomendacionesComponent implements OnInit {
             }
             this.cdr.markForCheck();
           },
-          error: () => {
+          error: (err: unknown) => {
             this.cargando = false;
+            this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar las recomendaciones.');
             this.cdr.markForCheck();
           },
         });
@@ -78,8 +81,9 @@ export class RecomendacionesComponent implements OnInit {
         this.cargando = false;
         this.cdr.markForCheck();
       },
-      error: () => {
+      error: (err: unknown) => {
         this.cargando = false;
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar las recomendaciones. Inténtalo de nuevo.');
         this.cdr.markForCheck();
       },
     });
@@ -120,7 +124,10 @@ export class RecomendacionesComponent implements OnInit {
         }
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Error al eliminar recomendación', err),
+      error: (err: unknown) => {
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo eliminar la recomendación.');
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -140,13 +147,14 @@ export class RecomendacionesComponent implements OnInit {
             this.cargarRecomendaciones();
           }
         },
-        error: (err) => {
-          console.error('Error al eliminar recomendación', err);
+        error: (err: unknown) => {
+          this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron eliminar las recomendaciones seleccionadas.');
           pendientes--;
           if (pendientes === 0) {
             this.seleccionadas.clear();
             this.cargarRecomendaciones();
           }
+          this.cdr.markForCheck();
         },
       });
     });
