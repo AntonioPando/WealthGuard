@@ -1,8 +1,8 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { LoginService } from '../../../services/login.service';
+import { UtilsService } from '../../../services/utils.service';
 import { TimeoutError, finalize } from 'rxjs';
 
 @Component({
@@ -11,7 +11,6 @@ import { TimeoutError, finalize } from 'rxjs';
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
-
 export class Login {
   usuario: string = '';
   password: string = '';
@@ -25,12 +24,11 @@ export class Login {
     private loginService: LoginService,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private utilsService: UtilsService,
   ) { }
 
   onSubmit(): void {
-    if (this.cargando) {
-      return;
-    }
+    if (this.cargando) return;
 
     this.errormensaje = '';
 
@@ -55,7 +53,6 @@ export class Login {
             clearTimeout(this.bloqueoSubmitId);
             this.bloqueoSubmitId = null;
           }
-
           this.cargando = false;
           this.cdr.detectChanges();
         })
@@ -65,43 +62,31 @@ export class Login {
           this.router.navigate(['/dashboard']);
         },
         error: (error: unknown) => {
-
           if (error instanceof TimeoutError) {
             this.errormensaje = 'El servidor tardó demasiado en responder. Inténtalo de nuevo.';
             this.cdr.detectChanges();
             return;
           }
 
-          const httpError = error as HttpErrorResponse;
-
+          // Mensaje personalizado para 401 con mensaje del backend
+          const httpError = error as any;
           if (httpError.status === 401) {
-            const mensajeBackend = (httpError.error as { mensaje?: string })?.mensaje;
+            const mensajeBackend = httpError.error?.mensaje;
             this.errormensaje = mensajeBackend || 'Usuario o contraseña incorrectos.';
-            this.cdr.detectChanges();
-            return;
-          }
-
-          if (httpError.status === 404) {
+          } else if (httpError.status === 404) {
             this.errormensaje = 'No se encontró el endpoint de login en el backend.';
-            this.cdr.detectChanges();
-            return;
+          } else {
+            this.errormensaje = this.utilsService.manejarError(error, 'No se pudo iniciar sesión. Inténtalo de nuevo.');
           }
 
-          if (httpError.status === 0) {
-            this.errormensaje = 'No hay conexión con el backend en http://localhost:8080.';
-            this.cdr.detectChanges();
-            return;
-          }
-
-          this.errormensaje = 'No se pudo iniciar sesión. Inténtalo de nuevo.';
           this.cdr.detectChanges();
         }
       });
   }
 
-onOlvideMiPassword(): void {
-  this.router.navigate(['/recuperar-password']);
-}
+  onOlvideMiPassword(): void {
+    this.router.navigate(['/recuperar-password']);
+  }
 
   togglePassword(): void {
     this.mostrarPassword = !this.mostrarPassword;

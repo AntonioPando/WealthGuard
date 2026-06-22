@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RecuperarPasswordService } from '../../../services/recuperar-password.service';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-recuperar-password',
@@ -32,25 +33,15 @@ export class RecuperarPassword {
   constructor(
     private router: Router,
     private recuperarPasswordService: RecuperarPasswordService,
+    private utilsService: UtilsService,
     private cdr: ChangeDetectorRef
   ) { }
 
-  get tieneMinCaracteres() {
-    return this.passwordNueva.length >= 6;
-  }
-  get tieneMayuscula() {
-    return /[A-Z]/.test(this.passwordNueva);
-  }
-  get tieneMinuscula() {
-    return /[a-z]/.test(this.passwordNueva);
-  }
-
-  get tieneNumero() {
-    return /[0-9]/.test(this.passwordNueva);
-  }
-  get passwordsCoinciden() {
-    return this.passwordNueva === this.confirmarPasswordNueva;
-  }
+  get tieneMinCaracteres() { return this.passwordNueva.length >= 6; }
+  get tieneMayuscula() { return /[A-Z]/.test(this.passwordNueva); }
+  get tieneMinuscula() { return /[a-z]/.test(this.passwordNueva); }
+  get tieneNumero() { return /[0-9]/.test(this.passwordNueva); }
+  get passwordsCoinciden() { return this.passwordNueva === this.confirmarPasswordNueva; }
   get passwordValida() {
     return this.tieneMinCaracteres && this.tieneMayuscula && this.tieneMinuscula && this.tieneNumero;
   }
@@ -71,44 +62,45 @@ export class RecuperarPassword {
       },
       error: (err: HttpErrorResponse) => {
         this.cargando = false;
+        // Prioritize backend message; fall back to manejarError for connection/auth issues
         const mensajeBackend = (err.error as { mensaje?: string })?.mensaje;
-        this.errorMensaje = mensajeBackend || 'No se ha encontrado ese usuario.';
+        this.errorMensaje = mensajeBackend
+          || this.utilsService.manejarError(err, 'No se ha encontrado ese usuario.');
+        this.cdr.detectChanges();
       }
     });
   }
 
-comprobarRespuesta(): void {
-  this.errorMensaje = '';
-  if (!this.respuesta.trim()) {
-    this.errorMensaje = 'Debes escribir una respuesta.';
-    return;
-  }
-  this.cargando = true;
-  this.recuperarPasswordService.verificarRespuesta(this.usuario.trim(), this.respuesta.trim()).subscribe({
-    next: (esCorrecta) => {
-      this.cargando = false;
-      if (esCorrecta === true || esCorrecta as unknown === 'true') {
-        this.paso = 3;
-        this.cdr.detectChanges(); 
-      } else {
-        this.errorMensaje = 'Respuesta incorrecta.';
+  comprobarRespuesta(): void {
+    this.errorMensaje = '';
+    if (!this.respuesta.trim()) {
+      this.errorMensaje = 'Debes escribir una respuesta.';
+      return;
+    }
+    this.cargando = true;
+    this.recuperarPasswordService.verificarRespuesta(this.usuario.trim(), this.respuesta.trim()).subscribe({
+      next: (esCorrecta) => {
+        this.cargando = false;
+        if (esCorrecta === true || esCorrecta as unknown === 'true') {
+          this.paso = 3;
+        } else {
+          this.errorMensaje = 'Respuesta incorrecta.';
+        }
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.cargando = false;
+        this.errorMensaje = this.utilsService.manejarError(err, 'No se pudo comprobar la respuesta. Inténtalo de nuevo.');
         this.cdr.detectChanges();
       }
-    },
-    error: () => {
-      this.cargando = false;
-      this.errorMensaje = 'No se pudo comprobar la respuesta. Inténtalo de nuevo.';
-      this.cdr.detectChanges();
-    }
-  });
-}
+    });
+  }
+
   onSubmit(): void {
     this.formularioEnviado = true;
     this.errorMensaje = '';
 
-    if (!this.passwordValida || !this.passwordsCoinciden) {
-      return;
-    }
+    if (!this.passwordValida || !this.passwordsCoinciden) return;
 
     this.cargando = true;
     this.recuperarPasswordService
@@ -122,8 +114,10 @@ comprobarRespuesta(): void {
         error: (err: HttpErrorResponse) => {
           this.cargando = false;
           const mensajeBackend = (err.error as { mensaje?: string })?.mensaje;
-          this.errorMensaje = mensajeBackend || 'No se pudo actualizar la contraseña.';
-          this.paso = 2; // por si la respuesta dejó de ser válida, que la repita
+          this.errorMensaje = mensajeBackend
+            || this.utilsService.manejarError(err, 'No se pudo actualizar la contraseña.');
+          this.paso = 2;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -133,13 +127,7 @@ comprobarRespuesta(): void {
     this.errorMensaje = '';
   }
 
-  togglePassword(): void {
-    this.mostrarPassword = !this.mostrarPassword;
-  }
-  toggleConfirmarPassword(): void {
-    this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword;
-  }
-  onVolverAlLogin(): void {
-    this.router.navigate(['/login']);
-  }
+  togglePassword(): void { this.mostrarPassword = !this.mostrarPassword; }
+  toggleConfirmarPassword(): void { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
+  onVolverAlLogin(): void { this.router.navigate(['/login']); }
 }

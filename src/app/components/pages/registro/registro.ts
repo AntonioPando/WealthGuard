@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RegistroService } from '../../../services/registro.service';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-registro',
@@ -43,7 +44,8 @@ export class Registro {
 
   constructor(
     private router: Router,
-    private registroService: RegistroService
+    private registroService: RegistroService,
+    private utilsService: UtilsService
   ) { }
 
   get nickValido() { return this.nickUsuario.trim().length >= 3 && !this.nickRepetido; }
@@ -95,9 +97,7 @@ export class Registro {
 
   irAlPaso2(): void {
     this.formularioEnviado = true;
-    if (!this.nickValido || !this.nombreValido || !this.apellidoValido || !this.emailValido) {
-      return;
-    }
+    if (!this.nickValido || !this.nombreValido || !this.apellidoValido || !this.emailValido) return;
     this.formularioEnviado = false;
     this.errorMensaje = '';
     this.paso = 2;
@@ -108,14 +108,8 @@ export class Registro {
     this.errorMensaje = '';
   }
 
-  togglePassword(): void {
-    this.mostrarPassword = !this.mostrarPassword;
-  }
-
-  toggleConfirmarPassword(): void {
-    this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword;
-  }
-
+  togglePassword(): void { this.mostrarPassword = !this.mostrarPassword; }
+  toggleConfirmarPassword(): void { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
 
   onSubmit(): void {
     this.formularioEnviado = true;
@@ -147,12 +141,11 @@ export class Registro {
       },
       error: (err: HttpErrorResponse) => {
         this.cargando = false;
+        // 400 has its own specific message about nick/email conflict
         if (err.status === 400) {
           this.errorMensaje = 'El nick o el email ya están en uso. Prueba con otros datos.';
-        } else if (err.status === 0) {
-          this.errorMensaje = 'No hay conexión con el servidor. Comprueba que el backend está activo.';
         } else {
-          this.errorMensaje = 'No se pudo crear la cuenta. Inténtalo de nuevo.';
+          this.errorMensaje = this.utilsService.manejarError(err, 'No se pudo crear la cuenta. Inténtalo de nuevo.');
         }
       }
     });

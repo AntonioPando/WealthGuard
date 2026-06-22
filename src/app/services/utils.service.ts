@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -43,4 +44,27 @@ export class UtilsService {
       return '';
     }
   }
+
+  manejarError(err: unknown, mensajeFallback: string): string {
+    const httpError = err as HttpErrorResponse;
+
+    if (httpError.status === 0) {
+      return 'Sin conexión con el backend en http://localhost:8080.';
+    }
+
+    if (httpError.status === 401) {
+      return 'Tu sesión ha expirado. Inicia sesión nuevamente.';
+    }
+
+    if (httpError.status === 403) {
+      return 'No tienes permisos para realizar esta acción.';
+    }
+
+    if (httpError.status === 404) {
+      return 'El recurso solicitado no existe.';
+    }
+
+    return mensajeFallback;
+  }
+
 }

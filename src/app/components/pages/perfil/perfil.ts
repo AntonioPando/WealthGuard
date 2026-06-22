@@ -9,6 +9,7 @@ import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FotoPerfilService } from '../../../services/foto-perfil.service';
 import { UiAlertsService } from '../../../services/ui-alerts.service';
+import { UtilsService } from '../../../services/utils.service';
 
 @Component({
   selector: 'app-perfil',
@@ -25,6 +26,7 @@ export class Perfil implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly fotoPerfilService = inject(FotoPerfilService);
   private readonly uiAlertsService = inject(UiAlertsService);
+  private readonly utilsService = inject(UtilsService);
 
   idUsuario: number | null = null;
 
@@ -106,7 +108,7 @@ export class Perfil implements OnInit {
   }
 
   ngOnInit(): void {
-    this.idUsuario = this.loginService.obtenerIdUsuario();
+    this.idUsuario = this.utilsService.obtenerIdUsuario();
 
     if (this.idUsuario === null) {
       this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tu perfil.';
@@ -127,16 +129,14 @@ export class Perfil implements OnInit {
         this.usuario = data;
         const foto = data.fotoPerfil;
         if (foto) {
-          const url = foto.startsWith('http')
-            ? foto
-            : 'http://localhost:8080/' + foto.replace(/\\/g, '/');
+          const url = foto.startsWith('http') ? foto : 'http://localhost:8080/' + foto.replace(/\\/g, '/');
           this.fotoPerfilService.actualizar(url);
         }
         this.cargandoPerfil = false;
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.mensajeError = 'No se pudo cargar el perfil. Inicia sesión nuevamente para ver tu perfil.';
+      error: (err) => {
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo cargar el perfil. Inicia sesión nuevamente para ver tu perfil.');
         this.cargandoPerfil = false;
         this.cdr.detectChanges();
       }
@@ -181,17 +181,14 @@ export class Perfil implements OnInit {
       this.mensajeErrorEditarPerfil = 'Nombre, usuario y email son obligatorios.';
       return;
     }
-
     if (this.nickRepetidoEditar) {
       this.mensajeErrorEditarPerfil = 'El nombre de usuario ya está en uso.';
       return;
     }
-
     if (this.emailRepetidoEditar) {
       this.mensajeErrorEditarPerfil = 'El correo electrónico ya está en uso.';
       return;
     }
-
     if (!this.formularioEditar.password || this.formularioEditar.password.trim() === '') {
       this.mensajeErrorEditarPerfil = 'Debes introducir tu contraseña para guardar los cambios.';
       return;
@@ -212,11 +209,9 @@ export class Perfil implements OnInit {
       },
       error: (err) => {
         this.guardandoPerfil = false;
-        if (err.status === 400) {
-          this.mensajeErrorEditarPerfil = 'La contraseña introducida es incorrecta.';
-        } else {
-          this.mensajeErrorEditarPerfil = 'No se pudo actualizar el perfil.';
-        }
+        this.mensajeErrorEditarPerfil = err.status === 400
+          ? 'La contraseña introducida es incorrecta.'
+          : 'No se pudo actualizar el perfil.';
         this.cdr.detectChanges();
       }
     });
@@ -247,7 +242,6 @@ export class Perfil implements OnInit {
       this.mensajeErrorPassword = 'Debes introducir tu contraseña actual.';
       return;
     }
-
     if (!this.nuevaPasswordValida || !this.nuevasPasswordsCoinciden) {
       this.mensajeError = 'La nueva contraseña no cumple los requisitos o no coincide.';
       return;
@@ -271,11 +265,9 @@ export class Perfil implements OnInit {
       },
       error: (err) => {
         this.actualizandoPassword = false;
-        if (err.status === 400 || err.status === 401) {
-          this.mensajeErrorPassword = 'La contraseña actual es incorrecta.';
-        } else {
-          this.mensajeErrorPassword = 'No se pudo actualizar la contraseña.';
-        }
+        this.mensajeErrorPassword = (err.status === 400 || err.status === 401)
+          ? 'La contraseña actual es incorrecta.'
+          : 'No se pudo actualizar la contraseña.';
         this.cdr.detectChanges();
       }
     });
@@ -291,19 +283,15 @@ export class Perfil implements OnInit {
 
     this.usuarioService.actualizarFotoPerfil(idUsuario, archivo).subscribe({
       next: (url) => {
-        const urlLimpia = url.startsWith('http')
-          ? url
-          : 'http://localhost:8080/' + url.replace(/\\/g, '/');
+        const urlLimpia = url.startsWith('http') ? url : 'http://localhost:8080/' + url.replace(/\\/g, '/');
         const urlConTimestamp = urlLimpia + '?t=' + Date.now();
-        if (this.usuario) {
-          this.usuario.fotoPerfil = urlConTimestamp;
-        }
+        if (this.usuario) this.usuario.fotoPerfil = urlConTimestamp;
         this.fotoPerfilService.actualizar(urlConTimestamp);
         this.mensajeExito = 'Foto de perfil actualizada.';
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.mensajeError = 'No se pudo actualizar la foto de perfil.';
+      error: (err) => {
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo actualizar la foto de perfil.');
         this.cdr.detectChanges();
       }
     });
@@ -358,7 +346,6 @@ export class Perfil implements OnInit {
 
   exportarDatosPerfil() {
     if (!this.usuario) return;
-
     const contenido = JSON.stringify(this.usuario, null, 2);
     const blob = new Blob([contenido], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -372,15 +359,13 @@ export class Perfil implements OnInit {
   obtenerNombreCompleto(): string {
     if (!this.usuario) return '';
     return [this.usuario.nombre, this.usuario.primerApellido, this.usuario.segundoApellido]
-      .filter(Boolean)
-      .join(' ');
+      .filter(Boolean).join(' ');
   }
 
   obtenerFotoPerfil(): string {
     const foto = this.usuario?.fotoPerfil;
     if (!foto) return '/usuario.png';
-    if (foto.startsWith('http')) return foto;
-    return 'http://localhost:8080/' + foto.replace(/\\/g, '/');
+    return foto.startsWith('http') ? foto : 'http://localhost:8080/' + foto.replace(/\\/g, '/');
   }
 
   formatearFechaRegistro(): string {
@@ -395,8 +380,7 @@ export class Perfil implements OnInit {
     if (!fecha) return 'Nunca actualizada';
 
     const ahora = new Date();
-    const fechaActualizacion = new Date(fecha);
-    const diffMs = ahora.getTime() - fechaActualizacion.getTime();
+    const diffMs = ahora.getTime() - new Date(fecha).getTime();
     const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
     if (diffDias === 0) return 'Actualizada hoy';
@@ -421,13 +405,12 @@ export class Perfil implements OnInit {
   private obtenerIdUsuarioActivo(): number | null {
     if (this.idUsuario !== null) return this.idUsuario;
 
-    this.idUsuario = this.loginService.obtenerIdUsuario();
+    this.idUsuario = this.utilsService.obtenerIdUsuario();
     if (this.idUsuario === null) {
       this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para continuar.';
       this.cdr.detectChanges();
       return null;
     }
-
     return this.idUsuario;
   }
 }

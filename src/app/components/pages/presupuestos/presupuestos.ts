@@ -7,9 +7,9 @@ import { PresupuestoForm } from './presupuesto-form/presupuesto-form';
 import { PresupuestosService } from '../../../services/presupuesto.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { LoginService } from '../../../services/login.service';
+import { UtilsService } from '../../../services/utils.service';
 import { PresupuestoResponse } from '../../../models/presupuestos.model';
 import { UiAlertsService } from '../../../services/ui-alerts.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 interface PresupuestoInterfaz {
   id: number;
@@ -27,7 +27,6 @@ interface PresupuestoInterfaz {
   templateUrl: './presupuestos.html',
   styleUrl: './presupuestos.css',
 })
-
 export class Presupuestos implements OnInit {
   private readonly uiAlertsService = inject(UiAlertsService);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -37,18 +36,18 @@ export class Presupuestos implements OnInit {
   public presupuestoEditando: PresupuestoInterfaz | null = null;
   public mostrarFormulario: boolean = false;
 
-  public listaPresupuestos: PresupuestoInterfaz[] = []
+  public listaPresupuestos: PresupuestoInterfaz[] = [];
   public listaCategorias: { id: number, nombre: string }[] = [];
-  
+
   public mensajeError: string = '';
   public mensajeExito: string = '';
   public cargandoDatos: boolean = false;
 
-
   constructor(
     private presupuestoService: PresupuestosService,
     private categoriaService: CategoriaService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit(): void {
@@ -57,7 +56,6 @@ export class Presupuestos implements OnInit {
 
   private comprobarUsuarioLogeado(): void {
     const id = this.loginService.obtenerIdUsuario();
-
     if (id !== null) {
       this.idUsuario = id;
       this.cargarDatos();
@@ -67,22 +65,16 @@ export class Presupuestos implements OnInit {
     }
   }
 
-  // Calculamos las fechas del mes actual
   private obtenerFechaInicioMes(): string {
     const ahora = new Date();
-    const anio = ahora.getFullYear();
-    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-    return `${anio}-${mes}-01T00:00:00`;
+    return `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-01T00:00:00`;
   }
 
   private obtenerFechaFinMes(): string {
     const ahora = new Date();
-    const anio = ahora.getFullYear();
     const mes = ahora.getMonth() + 1;
-    // El día '0' del siguiente mes nos da el último día del mes actual
-    const ultimoDia = new Date(anio, mes, 0).getDate();
-    const mesStr = String(mes).padStart(2, '0');
-    return `${anio}-${mesStr}-${String(ultimoDia).padStart(2, '0')}T23:59:59`;
+    const ultimoDia = new Date(ahora.getFullYear(), mes, 0).getDate();
+    return `${ahora.getFullYear()}-${String(mes).padStart(2, '0')}-${String(ultimoDia).padStart(2, '0')}T23:59:59`;
   }
 
   cargarDatos() {
@@ -95,7 +87,6 @@ export class Presupuestos implements OnInit {
     this.mensajeError = '';
     this.cargandoDatos = true;
 
-    // Cargamos los presupuestos 
     this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
       next: (data: PresupuestoResponse[]) => {
         this.listaPresupuestos = data.map(p => ({
@@ -111,46 +102,23 @@ export class Presupuestos implements OnInit {
       },
       error: (err: unknown) => {
         this.cargandoDatos = false;
-        const httpError = err as HttpErrorResponse;
-
-        if (httpError.status === 0) {
-          this.mensajeError = 'No hay conexión con el backend. Revisa que http://localhost:8080 esté disponible.';
-        } else if (httpError.status === 401) {
-          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
-        } else if (httpError.status === 404) {
-          this.mensajeError = 'No se encontró el endpoint de presupuestos en el backend.';
-        } else {
-          this.mensajeError = 'No se pudieron cargar los presupuestos. Inténtalo de nuevo.';
-        }
-
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar los presupuestos. Inténtalo de nuevo.');
         this.cdr.detectChanges();
       }
     });
 
-    // Cargamos las categorías globales para el dropdown del formulario
     this.categoriaService.obtenerCategorias().subscribe({
       next: (data) => {
-        this.listaCategorias = data.map(cat => ({
-          id: cat.id,
-          nombre: cat.nombre
-        }));
+        this.listaCategorias = data.map(cat => ({ id: cat.id, nombre: cat.nombre }));
         this.cdr.detectChanges();
       },
       error: (err: unknown) => {
-        const httpError = err as HttpErrorResponse;
-        if (httpError.status === 0) {
-          this.mensajeError = 'No hay conexión con el backend. Revisa que http://localhost:8080 esté disponible.';
-        } else if (httpError.status === 401) {
-          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
-        } else {
-          this.mensajeError = 'No se pudieron cargar las categorías. Inténtalo de nuevo.';
-        }
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar las categorías. Inténtalo de nuevo.');
         this.cdr.detectChanges();
       }
     });
   }
 
-  // Calculamos el porcentaje de consumo del presupuesto
   calcularPorcentaje(gastado: number, limite: number): number {
     if (!limite) return 0;
     return Math.floor((gastado / limite) * 100);
@@ -163,22 +131,17 @@ export class Presupuestos implements OnInit {
     return 'bueno';
   }
 
-
-  // Categoría con mayor gasto
   get categoriaMasGasto(): PresupuestoInterfaz | null {
     if (this.listaPresupuestos.length === 0) return null;
     return [...this.listaPresupuestos].sort((a, b) => b.gastado - a.gastado)[0];
   }
 
-  // Categoría con menor gasto
   get categoriaMenosGasto() {
     if (this.listaPresupuestos.length === 0) return null;
     return [...this.listaPresupuestos].sort((a, b) => a.gastado - b.gastado)[0];
   }
 
-  //Editar
   abrirEdicion(presupuesto: PresupuestoInterfaz) {
-    // Hacemos una copia para no modificar el original hasta guardar
     this.presupuestoEditando = { ...presupuesto };
   }
 
@@ -207,16 +170,7 @@ export class Presupuestos implements OnInit {
         }
       },
       error: (err: unknown) => {
-        const httpError = err as HttpErrorResponse;
-        if (httpError.status === 0) {
-          this.mensajeError = 'No hay conexión con el backend.';
-        } else if (httpError.status === 401) {
-          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
-        } else if (httpError.status === 400) {
-          this.mensajeError = 'Los datos del presupuesto no son válidos.';
-        } else {
-          this.mensajeError = 'No se pudo actualizar el presupuesto. Inténtalo de nuevo.';
-        }
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo actualizar el presupuesto. Inténtalo de nuevo.');
         this.cdr.detectChanges();
       }
     });
@@ -246,7 +200,6 @@ export class Presupuestos implements OnInit {
           setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
           return;
         }
-
         await this.uiAlertsService.alert({
           title: 'No se pudo eliminar',
           message: 'No se pudo eliminar el presupuesto.',
@@ -255,18 +208,9 @@ export class Presupuestos implements OnInit {
         });
       },
       error: async (err: unknown) => {
-        const httpError = err as HttpErrorResponse;
-        let mensaje = 'Se produjo un problema al intentar eliminar el presupuesto.';
-        
-        if (httpError.status === 0) {
-          mensaje = 'No hay conexión con el backend.';
-        } else if (httpError.status === 401) {
-          mensaje = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
-        }
-
+        const mensaje = this.utilsService.manejarError(err, 'Se produjo un problema al intentar eliminar el presupuesto.');
         this.mensajeError = mensaje;
         this.cdr.detectChanges();
-
         await this.uiAlertsService.alert({
           title: 'Error al eliminar',
           message: mensaje,
@@ -300,27 +244,14 @@ export class Presupuestos implements OnInit {
         setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
       },
       error: (err: unknown) => {
-        const httpError = err as HttpErrorResponse;
-        if (httpError.status === 0) {
-          this.mensajeError = 'No hay conexión con el backend.';
-        } else if (httpError.status === 401) {
-          this.mensajeError = 'Tu sesión ha expirado. Inicia sesión nuevamente.';
-        } else if (httpError.status === 400) {
-          this.mensajeError = 'Los datos del presupuesto no son válidos.';
-        } else {
-          this.mensajeError = 'No se pudo crear el presupuesto. Inténtalo de nuevo.';
-        }
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo crear el presupuesto. Inténtalo de nuevo.');
         this.cdr.detectChanges();
       }
     });
   }
 
   get nombreMesActual(): string {
-    const fecha = new Date();
-    const nombre = fecha.toLocaleString('es-ES', { month: 'long' });
+    const nombre = new Date().toLocaleString('es-ES', { month: 'long' });
     return nombre.charAt(0).toUpperCase() + nombre.slice(1);
   }
-
 }
-
-
