@@ -103,14 +103,13 @@ export class Movimientos implements OnInit {
     // Cargamos el historial completo de las transacciones
     this.transaccionService.listarTransacciones(this.idUsuario).subscribe({
       next: (data) => {
-        // Ordenamos las transacciones por fecha (de más reciente a más antigua)
+
         this.movimientos = data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
-        // Extraemos los strings de categorías existentes SOLO para el componente <app-filtros> de la tabla
         this.categorias = [...new Set(data.map(m => m.nombreCategoria).filter(Boolean))] as string[];
 
-        this.limpiarFiltros(); // Inicialmente mostramos todos los movimientos sin filtros
-        this.cdr.detectChanges(); // Forzamos la detección de cambios para actualizar la vista
+        this.limpiarFiltros(); 
+        this.cdr.detectChanges();
       },
       error: (e) => console.error('Error al cargar movimientos:', e)
     });
