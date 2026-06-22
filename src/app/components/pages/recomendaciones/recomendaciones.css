@@ -1,6 +1,7 @@
 .container {
-    margin-left: 10dvw;
+    margin-left: calc(var(--sidebar-width) + 1.25rem);
     margin-top: 11dvh;
+    padding: 0 1.5rem;
 }
 
 .rec-header {

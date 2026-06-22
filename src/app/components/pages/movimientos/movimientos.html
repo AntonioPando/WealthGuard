@@ -2,7 +2,15 @@
 <app-header></app-header>
 <app-menu-lateral (nuevaTransaccion)="abrirFormulario()"></app-menu-lateral>
 <div class="container">
+    @if (mensajeExito) {
+  <div class="alerta alerta-exito">{{ mensajeExito }}</div>
+  }
+  @if (mensajeError) {
+  <div class="alerta alerta-error">{{ mensajeError }}</div>
+  }
+
 <app-header-movimientos (abrirCrearTransaccion)="abrirFormulario()"></app-header-movimientos>
+
 
 <app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" 
 (limpiar)="limpiarFiltros()" 
@@ -42,5 +50,3 @@
 }
 
 </div>
-
-

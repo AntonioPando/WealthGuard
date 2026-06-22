@@ -7,6 +7,7 @@ import { PresupuestoForm } from './presupuesto-form/presupuesto-form';
 import { PresupuestosService } from '../../../services/presupuesto.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { LoginService } from '../../../services/login.service';
+import { UtilsService } from '../../../services/utils.service';
 import { PresupuestoResponse } from '../../../models/presupuestos.model';
 import { UiAlertsService } from '../../../services/ui-alerts.service';
 
@@ -26,24 +27,27 @@ interface PresupuestoInterfaz {
   templateUrl: './presupuestos.html',
   styleUrl: './presupuestos.css',
 })
-
 export class Presupuestos implements OnInit {
   private readonly uiAlertsService = inject(UiAlertsService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public idUsuario!: number;
 
   public presupuestoEditando: PresupuestoInterfaz | null = null;
   public mostrarFormulario: boolean = false;
 
-  public listaPresupuestos: PresupuestoInterfaz[] = []
+  public listaPresupuestos: PresupuestoInterfaz[] = [];
   public listaCategorias: { id: number, nombre: string }[] = [];
 
+  public mensajeError: string = '';
+  public mensajeExito: string = '';
+  public cargandoDatos: boolean = false;
 
   constructor(
     private presupuestoService: PresupuestosService,
     private categoriaService: CategoriaService,
     private loginService: LoginService,
-    private cdr: ChangeDetectorRef // Se fuerza el renderizado si Angular no detecta los cambios
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit(): void {
@@ -51,37 +55,38 @@ export class Presupuestos implements OnInit {
   }
 
   private comprobarUsuarioLogeado(): void {
-
     const id = this.loginService.obtenerIdUsuario();
-
     if (id !== null) {
       this.idUsuario = id;
       this.cargarDatos();
     } else {
-      console.warn('WealthGuard Alerta: No se encontró un usuario logeado.');
+      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tus presupuestos.';
+      this.cdr.detectChanges();
     }
   }
 
-  // Calculamos las fechas del mes actual
   private obtenerFechaInicioMes(): string {
     const ahora = new Date();
-    const anio = ahora.getFullYear();
-    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-    return `${anio}-${mes}-01T00:00:00`;
+    return `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-01T00:00:00`;
   }
 
   private obtenerFechaFinMes(): string {
     const ahora = new Date();
-    const anio = ahora.getFullYear();
     const mes = ahora.getMonth() + 1;
-    // El día '0' del siguiente mes nos da el último día del mes actual
-    const ultimoDia = new Date(anio, mes, 0).getDate();
-    const mesStr = String(mes).padStart(2, '0');
-    return `${anio}-${mesStr}-${String(ultimoDia).padStart(2, '0')}T23:59:59`;
+    const ultimoDia = new Date(ahora.getFullYear(), mes, 0).getDate();
+    return `${ahora.getFullYear()}-${String(mes).padStart(2, '0')}-${String(ultimoDia).padStart(2, '0')}T23:59:59`;
   }
 
   cargarDatos() {
-    // Cargamos los presupuestos 
+    if (!this.idUsuario) {
+      this.mensajeError = 'No se pudo identificar el usuario. Inicia sesión nuevamente.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.mensajeError = '';
+    this.cargandoDatos = true;
+
     this.presupuestoService.listarPresupuestos(this.idUsuario).subscribe({
       next: (data: PresupuestoResponse[]) => {
         this.listaPresupuestos = data.map(p => ({
@@ -92,27 +97,28 @@ export class Presupuestos implements OnInit {
           gastado: p.gastoActual,
           limite: p.limite
         }));
+        this.cargandoDatos = false;
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al cargar presupuestos:', e)
+      error: (err: unknown) => {
+        this.cargandoDatos = false;
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar los presupuestos. Inténtalo de nuevo.');
+        this.cdr.detectChanges();
+      }
     });
 
-    // Cargamos las categorías globales para el dropdown del formulario
     this.categoriaService.obtenerCategorias().subscribe({
       next: (data) => {
-        this.listaCategorias = data.map(cat => ({
-          id: cat.id,
-          nombre: cat.nombre,
-          icono: cat.icono
-        }));
+        this.listaCategorias = data.map(cat => ({ id: cat.id, nombre: cat.nombre }));
         this.cdr.detectChanges();
       },
-      error: (e) => console.error('Error al cargar el catálogo de categorías:', e)
+      error: (err: unknown) => {
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar las categorías. Inténtalo de nuevo.');
+        this.cdr.detectChanges();
+      }
     });
-
   }
 
-  // Calculamos el porcentaje de consumo del presupuesto
   calcularPorcentaje(gastado: number, limite: number): number {
     if (!limite) return 0;
     return Math.floor((gastado / limite) * 100);
@@ -125,22 +131,17 @@ export class Presupuestos implements OnInit {
     return 'bueno';
   }
 
-
-  // Categoría con mayor gasto
   get categoriaMasGasto(): PresupuestoInterfaz | null {
     if (this.listaPresupuestos.length === 0) return null;
     return [...this.listaPresupuestos].sort((a, b) => b.gastado - a.gastado)[0];
   }
 
-  // Categoría con menor gasto
   get categoriaMenosGasto() {
     if (this.listaPresupuestos.length === 0) return null;
     return [...this.listaPresupuestos].sort((a, b) => a.gastado - b.gastado)[0];
   }
 
-  //Editar
   abrirEdicion(presupuesto: PresupuestoInterfaz) {
-    // Hacemos una copia para no modificar el original hasta guardar
     this.presupuestoEditando = { ...presupuesto };
   }
 
@@ -151,6 +152,7 @@ export class Presupuestos implements OnInit {
   guardarCambios() {
     if (!this.presupuestoEditando) return;
 
+    this.mensajeError = '';
     this.presupuestoService.editarPresupuesto(
       this.presupuestoEditando.id,
       this.presupuestoEditando.idCategoria,
@@ -160,11 +162,17 @@ export class Presupuestos implements OnInit {
     ).subscribe({
       next: (editado) => {
         if (editado) {
+          this.mensajeExito = 'Presupuesto actualizado correctamente.';
           this.cargarDatos();
           this.cerrarEdicion();
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         }
       },
-      error: (err) => console.error('Error al actualizar presupuesto en BD:', err)
+      error: (err: unknown) => {
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo actualizar el presupuesto. Inténtalo de nuevo.');
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -181,15 +189,17 @@ export class Presupuestos implements OnInit {
 
     if (!confirmado) return;
 
+    this.mensajeError = '';
     this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
       next: async (eliminado) => {
         if (eliminado) {
+          this.mensajeExito = 'Presupuesto eliminado correctamente.';
           this.cargarDatos();
           this.cerrarEdicion();
-          console.log('Presupuesto eliminado de la BD');
+          this.cdr.detectChanges();
+          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
           return;
         }
-
         await this.uiAlertsService.alert({
           title: 'No se pudo eliminar',
           message: 'No se pudo eliminar el presupuesto.',
@@ -197,11 +207,13 @@ export class Presupuestos implements OnInit {
           severity: 'danger'
         });
       },
-      error: async (err) => {
-        console.error('Error al intentar eliminar de la BD:', err);
+      error: async (err: unknown) => {
+        const mensaje = this.utilsService.manejarError(err, 'Se produjo un problema al intentar eliminar el presupuesto.');
+        this.mensajeError = mensaje;
+        this.cdr.detectChanges();
         await this.uiAlertsService.alert({
           title: 'Error al eliminar',
-          message: 'Se produjo un problema al intentar eliminar el presupuesto.',
+          message: mensaje,
           confirmText: 'Entendido',
           severity: 'danger'
         });
@@ -214,6 +226,7 @@ export class Presupuestos implements OnInit {
   }
 
   guardarNuevoPresupuesto(datos: { idCategoria: number; limite: number }) {
+    this.mensajeError = '';
     const nuevoPresupuesto = {
       usuario: { id: this.idUsuario },
       categoria: { id: datos.idCategoria },
@@ -224,20 +237,21 @@ export class Presupuestos implements OnInit {
 
     this.presupuestoService.crearPresupuesto(nuevoPresupuesto).subscribe({
       next: () => {
+        this.mensajeExito = 'Presupuesto creado correctamente.';
         this.cargarDatos();
         this.mostrarFormulario = false;
+        this.cdr.detectChanges();
+        setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
       },
-      error: (err) => console.error('Error al guardar nuevo presupuesto:', err)
+      error: (err: unknown) => {
+        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo crear el presupuesto. Inténtalo de nuevo.');
+        this.cdr.detectChanges();
+      }
     });
-
   }
 
   get nombreMesActual(): string {
-    const fecha = new Date();
-    const nombre = fecha.toLocaleString('es-ES', { month: 'long' });
+    const nombre = new Date().toLocaleString('es-ES', { month: 'long' });
     return nombre.charAt(0).toUpperCase() + nombre.slice(1);
   }
-
 }
-
-

@@ -19,26 +19,6 @@
   margin-left: calc(var(--sidebar-width) + 20px);
 }
 
-.alerta {
-  max-width: 83.333rem;
-  margin: 0 auto 1.111rem auto;
-  padding: 0.833rem 1.111rem;
-  border-radius: 0.556rem;
-  font-weight: 600;
-  border: 0.069rem solid transparent;
-}
-
-.alerta-exito {
-  background: #ecfdf5;
-  border-color: #a7f3d0;
-  color: #047857;
-}
-
-.alerta-error {
-  background: #fef2f2;
-  border-color: #fecaca;
-  color: #b91c1c;
-}
 
 .contenedor-principal {
   display: grid;
@@ -234,6 +214,12 @@
   color: var(--accent);
   font-weight: 600;
   cursor: pointer;
+}
+
+.boton-flecha:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .seccion-desactivar-cuenta {

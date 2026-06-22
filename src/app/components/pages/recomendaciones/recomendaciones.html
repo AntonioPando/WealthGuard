@@ -3,6 +3,10 @@
 
 <div class="container">
 
+  @if (mensajeError) {
+  <div class="alerta alerta-error" role="alert" aria-live="assertive">{{ mensajeError }}</div>
+  }
+
   <div class="overlay-modal" *ngIf="mostrarPopup" (click)="cerrarPopup()">
     <div class="modal-recomendacion" (click)="$event.stopPropagation()">
       <button class="popup-close" (click)="cerrarPopup()">✕</button>
