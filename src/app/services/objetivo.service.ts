@@ -1,30 +1,44 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ObjetivoRequest, ObjetivoResponse } from "../models/objetivo.model";
+import { API_BASE, NICK_USUARIO_PARAM, PASS_USUARIO_PARAM } from '../shared/constants/api-urls';
+import { UtilsService } from './utils.service';
 
 @Injectable({
     providedIn: "root",
 })
 export class ObjetivoService {
 
-    private apiUrl = 'http://localhost:8080/objetivos';
+    private apiUrl = `${API_BASE}/objetivos`;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private utils: UtilsService) { }
 
-  obtenerMetaActiva(idUsuario: number): Observable<ObjetivoResponse> {
-    return this.http.get<ObjetivoResponse>(`${this.apiUrl}/activa/${idUsuario}`);
-  }
+    private addAuthParams(params: HttpParams): HttpParams {
+        const nick = this.utils.obtenerNickUsuario();
+        const pass = this.utils.obtenerContrasena();
+        if (nick) params = params.set(NICK_USUARIO_PARAM, nick);
+        if (pass) params = params.set(PASS_USUARIO_PARAM, pass);
+        return params;
+    }
 
-  crearObjetivo(objetivo: ObjetivoRequest): Observable<ObjetivoResponse> {
-    return this.http.post<ObjetivoResponse>(`${this.apiUrl}/crear`, objetivo);
-  }
+    obtenerMetaActiva(idUsuario: number): Observable<ObjetivoResponse> {
+        const params = this.addAuthParams(new HttpParams());
+        return this.http.get<ObjetivoResponse>(`${this.apiUrl}/activa/${idUsuario}`, { params });
+    }
 
-  editarObjetivo(id: number, objetivo: ObjetivoRequest): Observable<ObjetivoResponse> {
-    return this.http.put<ObjetivoResponse>(`${this.apiUrl}/editar/${id}`, objetivo);
-  }
+    crearObjetivo(objetivo: ObjetivoRequest): Observable<ObjetivoResponse> {
+        const params = this.addAuthParams(new HttpParams());
+        return this.http.post<ObjetivoResponse>(`${this.apiUrl}/crear`, objetivo, { params });
+    }
 
-  obtenerMetaPasada(idUsuario: number): Observable<ObjetivoResponse> {
-    return this.http.get<ObjetivoResponse>(`${this.apiUrl}/ultimo/${idUsuario}`);
-  }
+    editarObjetivo(id: number, objetivo: ObjetivoRequest): Observable<ObjetivoResponse> {
+        const params = this.addAuthParams(new HttpParams());
+        return this.http.put<ObjetivoResponse>(`${this.apiUrl}/editar/${id}`, objetivo, { params });
+    }
+
+    obtenerMetaPasada(idUsuario: number): Observable<ObjetivoResponse> {
+        const params = this.addAuthParams(new HttpParams());
+        return this.http.get<ObjetivoResponse>(`${this.apiUrl}/ultimo/${idUsuario}`, { params });
+    }
 }

@@ -46,7 +46,7 @@ export class Registro {
     private registroService: RegistroService
   ) { }
 
-  get nickValido() { return this.nickUsuario.trim().length >= 3 && !this.nickRepetido; }
+  get nickValido() { return this.nickUsuario.trim().length >= 4 && !this.nickRepetido; }
   get nombreValido() { return this.nombre.trim().length > 0; }
   get apellidoValido() { return this.primerApellido.trim().length > 0; }
   get emailValido() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email) && !this.emailRepetido; }

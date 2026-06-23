@@ -3,13 +3,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, timeout, tap } from 'rxjs';
 import { UsuarioResponse } from '../models/usuario.model';
 import { LoginResponse, LoginRequest } from '../models/login.model';
+import { API_BASE } from '../shared/constants/api-urls';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LoginService {
 	private readonly http = inject(HttpClient);
-	private readonly apiUrl = 'http://localhost:8080/usuarios/login';
+	private readonly apiUrl = `${API_BASE}/usuarios/login`;
 
 	iniciarSesion(usuario: string, pass: string, recordar: boolean): Observable<LoginResponse> {
 		const payload: LoginRequest = { usuario, pass };
@@ -36,6 +37,8 @@ export class LoginService {
 					storage.setItem('id_usuario', String(idUsuario));
 				}
 
+				storage.setItem('auth_contrasena', payload.pass);
+
 				const usuarioActual: Partial<UsuarioResponse> = {
 					id: respuesta.idUsuario,
 					nickUsuario: respuesta.nickUsuario,
@@ -54,9 +57,11 @@ export class LoginService {
 		localStorage.removeItem('auth_token');
 		localStorage.removeItem('id_usuario');
 		localStorage.removeItem('usuario_actual');
+		localStorage.removeItem('auth_contrasena');
 		sessionStorage.removeItem('auth_token');
 		sessionStorage.removeItem('id_usuario');
 		sessionStorage.removeItem('usuario_actual');
+		sessionStorage.removeItem('auth_contrasena');
 	}
 
 	obtenerIdUsuario(): number | null {
