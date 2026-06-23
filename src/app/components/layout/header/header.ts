@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { forkJoin, Subscription, timer } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FotoPerfilService } from '../../../services/foto-perfil.service';
@@ -77,7 +77,9 @@ export class Header implements OnInit, OnDestroy {
     const idUsuario = this.loginService.obtenerIdUsuario();
     if (idUsuario === null) return;
 
-    this.subFinanzas = timer(0, 4000).subscribe(() => {
+    this.cargarDatosFinancieros(idUsuario);
+
+    this.subFinanzas = this.transaccionService.alCambiarFinanzas$.subscribe(() => {
       this.cargarDatosFinancieros(idUsuario);
     });
 

@@ -98,6 +98,8 @@ export class Movimientos implements OnInit {
       return;
     }
 
+    this.transaccionService.notificarCambio();
+
     this.mensajeError = '';
     this.cargandoDatos = true;
 

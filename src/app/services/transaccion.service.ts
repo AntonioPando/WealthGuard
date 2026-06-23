@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TransaccionRequest, TransaccionResponse } from '../models/transaccion.model';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,13 @@ import { Observable } from 'rxjs';
 export class TransaccionService {
 
   private apiUrl = 'http://localhost:8080/transacciones';
+
+  private deFinanzasSub = new Subject<void>();
+  readonly alCambiarFinanzas$: Observable<void> = this.deFinanzasSub.asObservable();
+
+  notificarCambio(): void {
+    this.deFinanzasSub.next();
+  }
 
   constructor(private http: HttpClient) { }
 
