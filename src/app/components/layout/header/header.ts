@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription, timer } from 'rxjs';
 import { LoginService } from '../../../services/login.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FotoPerfilService } from '../../../services/foto-perfil.service';
@@ -46,7 +46,8 @@ export class Header implements OnInit, OnDestroy {
     return this.saldo < 0 ? 'saldo-negativo' : '';
   }
 
-  private sub: Subscription | null = null;
+  private subFoto: Subscription | null = null;
+  private subFinanzas: Subscription | null = null;
 
   @HostListener('document:click')
   onDocumentClick(): void {
@@ -68,7 +69,7 @@ export class Header implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.fotoPerfilService.foto$.subscribe(url => {
+    this.subFoto = this.fotoPerfilService.foto$.subscribe(url => {
       this.fotoPerfil = url;
       this.cdr.detectChanges();
     });
@@ -76,33 +77,8 @@ export class Header implements OnInit, OnDestroy {
     const idUsuario = this.loginService.obtenerIdUsuario();
     if (idUsuario === null) return;
 
-    // Cargar saldo (sumando transacciones)
-    this.transaccionService.listarTransacciones(idUsuario).subscribe({
-      next: (txs) => {
-        let total = 0;
-        for (const t of txs || []) {
-          if (t.tipoTransaccion) total += Number(t.cantidad ?? 0);
-          else total -= Number(t.cantidad ?? 0);
-        }
-        this.saldo = total;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.saldo = null;
-        this.cdr.detectChanges();
-      }
-    });
-
-    // Cargar score financiero
-    this.scoreFinancieroService.obtenerScoreMensual(idUsuario).subscribe({
-      next: (r) => {
-        this.score = r?.score ?? null;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.score = null;
-        this.cdr.detectChanges();
-      }
+    this.subFinanzas = timer(0, 4000).subscribe(() => {
+      this.cargarDatosFinancieros(idUsuario);
     });
 
     this.usuarioService.obtenerPerfil(idUsuario).subscribe({
@@ -124,7 +100,32 @@ export class Header implements OnInit, OnDestroy {
     });
   }
 
+  private cargarDatosFinancieros(idUsuario: number): void {
+    forkJoin({
+      txs: this.transaccionService.listarTransacciones(idUsuario),
+      resultadoScore: this.scoreFinancieroService.obtenerScoreMensual(idUsuario)
+    }).subscribe({
+      next: ({ txs, resultadoScore }) => {
+        let total = 0;
+        for (const t of txs || []) {
+          if (t.tipoTransaccion) total += Number(t.cantidad ?? 0);
+          else total -= Number(t.cantidad ?? 0);
+        }
+        this.saldo = total;
+
+        this.score = resultadoScore?.score ?? null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.saldo = null;
+        this.score = null;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   ngOnDestroy(): void {
-    this.sub?.unsubscribe();
+    this.subFoto?.unsubscribe();
+    this.subFinanzas?.unsubscribe();
   }
 }

@@ -40,6 +40,15 @@ export class ScoreFinancieroService {
 
 		return forkJoin({ saldoTx: reqSaldo, mesTx: reqMes, tresMesesTx: req3Meses, presupuestos: reqPresupuestos }).pipe(
 			map(({ saldoTx, mesTx, tresMesesTx, presupuestos }) => {
+
+				// Si no hay transacciones, no hay score
+				if (!saldoTx || saldoTx.length === 0) {
+                    return {
+                        score: 0,
+                        breakdown: { ahorro: 0, saludSaldo: 0, calidadCategorias: 0, tendencia: 0 }
+                    };
+                }
+
 				// Calcular saldo actual
 				let saldo = 0;
 				for (const t of saldoTx || []) {
