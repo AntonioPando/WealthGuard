@@ -41,8 +41,8 @@
                 autocomplete="username" placeholder="Usuario" (ngModelChange)="onNickChange()" />
               <span class="icono" aria-hidden="true">@</span>
             </div>
-            <span class="campo-error" *ngIf="formularioEnviado && nickUsuario.trim().length < 3">
-              El usuario debe tener al menos 3 caracteres.
+            <span class="campo-error" *ngIf="(formularioEnviado || nickUsuario.trim().length > 0) && nickUsuario.trim().length < 4">
+              El usuario debe tener al menos 4 caracteres.
             </span>
             <span class="campo-error" *ngIf="nickRepetido">
               Este nombre de usuario ya está en uso.

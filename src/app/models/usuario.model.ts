@@ -19,6 +19,7 @@ export interface UsuarioResponse {
   email: string;
   password?: string;
   preguntaSeguridad: string;
+  respuestaSeguridad?: string;
   fotoPerfil: string | null;
   fechaRegistro: string;
   fechaUltimoCambioPassword: string | null;

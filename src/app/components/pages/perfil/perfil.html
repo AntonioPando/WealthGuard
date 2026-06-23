@@ -113,12 +113,21 @@
 
     <div class="campo-form">
       <label>Pregunta de Seguridad</label>
-      <input [(ngModel)]="formularioEditar.preguntaSeguridad" type="text">
+      <input [value]="formularioEditar.preguntaSeguridad" type="text" readonly
+        style="opacity: 0.6; cursor: not-allowed;" />
     </div>
 
     <div class="campo-form">
       <label>Respuesta de Seguridad</label>
-      <input [(ngModel)]="formularioEditar.respuestaSeguridad" type="text">
+      <div class="entrada">
+        <input [type]="mostrarRespuestaSeguridad ? 'text' : 'password'"
+          [(ngModel)]="formularioEditar.respuestaSeguridad"
+          placeholder="••••••••" />
+        <span class="icono icono-click" (click)="toggleRespuestaSeguridad()"
+          aria-label="Mostrar respuesta de seguridad">
+          {{ mostrarRespuestaSeguridad ? '👁' : '*' }}
+        </span>
+      </div>
     </div>
 
     <div class="campo-form">
@@ -130,6 +139,9 @@
           {{ mostrarPasswordEditar ? '👁' : '*' }}
         </span>
       </div>
+      @if (passwordEditarIncorrecta) {
+      <span class="campo-error">La contraseña introducida es incorrecta.</span>
+      }
       @if (mensajeErrorEditarPerfil) {
       <span class="campo-error">{{ mensajeErrorEditarPerfil }}</span>
       }
@@ -173,6 +185,9 @@
           {{ mostrarNuevaPassword ? '👁' : '*' }}
         </span>
       </div>
+      @if (passwordIgualAAntigua) {
+      <span class="campo-error">La nueva contraseña no puede ser igual a la anterior.</span>
+      }
       <div class="requisitos-password">
         <span [class.cumplido]="nuevaPasswordTieneMinCaracteres" [class.pendiente]="!nuevaPasswordTieneMinCaracteres">
           {{ nuevaPasswordTieneMinCaracteres ? '✓' : '○' }} Mínimo 6 caracteres

@@ -48,7 +48,7 @@ export class Registro {
     private utilsService: UtilsService
   ) { }
 
-  get nickValido() { return this.nickUsuario.trim().length >= 3 && !this.nickRepetido; }
+  get nickValido() { return this.nickUsuario.trim().length >= 4 && !this.nickRepetido; }
   get nombreValido() { return this.nombre.trim().length > 0; }
   get apellidoValido() { return this.primerApellido.trim().length > 0; }
   get emailValido() { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email) && !this.emailRepetido; }
@@ -62,7 +62,7 @@ export class Registro {
 
   onNickChange(): void {
     this.nickRepetido = false;
-    if (this.nickUsuario.trim().length >= 3) {
+    if (this.nickUsuario.trim().length >= 4) {
       this.registroService.existeNick(this.nickUsuario.trim()).subscribe({
         next: (existe) => { this.nickRepetido = existe; },
         error: () => { }

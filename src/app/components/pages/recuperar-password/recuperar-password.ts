@@ -116,7 +116,6 @@ export class RecuperarPassword {
           const mensajeBackend = (err.error as { mensaje?: string })?.mensaje;
           this.errorMensaje = mensajeBackend
             || this.utilsService.manejarError(err, 'No se pudo actualizar la contraseña.');
-          this.paso = 2;
           this.cdr.detectChanges();
         }
       });
