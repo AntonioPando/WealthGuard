@@ -14,7 +14,6 @@ import { TimeoutError, finalize } from 'rxjs';
 export class Login {
   usuario: string = '';
   password: string = '';
-  recordar: boolean = false;
   errormensaje: string = '';
   cargando: boolean = false;
   mostrarPassword: boolean = false;
@@ -46,7 +45,7 @@ export class Login {
     }, 8000);
 
     this.loginService
-      .iniciarSesion(this.usuario.trim(), this.password, this.recordar)
+      .iniciarSesion(this.usuario.trim(), this.password)
       .pipe(
         finalize(() => {
           if (this.bloqueoSubmitId) {

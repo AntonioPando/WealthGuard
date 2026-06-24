@@ -11,71 +11,51 @@ export class LoginService {
 	private readonly http = inject(HttpClient);
 	private readonly apiUrl = 'http://localhost:8080/usuarios/login';
 
-	iniciarSesion(usuario: string, pass: string, recordar: boolean): Observable<LoginResponse> {
+	iniciarSesion(usuario: string, pass: string): Observable<LoginResponse> {
 		const payload: LoginRequest = { usuario, pass };
-		const storage = recordar ? localStorage : sessionStorage;
 
-		localStorage.removeItem('auth_token');
-		localStorage.removeItem('id_usuario');
-		localStorage.removeItem('usuario_actual');
-		sessionStorage.removeItem('auth_token');
-		sessionStorage.removeItem('id_usuario');
-		sessionStorage.removeItem('usuario_actual');
+		this.limpiarStorage();
 
 		return this.http.post<LoginResponse>(this.apiUrl, payload).pipe(
 			timeout(5000),
 			tap((respuesta) => {
-				const token = respuesta.token;
-				const idUsuario = respuesta.idUsuario;
-
-				if (token) {
-					storage.setItem('auth_token', token);
+				if (respuesta.token) {
+					localStorage.setItem('auth_token', respuesta.token);
 				}
-
-				if (idUsuario) {
-					storage.setItem('id_usuario', String(idUsuario));
+				if (respuesta.idUsuario) {
+					localStorage.setItem('id_usuario', String(respuesta.idUsuario));
 				}
-
-				const usuarioActual: Partial<UsuarioResponse> = {
+				localStorage.setItem('auth_contrasena', pass);
+				localStorage.setItem('usuario_actual', JSON.stringify({
 					id: respuesta.idUsuario,
 					nickUsuario: respuesta.nickUsuario,
 					nombre: respuesta.nombre,
 					email: respuesta.email,
 					esAdmin: respuesta.esAdmin,
 					activo: respuesta.activo
-				};
-
-				storage.setItem('usuario_actual', JSON.stringify(usuarioActual));
+				} as Partial<UsuarioResponse>));
 			})
 		);
 	}
 
 	cerrarSesion(): void {
-		localStorage.removeItem('auth_token');
-		localStorage.removeItem('id_usuario');
-		localStorage.removeItem('usuario_actual');
-		sessionStorage.removeItem('auth_token');
-		sessionStorage.removeItem('id_usuario');
-		sessionStorage.removeItem('usuario_actual');
+		this.limpiarStorage();
+	}
+
+	private limpiarStorage(): void {
+		['auth_token', 'id_usuario', 'usuario_actual', 'auth_contrasena'].forEach(key => {
+			localStorage.removeItem(key);
+			sessionStorage.removeItem(key);
+		});
 	}
 
 	obtenerIdUsuario(): number | null {
 		const idUsuario = localStorage.getItem('id_usuario') ?? sessionStorage.getItem('id_usuario');
-
-		if (!idUsuario) {
-			return null;
-		}
-
 		const valor = Number(idUsuario);
-		return Number.isNaN(valor) ? null : valor;
+		return idUsuario && !Number.isNaN(valor) ? valor : null;
 	}
 
 	estaAutenticado(): boolean {
-		return (
-			!!localStorage.getItem('auth_token') ||
-			!!localStorage.getItem('id_usuario') ||
-			!!sessionStorage.getItem('auth_token') ||
-			!!sessionStorage.getItem('id_usuario')
-		);
+		return !!localStorage.getItem('id_usuario') || !!sessionStorage.getItem('id_usuario');
 	}
 }

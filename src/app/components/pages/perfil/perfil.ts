@@ -66,6 +66,7 @@ export class Perfil implements OnInit {
   mostrarNuevaPassword: boolean = false;
   mostrarConfirmarPassword: boolean = false;
   mostrarPasswordEditar: boolean = false;
+  mostrarRespuestaSeguridad: boolean = false;
   formularioPasswordEnviado: boolean = false;
 
   get nuevaPasswordTieneMinCaracteres() { return this.passwordNueva.length >= 6; }
@@ -73,6 +74,13 @@ export class Perfil implements OnInit {
   get nuevaPasswordTieneMinuscula() { return /[a-z]/.test(this.passwordNueva); }
   get nuevaPasswordTieneNumero() { return /[0-9]/.test(this.passwordNueva); }
   get nuevasPasswordsCoinciden() { return this.passwordNueva === this.confirmarPasswordNueva; }
+  get passwordIgualAAntigua() { return this.passwordNueva.length > 0 && this.passwordNueva === this.passwordAntigua; }
+  get passwordEditarIncorrecta(): boolean {
+    const pwd = this.formularioEditar.password;
+    if (!pwd) return false;
+    const almacenada = localStorage.getItem('auth_contrasena') ?? sessionStorage.getItem('auth_contrasena');
+    return !!almacenada && pwd !== almacenada;
+  }
   get nuevaPasswordValida() {
     return this.nuevaPasswordTieneMinCaracteres &&
       this.nuevaPasswordTieneMayuscula &&
@@ -84,6 +92,7 @@ export class Perfil implements OnInit {
   toggleNuevaPassword(): void { this.mostrarNuevaPassword = !this.mostrarNuevaPassword; }
   toggleConfirmarPassword(): void { this.mostrarConfirmarPassword = !this.mostrarConfirmarPassword; }
   togglePasswordEditar(): void { this.mostrarPasswordEditar = !this.mostrarPasswordEditar; }
+  toggleRespuestaSeguridad(): void { this.mostrarRespuestaSeguridad = !this.mostrarRespuestaSeguridad; }
 
   onNickEditarChange(): void {
     this.nickRepetidoEditar = false;
@@ -152,6 +161,7 @@ export class Perfil implements OnInit {
     this.limpiarMensajes();
     this.mensajeErrorEditarPerfil = '';
     this.mostrarPasswordEditar = false;
+    this.mostrarRespuestaSeguridad = false;
     this.nickRepetidoEditar = false;
     this.emailRepetidoEditar = false;
     this.formularioEditar = {
@@ -162,7 +172,7 @@ export class Perfil implements OnInit {
       email: this.usuario.email,
       password: '',
       preguntaSeguridad: this.usuario.preguntaSeguridad,
-      respuestaSeguridad: '',
+      respuestaSeguridad: this.usuario.respuestaSeguridad ?? '',
       fotoPerfil: this.usuario.fotoPerfil
     };
     this.mostrarPopupEditarPerfil = true;
@@ -193,6 +203,10 @@ export class Perfil implements OnInit {
       this.mensajeErrorEditarPerfil = 'Debes introducir tu contraseña para guardar los cambios.';
       return;
     }
+    if (this.passwordEditarIncorrecta) {
+      this.mensajeErrorEditarPerfil = 'La contraseña introducida es incorrecta.';
+      return;
+    }
 
     const idUsuario = this.obtenerIdUsuarioActivo();
     if (idUsuario === null) return;
@@ -205,6 +219,7 @@ export class Perfil implements OnInit {
         this.guardandoPerfil = false;
         this.mostrarPopupEditarPerfil = false;
         this.mensajeExito = 'Perfil actualizado correctamente.';
+        this.actualizarUsuarioEnStorage(data.nickUsuario);
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -243,7 +258,11 @@ export class Perfil implements OnInit {
       return;
     }
     if (!this.nuevaPasswordValida || !this.nuevasPasswordsCoinciden) {
-      this.mensajeError = 'La nueva contraseña no cumple los requisitos o no coincide.';
+      this.mensajeErrorPassword = 'La nueva contraseña no cumple los requisitos o no coincide.';
+      return;
+    }
+    if (this.passwordIgualAAntigua) {
+      this.mensajeErrorPassword = 'La nueva contraseña no puede ser igual a la anterior.';
       return;
     }
 
@@ -257,6 +276,7 @@ export class Perfil implements OnInit {
         if (ok) {
           this.mostrarPopupPassword = false;
           this.mensajeExito = 'Contraseña actualizada correctamente.';
+          this.actualizarContrasenaEnStorage(this.passwordNueva);
           this.cdr.detectChanges();
           return;
         }
@@ -265,9 +285,11 @@ export class Perfil implements OnInit {
       },
       error: (err) => {
         this.actualizandoPassword = false;
-        this.mensajeErrorPassword = (err.status === 400 || err.status === 401)
-          ? 'La contraseña actual es incorrecta.'
-          : 'No se pudo actualizar la contraseña.';
+        const mensajeBackend = (err.error as { mensaje?: string })?.mensaje;
+        this.mensajeErrorPassword = mensajeBackend
+          ?? ((err.status === 400 || err.status === 401)
+            ? 'La contraseña actual es incorrecta.'
+            : 'No se pudo actualizar la contraseña.');
         this.cdr.detectChanges();
       }
     });
@@ -400,6 +422,27 @@ export class Perfil implements OnInit {
   private limpiarMensajes() {
     this.mensajeExito = '';
     this.mensajeError = '';
+  }
+
+  private actualizarContrasenaEnStorage(nuevaContrasena: string): void {
+    if (localStorage.getItem('auth_contrasena')) {
+      localStorage.setItem('auth_contrasena', nuevaContrasena);
+    } else {
+      sessionStorage.setItem('auth_contrasena', nuevaContrasena);
+    }
+  }
+
+  private actualizarUsuarioEnStorage(nuevoNick: string): void {
+    for (const storage of [localStorage, sessionStorage]) {
+      const raw = storage.getItem('usuario_actual');
+      if (raw) {
+        try {
+          const obj = JSON.parse(raw);
+          obj.nickUsuario = nuevoNick;
+          storage.setItem('usuario_actual', JSON.stringify(obj));
+        } catch { /* no-op */ }
+      }
+    }
   }
 
   private obtenerIdUsuarioActivo(): number | null {
