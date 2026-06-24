@@ -4,14 +4,6 @@
 }
 
 .nf-shell {
-    --color-primary: #0f172a;
-    --color-accent: #10b981;
-    --color-bg-page: #f1f5f9;
-    --color-border: #e2e8f0;
-    --color-white: #ffffff;
-    --color-text-main: #1e293b;
-    --color-text-muted: #64748b;
-
     min-height: 100dvh;
     display: grid;
     place-items: center;
@@ -20,7 +12,6 @@
         radial-gradient(circle at 12% 10%, rgb(16 185 129 / 10%), transparent 34%),
         radial-gradient(circle at 88% 90%, rgb(15 23 42 / 8%), transparent 36%),
         linear-gradient(140deg, #eaf0f8, var(--color-bg-page));
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .nf-card {

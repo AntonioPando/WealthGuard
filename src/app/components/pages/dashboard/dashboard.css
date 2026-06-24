@@ -1,18 +1,7 @@
-:root {
-  --bg: #f6f8fb;
-  --card: #ffffff;
-  --muted: #8b98a9;
-  --border: #e6e9ee;
-  --accent: #0b7a4a;
-  --danger: #e54b4b;
-  --primary: #0b6cff;
-  --glass: rgba(11, 12, 15, 0.03);
-}
-
 /* Contenedor principal */
 .contenedor-principal {
-  margin-top: 8dvh;
-  margin-left: var(--sidebar-width, 240px);
+  margin-top: calc(var(--page-content-top) - 1rem);
+  margin-left: var(--page-content-left);
   padding: 28px;
   display: block;
   gap: 24px;

@@ -60,6 +60,7 @@ export class Movimientos implements OnInit {
   mensajeError: string = '';
   mensajeExito: string = '';
   cargandoDatos: boolean = false;
+  private feedbackTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,6 +69,34 @@ export class Movimientos implements OnInit {
     private categoriaService: CategoriaService,
     private utilsService: UtilsService
   ) { }
+
+  private mostrarExito(mensaje: string): void {
+    if (this.feedbackTimeout) {
+      clearTimeout(this.feedbackTimeout);
+      this.feedbackTimeout = null;
+    }
+
+    this.mensajeError = '';
+    this.mensajeExito = mensaje;
+    this.cdr.detectChanges();
+
+    this.feedbackTimeout = setTimeout(() => {
+      this.mensajeExito = '';
+      this.feedbackTimeout = null;
+      this.cdr.detectChanges();
+    }, 3000);
+  }
+
+  private mostrarError(mensaje: string): void {
+    if (this.feedbackTimeout) {
+      clearTimeout(this.feedbackTimeout);
+      this.feedbackTimeout = null;
+    }
+
+    this.mensajeExito = '';
+    this.mensajeError = mensaje;
+    this.cdr.detectChanges();
+  }
 
   ngOnInit(): void {
     this.comprobarUsuarioLogeado();
@@ -86,15 +115,13 @@ export class Movimientos implements OnInit {
       this.idUsuario = id;
       this.cargarDatos();
     } else {
-      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tus movimientos.';
-      this.cdr.detectChanges();
+      this.mostrarError('No hay una sesión activa. Inicia sesión nuevamente para ver tus movimientos.');
     }
   }
 
   cargarDatos() {
     if (!this.idUsuario) {
-      this.mensajeError = 'No se pudo identificar el usuario. Inicia sesión nuevamente.';
-      this.cdr.detectChanges();
+      this.mostrarError('No se pudo identificar el usuario. Inicia sesión nuevamente.');
       return;
     }
 
@@ -109,8 +136,7 @@ export class Movimientos implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err: unknown) => {
-        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar las categorías.');
-        this.cdr.detectChanges();
+        this.mostrarError(this.utilsService.manejarError(err, 'No se pudieron cargar las categorías.'));
       }
     });
 
@@ -124,8 +150,7 @@ export class Movimientos implements OnInit {
       },
       error: (err: unknown) => {
         this.cargandoDatos = false;
-        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar los movimientos. Inténtalo de nuevo.');
-        this.cdr.detectChanges();
+        this.mostrarError(this.utilsService.manejarError(err, 'No se pudieron cargar los movimientos. Inténtalo de nuevo.'));
       }
     });
 
@@ -212,29 +237,23 @@ export class Movimientos implements OnInit {
 
       this.transaccionService.editarTransaccion(idTransaccion, transaccionParaJava).subscribe({
         next: () => {
-          this.mensajeExito = 'Movimiento actualizado correctamente.';
+          this.mostrarExito('Movimiento actualizado correctamente.');
           this.cargarDatos();
           this.cerrarFormulario();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
         error: (err: unknown) => {
-          this.mensajeError = this.utilsService.manejarError(err, 'No se pudo actualizar el movimiento. Inténtalo de nuevo.');
-          this.cdr.detectChanges();
+          this.mostrarError(this.utilsService.manejarError(err, 'No se pudo actualizar el movimiento. Inténtalo de nuevo.'));
         }
       });
     } else {
       this.transaccionService.crearTransaccion(transaccionParaJava).subscribe({
         next: () => {
-          this.mensajeExito = 'Movimiento creado correctamente.';
+          this.mostrarExito('Movimiento creado correctamente.');
           this.cargarDatos();
           this.cerrarFormulario();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
         error: (err: unknown) => {
-          this.mensajeError = this.utilsService.manejarError(err, 'No se pudo crear el movimiento. Inténtalo de nuevo.');
-          this.cdr.detectChanges();
+          this.mostrarError(this.utilsService.manejarError(err, 'No se pudo crear el movimiento. Inténtalo de nuevo.'));
         }
       });
     }
@@ -255,10 +274,8 @@ export class Movimientos implements OnInit {
     this.transaccionService.eliminarTransaccion(idTransaccion).subscribe({
       next: async (eliminado) => {
         if (eliminado) {
-          this.mensajeExito = 'Movimiento eliminado correctamente.';
+          this.mostrarExito('Movimiento eliminado correctamente.');
           this.cargarDatos();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
           return;
         }
         await this.uiAlertsService.alert({
@@ -270,8 +287,7 @@ export class Movimientos implements OnInit {
       },
       error: async (err: unknown) => {
         const mensaje = this.utilsService.manejarError(err, 'Se produjo un problema al intentar eliminar el movimiento.');
-        this.mensajeError = mensaje;
-        this.cdr.detectChanges();
+        this.mostrarError(mensaje);
         await this.uiAlertsService.alert({
           title: 'Error al eliminar',
           message: mensaje,
@@ -304,29 +320,23 @@ export class Movimientos implements OnInit {
     if (this.metaActivaEditar && this.metaActivaEditar.id) {
       this.objetivoService.editarObjetivo(this.metaActivaEditar.id, request).subscribe({
         next: () => {
-          this.mensajeExito = 'Meta actualizada correctamente.';
+          this.mostrarExito('Meta actualizada correctamente.');
           this.mostrarModalMeta = false;
           this.cargarDatos();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
         error: (err: unknown) => {
-          this.mensajeError = this.utilsService.manejarError(err, 'No se pudo actualizar la meta. Inténtalo de nuevo.');
-          this.cdr.detectChanges();
+          this.mostrarError(this.utilsService.manejarError(err, 'No se pudo actualizar la meta. Inténtalo de nuevo.'));
         }
       });
     } else {
       this.objetivoService.crearObjetivo(request).subscribe({
         next: () => {
-          this.mensajeExito = 'Meta creada correctamente.';
+          this.mostrarExito('Meta creada correctamente.');
           this.mostrarModalMeta = false;
           this.cargarDatos();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         },
         error: (err: unknown) => {
-          this.mensajeError = this.utilsService.manejarError(err, 'No se pudo crear la meta. Inténtalo de nuevo.');
-          this.cdr.detectChanges();
+          this.mostrarError(this.utilsService.manejarError(err, 'No se pudo crear la meta. Inténtalo de nuevo.'));
         }
       });
     }

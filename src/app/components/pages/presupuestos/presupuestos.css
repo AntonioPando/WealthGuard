@@ -1,39 +1,19 @@
-:root {
-    --fondo-color: #f8f9fc;
-    --tarjeta-bg: #ffffff;
-    --texto-principal: #0f172a;
-    --texto-atenuado: #64748b;
-    --exito: #15803d;
-    --advertencia: #f59e0b;
-    --peligro: #b91c1c;
-    --peligro-claro: #fef2f2;
-    --borde-color: #e2e8f0;
-    --borde-radio: 16px;
-    --sidebar-width: 250px;
-}
-
 .contenedor-presupuestos {
-    margin-top: 4dvh;
-    max-width: 1200px;
-    margin-left: calc(var(--sidebar-width) + 20px);
+    margin-top: var(--page-content-top);
+    margin-left: var(--page-content-left);
     padding-left: 40px;
     padding-right: 40px;
-    padding-top: 80px;
-    font-family: 'Inter', system-ui, sans-serif;
+    padding-top: 0;
     color: var(--texto-principal);
 }
 
 .cabecera-presupuestos {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 2rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
 }
 
 .titulos-cabecera h1 {
     margin: 0 0 0.5rem 0;
-    font-size: 1.8rem;
-    font-weight: 700;
 }
 
 .btn {
@@ -88,6 +68,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
+    margin-top: 0.75rem;
     margin-bottom: 2rem;
 }
 

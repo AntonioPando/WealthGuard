@@ -42,6 +42,7 @@ export class Presupuestos implements OnInit {
   public mensajeError: string = '';
   public mensajeExito: string = '';
   public cargandoDatos: boolean = false;
+  private feedbackTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private presupuestoService: PresupuestosService,
@@ -49,6 +50,34 @@ export class Presupuestos implements OnInit {
     private loginService: LoginService,
     private utilsService: UtilsService
   ) { }
+
+  private mostrarExito(mensaje: string): void {
+    if (this.feedbackTimeout) {
+      clearTimeout(this.feedbackTimeout);
+      this.feedbackTimeout = null;
+    }
+
+    this.mensajeError = '';
+    this.mensajeExito = mensaje;
+    this.cdr.detectChanges();
+
+    this.feedbackTimeout = setTimeout(() => {
+      this.mensajeExito = '';
+      this.feedbackTimeout = null;
+      this.cdr.detectChanges();
+    }, 3000);
+  }
+
+  private mostrarError(mensaje: string): void {
+    if (this.feedbackTimeout) {
+      clearTimeout(this.feedbackTimeout);
+      this.feedbackTimeout = null;
+    }
+
+    this.mensajeExito = '';
+    this.mensajeError = mensaje;
+    this.cdr.detectChanges();
+  }
 
   ngOnInit(): void {
     this.comprobarUsuarioLogeado();
@@ -60,8 +89,7 @@ export class Presupuestos implements OnInit {
       this.idUsuario = id;
       this.cargarDatos();
     } else {
-      this.mensajeError = 'No hay una sesión activa. Inicia sesión nuevamente para ver tus presupuestos.';
-      this.cdr.detectChanges();
+      this.mostrarError('No hay una sesión activa. Inicia sesión nuevamente para ver tus presupuestos.');
     }
   }
 
@@ -79,8 +107,7 @@ export class Presupuestos implements OnInit {
 
   cargarDatos() {
     if (!this.idUsuario) {
-      this.mensajeError = 'No se pudo identificar el usuario. Inicia sesión nuevamente.';
-      this.cdr.detectChanges();
+      this.mostrarError('No se pudo identificar el usuario. Inicia sesión nuevamente.');
       return;
     }
 
@@ -102,8 +129,7 @@ export class Presupuestos implements OnInit {
       },
       error: (err: unknown) => {
         this.cargandoDatos = false;
-        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar los presupuestos. Inténtalo de nuevo.');
-        this.cdr.detectChanges();
+        this.mostrarError(this.utilsService.manejarError(err, 'No se pudieron cargar los presupuestos. Inténtalo de nuevo.'));
       }
     });
 
@@ -113,8 +139,7 @@ export class Presupuestos implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err: unknown) => {
-        this.mensajeError = this.utilsService.manejarError(err, 'No se pudieron cargar las categorías. Inténtalo de nuevo.');
-        this.cdr.detectChanges();
+        this.mostrarError(this.utilsService.manejarError(err, 'No se pudieron cargar las categorías. Inténtalo de nuevo.'));
       }
     });
   }
@@ -162,16 +187,13 @@ export class Presupuestos implements OnInit {
     ).subscribe({
       next: (editado) => {
         if (editado) {
-          this.mensajeExito = 'Presupuesto actualizado correctamente.';
+          this.mostrarExito('Presupuesto actualizado correctamente.');
           this.cargarDatos();
           this.cerrarEdicion();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
         }
       },
       error: (err: unknown) => {
-        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo actualizar el presupuesto. Inténtalo de nuevo.');
-        this.cdr.detectChanges();
+        this.mostrarError(this.utilsService.manejarError(err, 'No se pudo actualizar el presupuesto. Inténtalo de nuevo.'));
       }
     });
   }
@@ -193,11 +215,9 @@ export class Presupuestos implements OnInit {
     this.presupuestoService.eliminarPresupuesto(this.presupuestoEditando.id).subscribe({
       next: async (eliminado) => {
         if (eliminado) {
-          this.mensajeExito = 'Presupuesto eliminado correctamente.';
+          this.mostrarExito('Presupuesto eliminado correctamente.');
           this.cargarDatos();
           this.cerrarEdicion();
-          this.cdr.detectChanges();
-          setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
           return;
         }
         await this.uiAlertsService.alert({
@@ -209,8 +229,7 @@ export class Presupuestos implements OnInit {
       },
       error: async (err: unknown) => {
         const mensaje = this.utilsService.manejarError(err, 'Se produjo un problema al intentar eliminar el presupuesto.');
-        this.mensajeError = mensaje;
-        this.cdr.detectChanges();
+        this.mostrarError(mensaje);
         await this.uiAlertsService.alert({
           title: 'Error al eliminar',
           message: mensaje,
@@ -237,15 +256,12 @@ export class Presupuestos implements OnInit {
 
     this.presupuestoService.crearPresupuesto(nuevoPresupuesto).subscribe({
       next: () => {
-        this.mensajeExito = 'Presupuesto creado correctamente.';
+        this.mostrarExito('Presupuesto creado correctamente.');
         this.cargarDatos();
         this.mostrarFormulario = false;
-        this.cdr.detectChanges();
-        setTimeout(() => { this.mensajeExito = ''; this.cdr.detectChanges(); }, 3000);
       },
       error: (err: unknown) => {
-        this.mensajeError = this.utilsService.manejarError(err, 'No se pudo crear el presupuesto. Inténtalo de nuevo.');
-        this.cdr.detectChanges();
+        this.mostrarError(this.utilsService.manejarError(err, 'No se pudo crear el presupuesto. Inténtalo de nuevo.'));
       }
     });
   }
