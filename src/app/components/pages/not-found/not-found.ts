@@ -13,7 +13,7 @@ export class NotFound {
 
   constructor(
     private router: Router,
-    private loginService: LoginService  // ← añadir esto
+    private loginService: LoginService
   ) {}
 
   irAlPanel(): void {

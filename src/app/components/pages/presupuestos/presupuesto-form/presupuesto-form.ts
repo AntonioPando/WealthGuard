@@ -32,9 +32,8 @@ export class PresupuestoForm implements OnInit {
   ngOnInit(): void {
     if (this.presupuestoEditar) {
       this.esEdicion = true;
-      // Patch de datos existentes
       this.form.patchValue({
-        idCategoria: this.presupuestoEditar.idCategoria, // 👈 Apuntamos al ID plano corregido
+        idCategoria: this.presupuestoEditar.idCategoria, // Apuntamos al ID plano corregido
         limite: this.presupuestoEditar.limite,
       });
     }

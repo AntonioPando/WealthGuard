@@ -90,7 +90,6 @@ export class ScoreFinancieroService {
 				// Presupuesto total del mes (sumar límites activos si aplica)
 				let presupuestoTotal = 0;
 				for (const p of presupuestos || []) {
-					// Si el presupuesto tiene fechas se debería filtrar por mes; asumimos que listarPresupuestos devuelve los activos o con fecha
 					presupuestoTotal += Number((p as any).limite ?? 0);
 				}
 

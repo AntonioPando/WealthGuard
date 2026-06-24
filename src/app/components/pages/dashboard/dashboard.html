@@ -73,7 +73,6 @@
           <p class="selector-periodo">{{ mesActual }}</p>
         </header>
         <div class="visualizacion-barras">
-          <!-- Las barras se generan dinámicamente o vía CSS -->
           <div class="visualizacion-barras__contenedor">
             <ng-container *ngIf="dailyExpenses && dailyExpenses.length > 0; else sinDatosEvo">
               <div *ngFor="let d of dailyExpenses" class="barra" [ngClass]="d.colorClass"
@@ -108,7 +107,6 @@
                 [attr.role]="'presentation'" [attr.aria-label]="s.nombre + ' ' + (s.porcentaje | number:'1.0-1') + '%'">
               </path>
             </ng-container>
-            <!-- Inner circle to simulate donut hole and keep central legend readable -->
             <circle cx="18" cy="18" r="8" fill="#fff"></circle>
           </svg>
 
