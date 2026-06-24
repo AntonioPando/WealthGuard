@@ -1,44 +1,40 @@
-h2 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 44px;
-}
-
 .header-transacciones {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: var(--sp-5);
+}
+
+.header-transacciones h2 {
+  margin: 0;
+  color: var(--dark);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .btn-add-mov {
   display: flex;
   align-items: center;
-  gap: 6px;
-
-  background: black;
+  gap: 0.375rem;
+  background: var(--dark);
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-
+  padding: 0.625rem var(--sp-4);
+  border-radius: var(--r-md);
   cursor: pointer;
   font-weight: 600;
   transition: 0.2s;
 }
 
-.btn-add-mov span {
-  font-size: 18px;
-}
-
-.btn-add-mov:hover {
-  background: #222;
-}
+.btn-add-mov span { font-size: 1.125rem; }
+.btn-add-mov:hover { background: #1e293b; }
 
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;
+  font-size: var(--text-2xl);
   display: inline-block;
   line-height: 1;
   letter-spacing: normal;

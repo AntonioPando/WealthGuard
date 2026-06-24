@@ -1,34 +1,32 @@
 .main-header {
   position: fixed;
-  left: var(--sidebar-width, 240px);
+  left: var(--sidebar-width, 15dvw);
   right: 0;
   top: 0;
   height: var(--header-height);
   background: var(--card);
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
   align-items: center;
-
-  padding: 20px;
-  z-index: 100;
+  padding: var(--sp-5);
+  z-index: var(--z-header);
 }
-
 
 .header-actions {
   display: flex;
-  align-items: center; 
-  gap: 28px;
+  align-items: center;
+  gap: 1.75rem;
 }
 
 .balance-display {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 8px 18px;
+  padding: var(--sp-2) 1.125rem;
 }
 
 .balance-label {
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: #94a3b8;
   letter-spacing: 0.6px;
   font-weight: 700;
@@ -36,53 +34,48 @@
 }
 
 .balance-amount {
-  font-size: 17px;
+  font-size: 1.0625rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--dark);
   font-variant-numeric: tabular-nums;
 }
 
 /* Saldo negativo */
-.balance-amount.saldo-negativo { color: #ef4444; }
-.balance-display .balance-amount.saldo-negativo { color: #ef4444; }
+.balance-amount.saldo-negativo                   { color: var(--danger); }
+.balance-display .balance-amount.saldo-negativo  { color: var(--danger); }
 
 /* Score color states */
-.score-rojo { color: #ef4444; }
+.score-rojo    { color: var(--danger); }
 .score-naranja { color: #fb923c; }
-.score-amarillo { color: #f59e0b; }
-.score-verde { color: #10b981; }
-.score-dorado { color: #d4af37; }
+.score-amarillo{ color: var(--warning); }
+.score-verde   { color: var(--accent); }
+.score-dorado  { color: #d4af37; }
 
-/* More specific selectors to override .balance-amount.score specificity */
-.balance-amount.score.score-rojo { color: #ef4444; }
+.balance-amount.score.score-rojo    { color: var(--danger); }
 .balance-amount.score.score-naranja { color: #fb923c; }
-.balance-amount.score.score-amarillo { color: #f59e0b; }
-.balance-amount.score.score-verde { color: #10b981; }
-.balance-amount.score.score-dorado { color: #d4af37; }
+.balance-amount.score.score-amarillo{ color: var(--warning); }
+.balance-amount.score.score-verde   { color: var(--accent); }
+.balance-amount.score.score-dorado  { color: #d4af37; }
 
 .icono-header {
-  width: 22px;
-  height: 22px;
+  width: 1.375rem;
+  height: 1.375rem;
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.2s ease;
 }
 
-.icono-header:hover {
-  opacity: 1;
-}
+.icono-header:hover { opacity: 1; }
 
 /* ── Usuario / dropdown ── */
-.user-menu-wrapper {
-  position: relative;
-}
+.user-menu-wrapper { position: relative; }
 
 .user-chip {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 16px 8px 8px;
-  border-radius: 999px;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4) var(--sp-2) var(--sp-2);
+  border-radius: var(--r-full);
   border: 1px solid transparent;
   cursor: pointer;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -91,81 +84,72 @@
 
 .user-chip:hover,
 .user-chip.activo {
-  border-color: #e2e8f0;
+  border-color: var(--border);
   background: #f8fafc;
 }
 
 .avatar {
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 0 1.5px #10b981, 0 2px 8px rgba(16, 24, 40, 0.12);
+  border: 2px solid var(--white);
+  box-shadow: 0 0 0 1.5px var(--accent), 0 0.125rem 0.5rem rgba(16, 24, 40, 0.12);
   flex-shrink: 0;
 }
 
 .usuario-nombre {
-  font-size: 15px;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: #0f172a;
-  max-width: 140px;
+  color: var(--dark);
+  max-width: 8.75rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .chevron {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: #94a3b8;
   transition: transform 0.2s ease;
   line-height: 1;
 }
 
-.chevron.girado {
-  transform: rotate(180deg);
-}
+.chevron.girado { transform: rotate(180deg); }
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--sp-2));
   right: 0;
-  width: 240px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  width: 15rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
-  z-index: 1200;
+  z-index: var(--z-dropdown);
   animation: fadeDown 0.15s ease;
 }
 
 @keyframes fadeDown {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-0.375rem); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .dropdown-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 0.625rem;
+  padding: 0.875rem var(--sp-4);
   background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
 }
 
 .dropdown-avatar {
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -176,16 +160,16 @@
 }
 
 .dropdown-nombre {
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 700;
-  color: #0f172a;
+  color: var(--dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .dropdown-email {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: #94a3b8;
   white-space: nowrap;
   overflow: hidden;
@@ -200,36 +184,28 @@
 .dropdown-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   width: 100%;
-  padding: 11px 16px;
+  padding: 0.6875rem var(--sp-4);
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 500;
-  color: #1e293b;
+  color: var(--text-main);
   cursor: pointer;
   text-align: left;
   transition: background 0.15s ease;
   font-family: inherit;
 }
 
-.dropdown-item:hover {
-  background: #f8fafc;
-}
+.dropdown-item:hover { background: #f8fafc; }
 
 .item-icono {
-  font-size: 15px;
-  width: 20px;
+  font-size: var(--text-sm);
+  width: 1.25rem;
   text-align: center;
   flex-shrink: 0;
 }
 
-.item-danger {
-  color: #ef4444;
-}
-
-.item-danger:hover {
-  background: #fef2f2;
-}
-
+.item-danger { color: var(--danger); }
+.item-danger:hover { background: var(--danger-bg); }

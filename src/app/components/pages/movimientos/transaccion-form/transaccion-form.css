@@ -1,65 +1,63 @@
+/* El overlay reutiliza .modal-overlay de styles.css */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1200;
+  z-index: var(--z-modal);
   backdrop-filter: blur(3px);
 }
 
 .modal-content {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
+  background: var(--card);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8);
   width: 100%;
-  max-width: 450px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  max-width: 28rem;
+  box-shadow: var(--shadow-modal);
 }
 
-h3 {
+.modal-content h3 {
   margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
+  margin-bottom: var(--sp-5);
+  font-size: var(--text-2xl);
   font-weight: 600;
 }
 
+/* Selector de tipo ingreso/gasto */
 .tipo-selector {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 0.625rem;
+  margin-bottom: var(--sp-5);
 }
 
 .radio-btn {
   flex: 1;
-  padding: 10px;
+  padding: 0.625rem;
   text-align: center;
-  border-radius: 8px;
-  border: 2px solid #e0e0e0;
+  border-radius: var(--r-md);
+  border: 2px solid var(--border);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: var(--sp-1);
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
-.radio-btn input {
-  display: none; 
-}
+.radio-btn input { display: none; }
 
 .radio-btn.ingreso.activo { border-color: #4caf50; background-color: #e8f5e9; color: #2e7d32; }
-.radio-btn.gasto.activo { border-color: #f44336; background-color: #ffebee; color: #c62828; }
+.radio-btn.gasto.activo   { border-color: var(--danger); background-color: #ffebee; color: var(--danger-dark); }
 
-.row {
-  display: flex;
-  gap: 15px;
-}
+.row { display: flex; gap: var(--sp-4); }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: var(--sp-4);
   display: flex;
   flex-direction: column;
 }
@@ -67,51 +65,44 @@ h3 {
 .form-group.half { flex: 1; }
 
 .form-group label {
-  font-size: 0.85rem;
-  margin-bottom: 5px;
-  color: #555;
+  font-size: var(--text-sm);
+  margin-bottom: var(--sp-1);
+  color: var(--text-muted);
   font-weight: 600;
 }
 
-.form-group input, .form-group select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+.form-group input,
+.form-group select {
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  font-size: var(--text-base);
   outline: none;
 }
 
-.form-group input:focus, .form-group select:focus {
-  border-color: #333;
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--dark);
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 25px;
+  gap: 0.625rem;
+  margin-top: var(--sp-6);
 }
 
-button {
-  padding: 10px 20px;
-  border-radius: 8px;
+.modal-actions button {
+  padding: 0.625rem var(--sp-5);
+  border-radius: var(--r-md);
   font-weight: 600;
   cursor: pointer;
   border: none;
-  font-size: 1rem;
+  font-size: var(--text-base);
 }
 
-.btn-cancelar {
-  background: transparent;
-  color: #666;
-}
-.btn-cancelar:hover { background: #f0f0f0; }
+.btn-cancelar { background: transparent; color: var(--text-muted); }
+.btn-cancelar:hover { background: var(--bg); }
 
-.btn-guardar {
-  background: #000;
-  color: #fff;
-}
-.btn-guardar:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
+.btn-guardar { background: var(--dark); color: var(--white); }
+.btn-guardar:disabled { background: #ccc; cursor: not-allowed; }

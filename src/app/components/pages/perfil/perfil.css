@@ -1,24 +1,8 @@
-:root {
-  --primary: #0f172a;
-  --accent: #10b981;
-  --accent-light: #ecfdf5;
-  --bg-page: #f1f5f9;
-  --border: #e2e8f0;
-  --white: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --danger: #ef4444;
-  --danger-bg: #fef2f2;
-
-  --sidebar-space: 18.06rem;
-  --header-space: 7.78rem;
-}
-
 .container {
-  margin-top: 11dvh;
-  margin-left: calc(var(--sidebar-width) + 20px);
+  margin-top: 8dvh;
+  margin-left: var(--sidebar-width);
+  padding: 1.75rem;
 }
-
 
 .contenedor-principal {
   display: grid;
@@ -27,17 +11,15 @@
     "perfil perfil"
     "config ads";
   gap: 1.667rem;
-  max-width: 83.333rem;
-  margin: 0 auto;
 }
 
 .tarjeta-perfil {
   grid-area: perfil;
   background: var(--white);
   padding: 2.222rem;
-  border-radius: 1.111rem;
-  border: 0.069rem solid var(--border);
-  box-shadow: 0 0.278rem 0.417rem -0.069rem rgba(0, 0, 0, 0.05);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .contenido-perfil {
@@ -58,7 +40,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 0.278rem solid var(--white);
-  box-shadow: 0 0 0 0.069rem var(--border);
+  box-shadow: 0 0 0 1px var(--border);
 }
 
 .boton-editar-avatar {
@@ -67,7 +49,7 @@
   right: 0.347rem;
   width: 2.5rem;
   height: 2.5rem;
-  background: var(--primary);
+  background: var(--dark);
   color: white;
   border: 0.208rem solid var(--white);
   border-radius: 50%;
@@ -78,18 +60,14 @@
   transition: 0.3s;
 }
 
-.boton-editar-avatar:hover {
-  transform: scale(1.1);
-}
+.boton-editar-avatar:hover { transform: scale(1.1); }
 
-.input-archivo-oculto {
-  display: none;
-}
+.input-archivo-oculto { display: none; }
 
 .datos-usuario h2 {
   font-size: 1.667rem;
   margin: 0 0 0.278rem 0;
-  color: var(--primary);
+  color: var(--dark);
 }
 
 .datos-usuario p {
@@ -101,10 +79,10 @@
   background: var(--accent-light);
   color: var(--accent);
   padding: 0.417rem 0.833rem;
-  border-radius: 0.556rem;
-  font-size: 0.833rem;
+  border-radius: var(--r-sm);
+  font-size: var(--text-xs);
   font-weight: 700;
-  border: 0.069rem solid #d1fae5;
+  border: 1px solid #d1fae5;
 }
 
 .acciones-usuario {
@@ -116,21 +94,21 @@
 .boton-editar-perfil,
 .boton-exportar-datos {
   padding: 0.694rem 1.389rem;
-  border-radius: 0.556rem;
+  border-radius: var(--r-sm);
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
 }
 
 .boton-editar-perfil {
-  background: var(--primary);
+  background: var(--dark);
   color: white;
   border: none;
 }
 
 .boton-exportar-datos {
   background: white;
-  border: 0.069rem solid var(--border);
+  border: 1px solid var(--border);
   color: var(--text-main);
 }
 
@@ -142,10 +120,10 @@
 
 .tarjeta-plan {
   grid-area: ads;
-  background: var(--primary);
+  background: var(--dark);
   color: white;
   padding: 1.667rem;
-  border-radius: 1.111rem;
+  border-radius: var(--r-xl);
   align-self: stretch;
   position: sticky;
   top: 10rem;
@@ -166,10 +144,10 @@
   margin-top: 2.222rem;
   padding: 0.833rem;
   background: rgba(255, 255, 255, 0.1);
-  border: 0.069rem dashed rgba(255, 255, 255, 0.3);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
   color: white;
-  border-radius: 0.556rem;
-  font-size: 0.833rem;
+  border-radius: var(--r-sm);
+  font-size: var(--text-xs);
 }
 
 .grid-configuracion {
@@ -183,8 +161,8 @@
 .seccion-desactivar-cuenta {
   background: var(--white);
   padding: 1.667rem;
-  border-radius: 1.111rem;
-  border: 0.069rem solid var(--border);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
 }
 
 .item-ajuste {
@@ -192,15 +170,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.111rem;
-  border: 0.069rem solid var(--border);
-  border-radius: 0.833rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
   margin-top: 1.111rem;
 }
 
-.texto-item strong {
-  display: block;
-  margin-bottom: 0.278rem;
-}
+.texto-item strong { display: block; margin-bottom: 0.278rem; }
 
 .texto-item p {
   margin: 0;
@@ -230,10 +205,7 @@
   gap: 1.389rem;
 }
 
-.texto-desactivar-cuenta h3 {
-  color: var(--danger);
-  margin: 0;
-}
+.texto-desactivar-cuenta h3 { color: var(--danger); margin: 0; }
 
 .texto-desactivar-cuenta p {
   font-size: 0.903rem;
@@ -244,9 +216,9 @@
 .boton-eliminar-cuenta {
   background: var(--danger-bg);
   color: var(--danger);
-  border: 0.069rem solid #fecaca;
+  border: 1px solid #fecaca;
   padding: 0.694rem 1.389rem;
-  border-radius: 0.556rem;
+  border-radius: var(--r-sm);
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -257,6 +229,7 @@
   cursor: not-allowed;
 }
 
+/* Modal */
 .overlay-modal {
   position: fixed;
   inset: 0;
@@ -264,15 +237,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10001;
+  z-index: var(--z-modal);
 }
 
 .modal-perfil {
   width: min(90vw, 34.722rem);
   background: var(--white);
-  border-radius: 1.111rem;
-  border: 0.069rem solid var(--border);
-  box-shadow: 0 0.972rem 2.083rem -1.042rem rgba(15, 23, 42, 0.35);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-modal);
   padding: 1.667rem;
   box-sizing: border-box;
   max-height: 90rem;
@@ -281,12 +254,10 @@
 
 .modal-perfil h3 {
   margin: 0 0 1.111rem 0;
-  color: var(--primary);
+  color: var(--dark);
 }
 
-.campo-form {
-  margin-bottom: 0.833rem;
-}
+.campo-form { margin-bottom: 0.833rem; }
 
 .campo-form label {
   display: block;
@@ -297,11 +268,11 @@
 
 .campo-form input {
   width: 100%;
-  border: 0.069rem solid var(--border);
-  border-radius: 0.556rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
   padding: 0.625rem 0.833rem;
   box-sizing: border-box;
-  font-size: 0.972rem;
+  font-size: var(--text-sm);
 }
 
 .campo-doble {
@@ -318,11 +289,11 @@
 
 .modal-perfil .entrada input {
   width: 100%;
-  border: 0.069rem solid var(--border);
-  border-radius: 0.556rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
   padding: 0.625rem 2.5rem 0.625rem 0.833rem;
   box-sizing: border-box;
-  font-size: 0.972rem;
+  font-size: var(--text-sm);
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -330,7 +301,7 @@
 .modal-perfil .entrada input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 0.208rem rgb(16 185 129 / 22%);
+  box-shadow: 0 0 0 0.208rem rgba(16, 185, 129, 0.22);
 }
 
 .modal-perfil .icono {
@@ -338,8 +309,8 @@
   right: 0.694rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
-  font-size: 0.972rem;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
   pointer-events: none;
 }
 
@@ -352,26 +323,14 @@
   display: grid;
   gap: 0.278rem;
   margin-top: 0.347rem;
-  font-size: 0.833rem;
+  font-size: var(--text-xs);
 }
 
-.requisitos-password .cumplido {
-  color: var(--accent);
-}
+.requisitos-password .cumplido { color: var(--accent); }
+.requisitos-password .pendiente { color: #94a3b8; }
 
-.requisitos-password .pendiente {
-  color: #94a3b8;
-}
-
-.campo-error {
-  font-size: 0.833rem;
-  color: #b91c1c;
-}
-
-.campo-exito {
-  font-size: 0.833rem;
-  color: #15803d;
-}
+.campo-error { font-size: var(--text-xs); color: var(--danger-dark); }
+.campo-exito { font-size: var(--text-xs); color: #15803d; }
 
 .acciones-modal {
   display: flex;
@@ -382,8 +341,8 @@
 
 .boton-primario,
 .boton-secundario {
-  border-radius: 0.556vw;
-  padding: 0.625vw 1.111vw;
+  border-radius: var(--r-sm);
+  padding: 0.625rem 1.111rem;
   font-weight: 600;
   cursor: pointer;
 }
@@ -391,7 +350,7 @@
 .boton-primario {
   border: none;
   color: white;
-  background: var(--primary);
+  background: var(--dark);
 }
 
 .boton-primario:disabled {
@@ -400,7 +359,7 @@
 }
 
 .boton-secundario {
-  border: 0.069vw solid var(--border);
+  border: 1px solid var(--border);
   color: var(--text-main);
   background: white;
 }
@@ -413,8 +372,7 @@
 
   .container {
     margin-left: 0;
-    width: 100%;
-    padding: 2.222vw;
+    padding: var(--sp-4);
   }
 
   .contenido-perfil {
@@ -434,30 +392,22 @@
   }
 
   .modal-perfil {
-    width: min(92vw, 35.417vw);
-    border-radius: 2.222vw;
-    padding: 4.444vw;
+    width: min(92vw, 90vw);
+    border-radius: var(--r-xl);
+    padding: var(--sp-4);
   }
 
-  .campo-doble {
-    grid-template-columns: 1fr;
-  }
+  .campo-doble { grid-template-columns: 1fr; }
 
   .alerta {
-    margin-bottom: 2.222vw;
-    padding: 2.222vw;
-    border-radius: 1.111vw;
+    margin-bottom: var(--sp-4);
+    padding: var(--sp-4);
+    border-radius: var(--r-md);
   }
 
-  .requisitos-password {
-    font-size: 2.8vw;
-    gap: 1vw;
-  }
-
+  .requisitos-password { font-size: 2.8vw; gap: 1vw; }
   .campo-error,
-  .campo-exito {
-    font-size: 2.8vw;
-  }
+  .campo-exito         { font-size: 2.8vw; }
 
   .modal-perfil .entrada input {
     font-size: 3.5vw;
@@ -469,5 +419,4 @@
     font-size: 4vw;
     right: 2.5vw;
   }
-
 }

@@ -1,51 +1,114 @@
-/* Global CSS variables and responsive sidebar width */
-:root{
-	--sidebar-width: 15dvw;
-	--header-height: 5dvh; /* default header height for desktop */
+/* ══════════════════════════════════════════════════════
+   WealthGuard — Design System Global
+   Fuente única de variables CSS para toda la aplicación.
+   Convención de unidades:
+     · Tipografía  → rem  (escala con el zoom del usuario)
+     · Alturas de sección → dvh / dvw
+     · Anchos de columna  → %, fr, vw
+     · Márgenes y paddings → rem
+   ══════════════════════════════════════════════════════ */
 
-	--background: '#f8f9ff';
-  --bg: #f6f8fb;
-  --card: #ffffff;
-  --muted: #8b98a9;
-  --border: #e6e9ee;
-  --accent: #0b7a4a;
-  --danger: #e54b4b;
-  --primary: #0b6cff;
+:root {
+  /* ── Layout ───────────────────────────────────────── */
+  --sidebar-width:  15dvw;
+  --header-height:  5dvh;
+
+  /* ── Paleta de color ──────────────────────────────── */
+  --dark:         #0f172a;    /* azul oscuro: nav, botones principales */
+  --primary:      #0b6cff;    /* azul: KPIs, highlights de acción */
+  --accent:       #10b981;    /* verde: activo, éxito */
+  --accent-light: #ecfdf5;    /* verde claro: fondos de estado éxito */
+  --warning:      #f59e0b;    /* ámbar: advertencia */
+  --warning-bg:   #fffbeb;
+  --danger:       #ef4444;    /* rojo: error, eliminar */
+  --danger-bg:    #fef2f2;    /* rojo claro: fondo de error */
+  --danger-dark:  #b91c1c;    /* rojo oscuro: texto de error */
+
+  /* ── Superficies ──────────────────────────────────── */
+  --bg:    #f1f5f9;           /* fondo de página */
+  --card:  #ffffff;           /* tarjetas y paneles */
+  --white: #ffffff;           /* alias de --card */
   --glass: rgba(11, 12, 15, 0.03);
+
+  /* ── Texto ────────────────────────────────────────── */
+  --text-main:  #1e293b;      /* texto principal */
+  --text-muted: #64748b;      /* texto secundario */
+  --muted:      #8b98a9;      /* muted alternativo */
+
+  /* ── Bordes ───────────────────────────────────────── */
+  --border: #e2e8f0;
+
+  /* ── Tipografía (escala rem, base 16 px) ─────────── */
+  --font:      'Inter', system-ui, sans-serif;
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+
+  /* ── Espaciado (rem) ──────────────────────────────── */
+  --sp-1: 0.25rem;    /*  4px */
+  --sp-2: 0.5rem;     /*  8px */
+  --sp-3: 0.75rem;    /* 12px */
+  --sp-4: 1rem;       /* 16px */
+  --sp-5: 1.25rem;    /* 20px */
+  --sp-6: 1.5rem;     /* 24px */
+  --sp-8: 2rem;       /* 32px */
+
+  /* ── Border-radius ────────────────────────────────── */
+  --r-sm:   0.375rem;   /*  6px */
+  --r-md:   0.5rem;     /*  8px */
+  --r-lg:   0.75rem;    /* 12px */
+  --r-xl:   1rem;       /* 16px */
+  --r-2xl:  1.25rem;    /* 20px */
+  --r-full: 9999px;
+
+  /* ── Sombras ──────────────────────────────────────── */
+  --shadow-sm:    0 0.125rem 0.375rem rgba(20, 30, 40, 0.06);
+  --shadow-md:    0 0.375rem 1.125rem rgba(20, 30, 40, 0.08);
+  --shadow-lg:    0 0.5rem  1.875rem  rgba(20, 30, 40, 0.12);
+  --shadow-modal: 0 1.25rem 2.5rem -1.25rem rgba(15, 23, 42, 0.35);
+
+  /* ── Z-index ──────────────────────────────────────── */
+  --z-sidebar:  50;
+  --z-header:   100;
+  --z-dropdown: 200;
+  --z-overlay:  1000;
+  --z-modal:    1100;
+  --z-toast:    1200;
 }
 
-@media (max-width: 900px){
-	:root{
-		--sidebar-width: 15dvw; /* keep proportional on small screens */
-		--header-height: 5dvh; /* adjust header height for mobile */
-	}
+/* ── Base ─────────────────────────────────────────── */
+html {
+  background: var(--bg);
+  font-family: var(--font);
+  font-size: 1rem;
 }
 
-/* You can add global styles to this file, and also import other style files */
-html{
-	background: var(--background);
-	font-family: 'Inter', sans-serif;
-
+body {
+  background: var(--bg);
+  color: var(--text-main);
+  margin: 0;
 }
 
-body{
-  background: #f3f3f3;
-}
-
+/* ── Angular Material: datepicker ─────────────────── */
 .mat-datepicker-popup .mat-datepicker-content {
-  background-color: white;
+  background-color: var(--card);
 }
 
+/* ── Angular Material: filtros globales ───────────── */
 .contenedor-filtros-global .mat-mdc-text-field-wrapper {
-  border-radius: 12px ;
-  border: 1px solid #e5e5e5;
-  background: white;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--card);
 }
 
 .contenedor-filtros-global .mdc-notched-outline__leading,
 .contenedor-filtros-global .mdc-notched-outline__notch,
 .contenedor-filtros-global .mdc-notched-outline__trailing {
-  border-color: #e5e5e5 !important;
+  border-color: var(--border) !important;
 }
 
 .contenedor-filtros-global .mat-mdc-text-field-wrapper:hover {
@@ -57,29 +120,92 @@ body{
 }
 
 .contenedor-filtros-global .mat-date-range-input-container {
-  padding-left: 12px;
-  padding-right: 12px;
-  gap: 8px;
+  padding-left: var(--sp-3);
+  padding-right: var(--sp-3);
+  gap: var(--sp-2);
 }
 
-/* Alertas de página (error / éxito) — usadas en todas las páginas con sidebar */
+/* ── Mensajes de estado (error / éxito) ───────────── */
 .alerta {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  margin-bottom: var(--sp-4);
+  padding: 0.75rem var(--sp-4);
+  border-radius: var(--r-md);
+  font-size: var(--text-sm);
   font-weight: 600;
   border: 1px solid transparent;
 }
 
 .alerta-exito {
-  background: #ecfdf5;
+  background: var(--accent-light);
   border-color: #a7f3d0;
   color: #047857;
 }
 
 .alerta-error {
-  background: #fef2f2;
+  background: var(--danger-bg);
   border-color: #fecaca;
-  color: #b91c1c;
+  color: var(--danger-dark);
 }
 
+/* ── Overlay de modal (patrón compartido) ─────────── */
+.modal-overlay,
+.overlay-modal,
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-overlay);
+  backdrop-filter: blur(3px);
+}
+
+/* ════════════════════════════════════════════════════
+   Layout compartido: páginas interiores (con sidebar)
+   Aplica el mismo offset y padding que el dashboard.
+   ════════════════════════════════════════════════════ */
+.pagina {
+  margin-top: 8dvh;
+  margin-left: var(--sidebar-width);
+  padding: 1.75rem;
+}
+
+/* ── Cabecera de página ───────────────────────────── */
+.pag-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--sp-6);
+  gap: var(--sp-4);
+}
+
+.pag-titulo {
+  font-size: var(--text-2xl);   /* 1.5rem = 24px */
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0 0 var(--sp-1) 0;
+  line-height: 1.2;
+}
+
+.pag-subtitulo {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Título de sección dentro de una página ──────── */
+.seccion-titulo {
+  font-size: var(--text-base);   /* 1rem = 16px, igual que dashboard */
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0;
+}
+
+/* ── Tarjeta / panel genérico ─────────────────────── */
+.panel {
+  background: var(--card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.125rem;
+}

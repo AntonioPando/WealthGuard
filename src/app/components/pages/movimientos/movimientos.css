@@ -1,26 +1,26 @@
 .container {
-  margin-left: calc(var(--sidebar-width) + 20px);  
-  padding-left: 40px;  
-  padding-right: 40px;
-  padding-top: 80px;
+  margin-left: calc(var(--sidebar-width) + var(--sp-5));
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  padding-top: 5rem;
 }
 
 .error {
-    margin: 0 0 1.5rem 0;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #fecaca;
-    background-color: #fef2f2;
-    color: #b91c1c;
-    font-size: 14px;
+  margin: 0 0 var(--sp-6) 0;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--r-lg);
+  border: 1px solid #fecaca;
+  background-color: var(--danger-bg);
+  color: var(--danger-dark);
+  font-size: var(--text-sm);
 }
 
 .exito {
-    margin: 0 0 1.5rem 0;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #bbf7d0;
-    background-color: #f0fdf4;
-    color: #16803d;
-    font-size: 14px;
+  margin: 0 0 var(--sp-6) 0;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--r-lg);
+  border: 1px solid #bbf7d0;
+  background-color: #f0fdf4;
+  color: #16803d;
+  font-size: var(--text-sm);
 }
