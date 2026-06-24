@@ -1,45 +1,137 @@
-/* Global CSS variables and responsive sidebar width */
-:root{
-	--sidebar-width: 15dvw;
-	--header-height: 5dvh; /* default header height for desktop */
+/* Global design tokens shared by all pages */
+:root {
+  --sidebar-width: 15dvw;
+  --header-height: 5dvh;
+  --page-content-top: 11dvh;
+  --page-content-left: calc(var(--sidebar-width) + 20px);
+  --page-content-padding-x: 40px;
+  --page-title-size: 1.667rem;
+  --font-family-base: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-	--background: '#f8f9ff';
+  --background: #f1f5f9;
   --bg: #f6f8fb;
+  --bg-page: #f1f5f9;
   --card: #ffffff;
+  --white: #ffffff;
+  --border: #e2e8f0;
+  --primary: #0f172a;
+  --accent: #10b981;
+  --accent-light: #ecfdf5;
+  --danger: #ef4444;
+  --danger-bg: #fef2f2;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
   --muted: #8b98a9;
-  --border: #e6e9ee;
-  --accent: #0b7a4a;
-  --danger: #e54b4b;
-  --primary: #0b6cff;
   --glass: rgba(11, 12, 15, 0.03);
+
+  /* Aliases for existing page styles */
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-bg-page: var(--bg-page);
+  --color-border: var(--border);
+  --color-white: var(--white);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+
+  --fondo-color: var(--bg);
+  --tarjeta-bg: var(--card);
+  --texto-principal: var(--text-main);
+  --texto-atenuado: var(--text-muted);
+  --exito: var(--color-success);
+  --advertencia: #f59e0b;
+  --peligro: #b91c1c;
+  --peligro-claro: var(--danger-bg);
+  --borde-color: var(--border);
+  --borde-radio: 16px;
 }
 
-@media (max-width: 900px){
-	:root{
-		--sidebar-width: 15dvw; /* keep proportional on small screens */
-		--header-height: 5dvh; /* adjust header height for mobile */
-	}
+@media (max-width: 900px) {
+  :root {
+    --sidebar-width: 15dvw;
+    --header-height: 5dvh;
+  }
 }
 
 /* You can add global styles to this file, and also import other style files */
-html{
-	background: var(--background);
-	font-family: 'Inter', sans-serif;
-
+html {
+  background: var(--background);
+  font-family: var(--font-family-base);
 }
 
-body{
-  background: #f3f3f3;
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-main);
+  font-family: var(--font-family-base);
+  line-height: 1.5;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Shared page layout shell for pages with sidebar + header */
+:where(.container, .contenedor-presupuestos) {
+  margin-top: var(--page-content-top);
+  margin-left: var(--page-content-left);
+  padding-left: var(--page-content-padding-x);
+  padding-right: var(--page-content-padding-x);
+}
+
+/* Shared main-page heading style */
+:where(.titulo-transacciones, .rec-titulo, .titulos-cabecera h1) {
+  color: var(--text-main);
+  font-size: var(--page-title-size);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Shared page header block to align title position across screens */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.667rem;
+}
+
+@media (max-width: 1024px) {
+  :where(.container, .contenedor-presupuestos) {
+    margin-left: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .mat-datepicker-popup .mat-datepicker-content {
-  background-color: white;
+  background-color: #ffffff;
+  border: 1px solid #dbe2ea;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.18);
 }
 
 .contenedor-filtros-global .mat-mdc-text-field-wrapper {
   border-radius: 12px ;
   border: 1px solid #e5e5e5;
-  background: white;
+  background: white !important;
+}
+
+.contenedor-filtros-global .mdc-text-field,
+.contenedor-filtros-global .mat-mdc-form-field-flex,
+.contenedor-filtros-global .mat-mdc-form-field-infix {
+  background: white !important;
+}
+
+.contenedor-filtros-global .mat-mdc-form-field-focus-overlay {
+  background: transparent !important;
 }
 
 .contenedor-filtros-global .mdc-notched-outline__leading,
@@ -53,13 +145,29 @@ body{
 }
 
 .contenedor-filtros-global .mat-mdc-text-field-wrapper.mdc-text-field--focused {
-  border-color: #999;
+  border-color: #111;
+  box-shadow: inset 0 -2px 0 #111;
+}
+
+.contenedor-filtros-global .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  border-color: #111 !important;
+  box-shadow: inset 0 -2px 0 #111;
+}
+
+.contenedor-filtros-global .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.contenedor-filtros-global .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.contenedor-filtros-global .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #111 !important;
 }
 
 .contenedor-filtros-global .mat-date-range-input-container {
-  padding-left: 12px;
+  padding-left: 16px;
   padding-right: 12px;
   gap: 8px;
+}
+
+.contenedor-filtros-global .mat-mdc-floating-label {
+  margin-left: 4px;
 }
 
 /* Alertas de página (error / éxito) — usadas en todas las páginas con sidebar */

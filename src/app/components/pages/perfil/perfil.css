@@ -1,22 +1,6 @@
-:root {
-  --primary: #0f172a;
-  --accent: #10b981;
-  --accent-light: #ecfdf5;
-  --bg-page: #f1f5f9;
-  --border: #e2e8f0;
-  --white: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --danger: #ef4444;
-  --danger-bg: #fef2f2;
-
-  --sidebar-space: 18.06rem;
-  --header-space: 7.78rem;
-}
-
 .container {
-  margin-top: 11dvh;
-  margin-left: calc(var(--sidebar-width) + 20px);
+  margin-top: var(--page-content-top);
+  margin-left: var(--page-content-left);
 }
 
 
@@ -27,8 +11,7 @@
     "perfil perfil"
     "config ads";
   gap: 1.667rem;
-  max-width: 83.333rem;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .tarjeta-perfil {

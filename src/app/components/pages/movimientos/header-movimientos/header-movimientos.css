@@ -1,13 +1,12 @@
-h2 {
+.titulo-transacciones {
   margin-bottom: 20px;
-  color: #333;
-  font-size: 44px;
 }
 
 .header-transacciones {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: -1.125rem;
 }
 
 .btn-add-mov {
