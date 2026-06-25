@@ -112,7 +112,7 @@
     </section>
 
     @if (mostrarFormulario) {
-    <app-presupuesto-form [categoriasLista]="listaCategorias" (guardar)="guardarNuevoPresupuesto($event)"
+    <app-presupuesto-form [categoriasLista]="listaCategorias" [categoriasOcupadas]="categoriaExiste" (guardar)="guardarNuevoPresupuesto($event)"
         (cancelar)="mostrarFormulario = false">
     </app-presupuesto-form>
     }

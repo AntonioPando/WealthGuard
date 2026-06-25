@@ -368,8 +368,7 @@ export class Perfil implements OnInit {
 
   exportarDatosPerfil() {
     if (!this.usuario) return;
-    const contenido = JSON.stringify(this.usuario, null, 2);
-    const blob = new Blob([contenido], { type: 'application/json' });
+    const { respuestaSeguridad, password, ...datosParaExportar } = this.usuario as any; const contenido = JSON.stringify(datosParaExportar, null, 2); const blob = new Blob([contenido], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const enlace = document.createElement('a');
     enlace.href = url;
