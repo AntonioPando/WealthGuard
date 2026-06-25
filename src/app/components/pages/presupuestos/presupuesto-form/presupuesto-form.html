@@ -12,6 +12,10 @@
           <option *ngFor="let cat of categoriasLista" [ngValue]="cat.id"> {{ cat.nombre }}
           </option>
         </select>
+
+        <div *ngIf="form.get('idCategoria')?.hasError('categoriaDuplicada') && form.get('idCategoria')?.touched"
+style="color: var(--peligro); font-size: 0.85rem; margin-top: 0.4rem; display: flex; align-items: center; gap: 4px;">          Ya tienes un presupuesto asignado a esta categoría en este mes.
+        </div>
       </div>
 
       <div class="form-group">

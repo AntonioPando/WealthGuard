@@ -28,7 +28,7 @@ export class TransaccionForm implements OnInit {
       tipoTransaccion: [null, Validators.required], // false = gasto, true = ingreso
       cantidad: ['', [Validators.required, Validators.min(0.01)]], // validamos que el numero sea positivo
       fecha: ['', Validators.required],
-      descripcion: [''],
+      descripcion: ['', [Validators.maxLength(100)]],
       idCategoria: ['', Validators.required]
     });
   }

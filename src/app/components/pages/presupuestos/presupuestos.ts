@@ -270,4 +270,9 @@ export class Presupuestos implements OnInit {
     const nombre = new Date().toLocaleString('es-ES', { month: 'long' });
     return nombre.charAt(0).toUpperCase() + nombre.slice(1);
   }
+
+  get categoriaExiste(): number[] {
+    return this.listaPresupuestos.map(p => p.idCategoria);
+  }
+
 }

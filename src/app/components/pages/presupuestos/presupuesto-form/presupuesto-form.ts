@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-presupuesto-form',
@@ -13,6 +13,7 @@ export class PresupuestoForm implements OnInit {
 
   @Input() presupuestoEditar: any;
   @Input() categoriasLista: { id: number, nombre: string }[] = [];
+  @Input() categoriasOcupadas: number[] = [];
 
 
   @Output() guardar = new EventEmitter<any>();
@@ -33,10 +34,28 @@ export class PresupuestoForm implements OnInit {
     if (this.presupuestoEditar) {
       this.esEdicion = true;
       this.form.patchValue({
-        idCategoria: this.presupuestoEditar.idCategoria, // Apuntamos al ID plano corregido
+        idCategoria: this.presupuestoEditar.idCategoria,
         limite: this.presupuestoEditar.limite,
       });
     }
+
+    this.form.get('idCategoria')?.setValidators([
+      Validators.required,
+      (control: AbstractControl): ValidationErrors | null => {
+        if (!control.value) return null;
+
+        const idSeleccionado = Number(control.value);
+
+        if (this.esEdicion && idSeleccionado === this.presupuestoEditar?.idCategoria) {
+          return null;
+        }
+
+        const yaExiste = this.categoriasOcupadas.includes(idSeleccionado);
+        return yaExiste ? { categoriaDuplicada: true } : null;
+      }
+    ]);
+
+    this.form.get('idCategoria')?.updateValueAndValidity();
   }
 
   onSubmit() {
