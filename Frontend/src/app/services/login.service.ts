@@ -65,20 +65,14 @@ export class LoginService {
 	}
 
 	obtenerIdUsuario(): number | null {
-		const idUsuario = localStorage.getItem('id_usuario') ?? sessionStorage.getItem('id_usuario');
-
-		if (!idUsuario) {
-			return null;
-		}
-
+		const idUsuario = sessionStorage.getItem('id_usuario');
+		if (!idUsuario) return null;
 		const valor = Number(idUsuario);
 		return Number.isNaN(valor) ? null : valor;
 	}
 
 	estaAutenticado(): boolean {
 		return (
-			!!localStorage.getItem('auth_token') ||
-			!!localStorage.getItem('id_usuario') ||
 			!!sessionStorage.getItem('auth_token') ||
 			!!sessionStorage.getItem('id_usuario')
 		);
