@@ -12,9 +12,9 @@ export class LoginService {
 	private readonly http = inject(HttpClient);
 	private readonly apiUrl = `${API_BASE}/usuarios/login`;
 
-	iniciarSesion(usuario: string, pass: string, recordar: boolean): Observable<LoginResponse> {
+	iniciarSesion(usuario: string, pass: string): Observable<LoginResponse> {
 		const payload: LoginRequest = { usuario, pass };
-		const storage = recordar ? localStorage : sessionStorage;
+		const storage = sessionStorage;
 
 		localStorage.removeItem('auth_token');
 		localStorage.removeItem('id_usuario');
