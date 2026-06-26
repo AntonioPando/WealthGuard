@@ -19,6 +19,17 @@ export class UtilsService {
     'noviembre',
     'diciembre',
   ];
+
+  obtenerNickUsuario(): string | null {
+    const data = localStorage.getItem('usuario_actual') ?? sessionStorage.getItem('usuario_actual');
+    if (!data) return null;
+    try { return JSON.parse(data).nickUsuario ?? null; } catch { return null; }
+  }
+
+  obtenerContrasena(): string | null {
+    return localStorage.getItem('auth_contrasena') ?? sessionStorage.getItem('auth_contrasena');
+  }
+
   // Obtiene el id del usuario logeado
   obtenerIdUsuario(): number | null {
     const idUsuario = localStorage.getItem('id_usuario') ?? sessionStorage.getItem('id_usuario');

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, switchMap, of } from 'rxjs';
+import { API_BASE } from '../shared/constants/api-urls';
 
 export interface RegistroRequest {
   nickUsuario: string;
@@ -24,7 +25,7 @@ export interface RegistroResponse {
 @Injectable({ providedIn: 'root' })
 export class RegistroService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/usuarios';
+  private readonly apiUrl = `${API_BASE}/usuarios`;
 
   registrar(datos: RegistroRequest, foto: File | null = null): Observable<RegistroResponse> {
     return this.http.post<RegistroResponse>(`${this.apiUrl}/crear`, datos).pipe(
