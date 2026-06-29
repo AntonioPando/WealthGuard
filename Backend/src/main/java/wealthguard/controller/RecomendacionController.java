@@ -17,7 +17,7 @@ import wealthguard.dto.RecomendacionResponseDTO;
 import wealthguard.service.IRecomendacionService;
 
 @RestController
-@RequestMapping("/api/recomendaciones")
+@RequestMapping("/recomendaciones")
 @CrossOrigin(origins = "*")
 public class RecomendacionController {
 

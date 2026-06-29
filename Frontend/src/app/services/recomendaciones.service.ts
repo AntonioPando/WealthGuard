@@ -10,7 +10,7 @@ import { UtilsService } from './utils.service';
 export class RecomendacionService {
     private readonly http = inject(HttpClient);
     private readonly utils = inject(UtilsService);
-    private readonly API = `${API_BASE}/api/recomendaciones`;
+    private readonly API = `${API_BASE}/recomendaciones`;
 
     private addAuthParams(params: HttpParams): HttpParams {
         const nick = this.utils.obtenerNickUsuario();
