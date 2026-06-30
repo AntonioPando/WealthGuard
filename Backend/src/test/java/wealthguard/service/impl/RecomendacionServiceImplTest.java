@@ -77,8 +77,6 @@ class RecomendacionServiceImplTest {
         recomendacionDTO = new RecomendacionResponseDTO();
     }
 
-    // ─── generarRecomendaciones ───────────────────────────────────────────────
-
     @Test
     @DisplayName("generarRecomendaciones: score en mismo rango — devuelve historial sin nueva fila")
     void generarRecomendaciones_mismoRango_devuelveHistorialExistente() {
@@ -193,8 +191,6 @@ class RecomendacionServiceImplTest {
                 r -> r.getTipoRecomendacion().getScoreMaximo() - r.getTipoRecomendacion().getScoreMinimo() == 20));
     }
 
-    // ─── obtenerRecomendaciones ───────────────────────────────────────────────
-
     @Test
     @DisplayName("obtenerRecomendaciones: devuelve historial mapeado")
     void obtenerRecomendaciones_devuelveListaMapeada() {
@@ -219,8 +215,6 @@ class RecomendacionServiceImplTest {
 
         assertThat(resultado).isEmpty();
     }
-
-    // ─── eliminarRecomendacion ────────────────────────────────────────────────
 
     @Test
     @DisplayName("eliminarRecomendacion: no existe — devuelve false")

@@ -11,7 +11,6 @@ import wealthguard.entity.UsuarioEntity;
 @Component
 public class TransaccionMapper {
 
-    // Metodo para convertir lo que llega del frontend en una entidad para la base de datos
     public TransaccionEntity convertirAEntity (TransaccionRequestDTO transaccionRequestDTO){
         if (transaccionRequestDTO == null) {
             return null;
@@ -38,7 +37,6 @@ public class TransaccionMapper {
         return transaccionEntity;
     }
 
-    // Metodo para convertir lo que sale de la base de datos a DTO para el frontend
     public TransaccionResponseDTO convertirADTO(TransaccionEntity transaccionEntity){
         if (transaccionEntity == null) {
             return null;

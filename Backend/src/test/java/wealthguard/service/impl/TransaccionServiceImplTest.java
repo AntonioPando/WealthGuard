@@ -37,11 +37,16 @@ import wealthguard.service.LoginService;
 @ExtendWith(MockitoExtension.class)
 class TransaccionServiceImplTest {
 
-    @Mock private TransaccionRepository transaccionRepository;
-    @Mock private ObjetivoRepository objetivoRepository;
-    @Mock private CategoriaRepository categoriaRepository;
-    @Mock private TransaccionMapper transaccionMapper;
-    @Mock private LoginService loginService;
+    @Mock
+    private TransaccionRepository transaccionRepository;
+    @Mock
+    private ObjetivoRepository objetivoRepository;
+    @Mock
+    private CategoriaRepository categoriaRepository;
+    @Mock
+    private TransaccionMapper transaccionMapper;
+    @Mock
+    private LoginService loginService;
 
     @InjectMocks
     private TransaccionServiceImpl transaccionService;
@@ -75,8 +80,6 @@ class TransaccionServiceImplTest {
         transaccionDTO = new TransaccionResponseDTO();
     }
 
-    // ─── listarTransacciones ──────────────────────────────────────────────────
-
     @Test
     @DisplayName("listarTransacciones: sin fechas — aplica rango de últimos 7 días por defecto")
     void listarTransacciones_sinFechas_aplicaRangoPorDefecto() {
@@ -107,8 +110,6 @@ class TransaccionServiceImplTest {
 
         assertThat(resultado).isEmpty();
     }
-
-    // ─── crearTransaccion ─────────────────────────────────────────────────────
 
     @Test
     @DisplayName("crearTransaccion: categoría válida — guarda y devuelve DTO")
@@ -165,8 +166,6 @@ class TransaccionServiceImplTest {
         verify(categoriaRepository, never()).findById(any());
     }
 
-    // ─── editarTransaccion ────────────────────────────────────────────────────
-
     @Test
     @DisplayName("editarTransaccion: transacción no encontrada — lanza RuntimeException")
     void editarTransaccion_noExiste_lanzaExcepcion() {
@@ -205,8 +204,6 @@ class TransaccionServiceImplTest {
         verify(transaccionRepository).save(transaccionReciente);
     }
 
-    // ─── eliminarTransaccion ──────────────────────────────────────────────────
-
     @Test
     @DisplayName("eliminarTransaccion: no existe — devuelve false")
     void eliminarTransaccion_noExiste_devuelveFalse() {
@@ -242,8 +239,6 @@ class TransaccionServiceImplTest {
         assertThat(resultado).isTrue();
         verify(transaccionRepository).deleteById(1);
     }
-
-    // ─── obtenerTendencia ─────────────────────────────────────────────────────
 
     @Test
     @DisplayName("obtenerTendencia: balance anterior 0 y actual positivo — devuelve 100.0")
@@ -297,8 +292,6 @@ class TransaccionServiceImplTest {
         assertThat(resultado).isEqualTo(-50.0);
     }
 
-    // ─── obtenerCategoriaPrincipal ────────────────────────────────────────────
-
     @Test
     @DisplayName("obtenerCategoriaPrincipal: sin gastos este mes — devuelve ['Sin datos', '0.0']")
     void obtenerCategoriaPrincipal_sinGastos_devuelveSinDatos() {
@@ -332,8 +325,6 @@ class TransaccionServiceImplTest {
 
         assertThat(resultado[0]).isEqualTo("Ocio");
     }
-
-    // ─── obtenerMeta ─────────────────────────────────────────────────────────
 
     @Test
     @DisplayName("obtenerMeta: sin objetivo — devuelve [0.0, 0.0]")
@@ -412,8 +403,6 @@ class TransaccionServiceImplTest {
         assertThat(resultado[0]).isEqualTo(500.0);
         assertThat(resultado[1]).isEqualTo(100.0);
     }
-
-    // ─── listarTodasPorUsuario ────────────────────────────────────────────────
 
     @Test
     @DisplayName("listarTodasPorUsuario: devuelve todas las transacciones mapeadas")

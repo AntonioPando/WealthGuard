@@ -1,4 +1,5 @@
 package wealthguard.service.impl;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +31,6 @@ import wealthguard.entity.CategoriaEntity;
 import wealthguard.mapper.CategoriaMapper;
 import wealthguard.repository.CategoriaRepository;
 import wealthguard.service.LoginService;
-import wealthguard.service.impl.CategoriaServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class CategoriaServiceImplTest {
@@ -68,8 +68,6 @@ class CategoriaServiceImplTest {
         categoriaRequestDTO.setIcono("food.svg");
     }
 
-    // --- crearCategoria ---
-
     @Test
     void crearCategoria_nueva_retornaCategoriaResponseDTO() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -105,8 +103,6 @@ class CategoriaServiceImplTest {
                 () -> categoriaService.crearCategoria(categoriaRequestDTO, "wrong", "wrong"));
     }
 
-    // --- obtenerCategorias ---
-
     @Test
     void obtenerCategorias_conDatos_retornaLista() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -139,8 +135,6 @@ class CategoriaServiceImplTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
-
-    // --- editarCategoria ---
 
     @Test
     void editarCategoria_exitosa_retornaCategoriaActualizada() {
@@ -195,8 +189,6 @@ class CategoriaServiceImplTest {
         assertThrows(RuntimeException.class,
                 () -> categoriaService.editarCategoria(999, categoriaRequestDTO, "testuser", "pass"));
     }
-
-    // --- eliminarCategoria ---
 
     @Test
     void eliminarCategoria_existe_eliminaYRetornaTrue() {

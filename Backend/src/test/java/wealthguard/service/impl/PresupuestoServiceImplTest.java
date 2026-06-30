@@ -1,20 +1,31 @@
 package wealthguard.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import wealthguard.dto.PresupuestoRequestDTO;
@@ -83,8 +94,6 @@ class PresupuestoServiceImplTest {
         presupuestoRequestDTO.setFechaFin(LocalDateTime.now().plusDays(1));
     }
 
-    // --- crearPresupuesto ---
-
     @Test
     void crearPresupuesto_exitoso_retornaResponseDTO() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -108,8 +117,6 @@ class PresupuestoServiceImplTest {
         verify(presupuestoRepository, never()).save(any());
     }
 
-    // --- eliminarPresupuesto ---
-
     @Test
     void eliminarPresupuesto_existe_eliminaYRetornaTrue() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -132,8 +139,6 @@ class PresupuestoServiceImplTest {
         verify(presupuestoRepository, never()).deleteById(any());
     }
 
-    // --- editarPresupuesto ---
-
     @Test
     void editarPresupuesto_existe_actualizaYRetornaTrue() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -146,8 +151,7 @@ class PresupuestoServiceImplTest {
         boolean result = presupuestoService.editarPresupuesto(1, 1, 750.0, nuevaInicio, nuevaFin, "testuser", "pass");
 
         assertTrue(result);
-        verify(presupuestoRepository).save(argThat(p ->
-                p.getLimite() == 750.0 &&
+        verify(presupuestoRepository).save(argThat(p -> p.getLimite() == 750.0 &&
                 p.getFechaInicio().equals(nuevaInicio) &&
                 p.getFechaFin().equals(nuevaFin)));
     }
@@ -163,8 +167,6 @@ class PresupuestoServiceImplTest {
         assertFalse(result);
         verify(presupuestoRepository, never()).save(any());
     }
-
-    // --- obtenerPresupuestos ---
 
     @Test
     void obtenerPresupuestos_conGastos_calculaPorcentajeCorrectamente() {

@@ -90,8 +90,6 @@ class UsuarioServiceImplTest {
         responseDTO.setEmail("test@example.com");
     }
 
-    // --- login ---
-
     @Test
     void login_conNickValido_retornaLoginResponseDTO() throws UsuarioException {
         when(usuarioRepository.findByNickUsuarioIgnoreCase("testuser")).thenReturn(Optional.of(usuarioTest));
@@ -176,8 +174,6 @@ class UsuarioServiceImplTest {
         assertEquals("Credenciales_incorrectas", ex.getMessage());
     }
 
-    // --- crearUsuario ---
-
     @Test
     void crearUsuario_exitoso_retornaResponseDTO() throws UsuarioException {
         UsuarioRequestDTO requestDTO = new UsuarioRequestDTO();
@@ -211,8 +207,6 @@ class UsuarioServiceImplTest {
         assertThrows(UsuarioException.class, () -> usuarioService.crearUsuario(requestDTO));
         verify(usuarioRepository, never()).save(any());
     }
-
-    // --- actualizarUsuario ---
 
     @Test
     void actualizarUsuario_exitoso_retornaResponseDTO() throws UsuarioException {
@@ -288,8 +282,6 @@ class UsuarioServiceImplTest {
         assertEquals("Password_incorrecta", ex.getMessage());
     }
 
-    // --- eliminarCuenta ---
-
     @Test
     void eliminarCuenta_usuarioExiste_eliminaTodoYRetornaTrue() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -302,8 +294,6 @@ class UsuarioServiceImplTest {
         verify(recomendacionRepository).deleteByUsuarioId(1);
         verify(presupuestoRepository).deleteByUsuarioId(1);
         verify(objetivoRepository).deleteByUsuarioId(1);
-        // Eliminado: scoreFinancieroRepository.deleteByUsuarioId — no existe en la
-        // implementación
         verify(usuarioRepository).deleteById(1);
     }
 
@@ -325,8 +315,6 @@ class UsuarioServiceImplTest {
         assertThrows(RuntimeException.class,
                 () -> usuarioService.eliminarCuenta(1, "wronguser", "wrongpass"));
     }
-
-    // --- exportarDatos ---
 
     @Test
     void exportarDatos_usuarioExiste_retornaCSV() {
@@ -350,8 +338,6 @@ class UsuarioServiceImplTest {
         assertThrows(RuntimeException.class,
                 () -> usuarioService.exportarDatos(999, "testuser", PLAIN_PASSWORD));
     }
-
-    // --- cambiarPassword ---
 
     @Test
     void cambiarPassword_exitoso_retornaTrue() throws UsuarioException {
@@ -396,8 +382,6 @@ class UsuarioServiceImplTest {
                         PLAIN_PASSWORD));
     }
 
-    // --- obtenerPerfil ---
-
     @Test
     void obtenerPerfil_usuarioExiste_retornaResponseDTO() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -418,8 +402,6 @@ class UsuarioServiceImplTest {
         assertThrows(RuntimeException.class,
                 () -> usuarioService.obtenerPerfil(999, "testuser", PLAIN_PASSWORD));
     }
-
-    // --- listarUsuarios ---
 
     @Test
     void listarUsuarios_conDatos_retornaLista() {
@@ -444,8 +426,6 @@ class UsuarioServiceImplTest {
         assertTrue(result.isEmpty());
     }
 
-    // --- existeNick ---
-
     @Test
     void existeNick_nickExistente_retornaTrue() {
         when(usuarioRepository.findByNickUsuarioIgnoreCase("testuser")).thenReturn(Optional.of(usuarioTest));
@@ -458,8 +438,6 @@ class UsuarioServiceImplTest {
         assertFalse(usuarioService.existeNick("noexiste"));
     }
 
-    // --- existeEmail ---
-
     @Test
     void existeEmail_emailExistente_retornaTrue() {
         when(usuarioRepository.findByEmailIgnoreCase("test@example.com")).thenReturn(Optional.of(usuarioTest));
@@ -471,8 +449,6 @@ class UsuarioServiceImplTest {
         when(usuarioRepository.findByEmailIgnoreCase("noexiste@test.com")).thenReturn(Optional.empty());
         assertFalse(usuarioService.existeEmail("noexiste@test.com"));
     }
-
-    // --- obtenerPreguntaSeguridad ---
 
     @Test
     void obtenerPreguntaSeguridad_porNick_retornaPregunta() throws UsuarioException {
@@ -504,8 +480,6 @@ class UsuarioServiceImplTest {
                 () -> usuarioService.obtenerPreguntaSeguridad(null));
     }
 
-    // --- verificarRespuestaSeguridad ---
-
     @Test
     void verificarRespuestaSeguridad_respuestaCorrecta_retornaTrue() throws UsuarioException {
         when(usuarioRepository.findByNickUsuarioIgnoreCase("testuser")).thenReturn(Optional.of(usuarioTest));
@@ -529,8 +503,6 @@ class UsuarioServiceImplTest {
         when(usuarioRepository.findByNickUsuarioIgnoreCase("testuser")).thenReturn(Optional.of(usuarioTest));
         assertTrue(usuarioService.verificarRespuestaSeguridad("testuser", "FIRULAIS"));
     }
-
-    // --- resetearPassword ---
 
     @Test
     void resetearPassword_exitoso_retornaTrue() throws UsuarioException {

@@ -33,7 +33,6 @@ import wealthguard.entity.UsuarioEntity;
 import wealthguard.mapper.ObjetivoMapper;
 import wealthguard.repository.ObjetivoRepository;
 import wealthguard.service.LoginService;
-import wealthguard.service.impl.ObjetivoServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class ObjetivoServiceImplTest {
@@ -88,8 +87,6 @@ class ObjetivoServiceImplTest {
         objetivoRequestDTO.setUsuarioId(1);
         objetivoRequestDTO.setCantidadObjetivo(1500.0);
     }
-
-    // --- crearObjetivo ---
 
     @Test
     void crearObjetivo_sinObjetivoExistente_creaUnoNuevo() {
@@ -151,8 +148,6 @@ class ObjetivoServiceImplTest {
         verify(objetivoMapper).convertirAEntity(objetivoRequestDTO);
     }
 
-    // --- eliminarObjetivo ---
-
     @Test
     void eliminarObjetivo_existe_eliminaYRetornaTrue() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -174,8 +169,6 @@ class ObjetivoServiceImplTest {
         assertFalse(result);
         verify(objetivoRepository, never()).deleteById(any());
     }
-
-    // --- editarObjetivo ---
 
     @Test
     void editarObjetivo_existe_actualizaCantidadYRetornaDTO() {
@@ -206,8 +199,6 @@ class ObjetivoServiceImplTest {
                 () -> objetivoService.editarObjetivo(999, objetivoRequestDTO, "testuser", "pass"));
     }
 
-    // --- obtenerObjetivo ---
-
     @Test
     void obtenerObjetivo_existe_retornaDTO() {
         doNothing().when(loginService).verificar(anyString(), anyString());
@@ -230,8 +221,6 @@ class ObjetivoServiceImplTest {
 
         assertNull(result);
     }
-
-    // --- obtenerUltimoObjetivo ---
 
     @Test
     void obtenerUltimoObjetivo_existeExpirado_retornaDTO() {

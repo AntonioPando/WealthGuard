@@ -10,8 +10,6 @@ import wealthguard.entity.TipoRecomendacionEntity;
 @Component
 public class RecomendacionMapper {
 
-    // Metodo para convertir lo que llega del frontend en una entidad para la base
-    // de datos
     public RecomendacionEntity convertirAEntity(RecomendacionRequestDTO dto) {
         if (dto == null) {
             return null;
@@ -26,7 +24,6 @@ public class RecomendacionMapper {
 
     }
 
-    // Metodo para convertir lo que sale de la base de datos a DTO para el frontend
     public RecomendacionResponseDTO convertirADTO(RecomendacionEntity entity) {
         if (entity == null) {
             return null;
