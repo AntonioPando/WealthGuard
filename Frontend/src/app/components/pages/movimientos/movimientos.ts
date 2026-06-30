@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Filtros } from './filtros/filtros';
 import { Tabla } from './tabla/tabla';
 import { HeaderMovimientos } from './header-movimientos/header-movimientos';
@@ -78,12 +78,10 @@ export class Movimientos implements OnInit {
 
     this.mensajeError = '';
     this.mensajeExito = mensaje;
-    this.cdr.detectChanges();
 
     this.feedbackTimeout = setTimeout(() => {
       this.mensajeExito = '';
       this.feedbackTimeout = null;
-      this.cdr.detectChanges();
     }, 3000);
   }
 
@@ -95,7 +93,6 @@ export class Movimientos implements OnInit {
 
     this.mensajeExito = '';
     this.mensajeError = mensaje;
-    this.cdr.detectChanges();
   }
 
   ngOnInit(): void {
@@ -133,7 +130,7 @@ export class Movimientos implements OnInit {
     this.categoriaService.obtenerCategorias().subscribe({
       next: (cats) => {
         this.categoriasDesdeBackend = cats.map(c => ({ id: c.id, nombre: c.nombre }));
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err: unknown) => {
         this.mostrarError(this.utilsService.manejarError(err, 'No se pudieron cargar las categorías.'));
@@ -146,7 +143,7 @@ export class Movimientos implements OnInit {
         this.categorias = [...new Set(data.map(m => m.nombreCategoria).filter(Boolean))] as string[];
         this.limpiarFiltros();
         this.cargandoDatos = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err: unknown) => {
         this.cargandoDatos = false;
@@ -155,22 +152,22 @@ export class Movimientos implements OnInit {
     });
 
     this.transaccionService.obtenerTendencia(this.idUsuario).subscribe({
-      next: (resultado) => { this.tendencia = resultado; this.cdr.detectChanges(); },
+      next: (resultado) => { this.tendencia = resultado; this.cdr.markForCheck();},
       error: () => { this.tendencia = 0; }
     });
 
     this.transaccionService.obtenerCategoriaPrincipal(this.idUsuario).subscribe({
-      next: (resultado) => { this.categoriaPrincipal = resultado; this.cdr.detectChanges(); },
+      next: (resultado) => { this.categoriaPrincipal = resultado; this.cdr.markForCheck(); },
       error: () => { this.categoriaPrincipal = ['sin datos', '0,0']; }
     });
 
     this.transaccionService.obtenerMeta(this.idUsuario).subscribe({
-      next: (resultado) => { this.meta = resultado; this.cdr.detectChanges(); },
+      next: (resultado) => { this.meta = resultado; this.cdr.markForCheck(); },
       error: () => { this.meta = [0.0, 0.0]; }
     });
 
     this.objetivoService.obtenerMetaPasada(this.idUsuario).subscribe({
-      next: (resultado: ObjetivoResponse) => { this.metaPasada = resultado; this.cdr.detectChanges(); },
+      next: (resultado: ObjetivoResponse) => { this.metaPasada = resultado; this.cdr.markForCheck(); },
       error: () => { this.metaPasada = null; }
     });
   }
@@ -275,9 +272,14 @@ export class Movimientos implements OnInit {
       next: async (eliminado) => {
         if (eliminado) {
           this.mostrarExito('Movimiento eliminado correctamente.');
-          this.cargarDatos();
+          
+         setTimeout(() => {
+            this.cargarDatos();
+          }, 0);
+          
           return;
         }
+        
         await this.uiAlertsService.alert({
           title: 'No se pudo eliminar',
           message: 'No se pudo eliminar el movimiento.',
@@ -303,12 +305,10 @@ export class Movimientos implements OnInit {
       next: (meta: ObjetivoResponse) => {
         this.metaActivaEditar = meta;
         this.mostrarModalMeta = true;
-        this.cdr.detectChanges();
       },
       error: () => {
         this.metaActivaEditar = null;
         this.mostrarModalMeta = true;
-        this.cdr.detectChanges();
       }
     });
   }
