@@ -1,4 +1,3 @@
-/* Contenedor principal */
 .contenedor-principal {
   margin-top: calc(var(--page-content-top) - 1rem);
   margin-left: var(--page-content-left);
@@ -8,7 +7,6 @@
   background: transparent;
 }
 
-/* KPI grid */
 .rejilla-kpi {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -87,7 +85,6 @@
   background: linear-gradient(90deg, var(--accent), #34c37a);
 }
 
-/* Analisis visual grid */
 .rejilla-analisis {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -276,7 +273,6 @@
   background: #d63a3a
 }
 
-/* Paleta ampliada y más contrastada para el gráfico */
 .punto-color--c1 {
   background: #0b7a4a
 }

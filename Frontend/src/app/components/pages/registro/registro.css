@@ -347,6 +347,7 @@ label {
     color: var(--color-text-muted);
     font-size: 14px;
 }
+
 .login-link {
     border: 0;
     background: none;
@@ -357,7 +358,7 @@ label {
     font-family: inherit;
     font-size: 14px;
 }
-/* ── Avatar upload ── */
+
 .form-group-avatar {
     display: flex;
     flex-direction: column;

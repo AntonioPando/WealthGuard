@@ -1,4 +1,3 @@
-/* Global design tokens shared by all pages */
 :root {
   --sidebar-width: 15dvw;
   --header-height: 5dvh;
@@ -24,7 +23,6 @@
   --muted: #8b98a9;
   --glass: rgba(11, 12, 15, 0.03);
 
-  /* Aliases for existing page styles */
   --color-primary: var(--primary);
   --color-accent: var(--accent);
   --color-bg-page: var(--bg-page);
@@ -69,11 +67,12 @@ body {
   line-height: 1.5;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-/* Shared page layout shell for pages with sidebar + header */
 :where(.container, .contenedor-presupuestos) {
   margin-top: var(--page-content-top);
   margin-left: var(--page-content-left);
@@ -81,7 +80,6 @@ body {
   padding-right: var(--page-content-padding-x);
 }
 
-/* Shared main-page heading style */
 :where(.titulo-transacciones, .rec-titulo, .titulos-cabecera h1) {
   color: var(--text-main);
   font-size: var(--page-title-size);
@@ -89,7 +87,6 @@ body {
   font-weight: 700;
 }
 
-/* Shared page header block to align title position across screens */
 .page-header {
   display: flex;
   align-items: flex-start;
@@ -118,7 +115,7 @@ body {
 }
 
 .contenedor-filtros-global .mat-mdc-text-field-wrapper {
-  border-radius: 12px ;
+  border-radius: 12px;
   border: 1px solid #e5e5e5;
   background: white !important;
 }
@@ -169,7 +166,6 @@ body {
   margin-left: 4px;
 }
 
-/* Alertas de página (error / éxito) — usadas en todas las páginas con sidebar */
 .alerta {
   margin-bottom: 1rem;
   padding: 0.75rem 1rem;
@@ -189,4 +185,3 @@ body {
   border-color: #fecaca;
   color: #b91c1c;
 }
-

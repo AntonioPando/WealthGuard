@@ -282,7 +282,6 @@
     border-color: var(--border);
 }
 
-/* ---------- TOOLTIP ---------- */
 .tooltip-disabled {
     position: relative;
 }
@@ -479,7 +478,6 @@
     transform: scale(0.98);
 }
 
-/* ---------- RESPONSIVE ---------- */
 @media (max-width: 1024px) {
     .container {
         margin-left: 0;
