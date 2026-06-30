@@ -1,59 +1,92 @@
-# WealthWard
+# WealthGuard
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+Aplicación para gestión financiera personal. Proyecto monorepo con Backend Java (Spring Boot + Maven) y Frontend Angular.
 
-## Development server
+## Estructura del repositorio
 
-To start a local development server, run:
+- `Backend/` - Servicio backend Java (Spring Boot). Contiene `pom.xml`, `mvnw` y la aplicación.
+- `Frontend/` - Aplicación cliente Angular.
 
-```bash
-ng serve
-```
+## Requisitos
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Java 17+ (JDK instalado)
+- Maven (se puede usar el wrapper `mvnw` incluido)
+- Node.js 18+ y npm
+- Angular CLI (opcional para desarrollo local)
 
-## Code scaffolding
+## Configuración rápida
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Clona el repositorio.
+2. Configura las variables de entorno necesarias (si aplica) o revisa los archivos de configuración en `Backend/src/main/resources/`.
 
-```bash
-ng generate component component-name
-```
+## Ejecutar Backend (desarrollo)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Desde la carpeta `Backend` puedes usar el wrapper de Maven incluido:
 
 ```bash
-ng build
+cd Backend
+./mvnw spring-boot:run        # Unix / WSL / Git Bash
+mvnw.cmd spring-boot:run     # Windows PowerShell / CMD
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Alternativamente, compilar y ejecutar el JAR:
 
 ```bash
-ng test
+cd Backend
+./mvnw clean package
+java -jar target/*.jar
 ```
 
-## Running end-to-end tests
+Archivos de configuración relevantes:
 
-For end-to-end (e2e) testing, run:
+- `Backend/src/main/resources/application.yml`
+- `Backend/src/main/resources/application-dev.yml`
+- `Backend/src/main/resources/application-prod.yml`
+- Migraciones DB: `Backend/src/main/resources/db/` (si se usa Flyway).
+
+## Ejecutar Frontend (desarrollo)
+
+Desde la carpeta `Frontend`:
 
 ```bash
-ng e2e
+cd Frontend
+npm install
+npm start       # o `ng serve` si está instalado globalmente
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Para producción (build):
 
-## Additional Resources
+```bash
+cd Frontend
+npm run build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Endpoints y conexión
+
+El backend por defecto expone la API en `http://localhost:8080` (configurable en `application.yml`). Ajusta el origen en el frontend si es necesario (`app.config.ts` o configuración de ambiente).
+
+## Tests
+
+Backend (JUnit / Maven):
+
+```bash
+cd Backend
+./mvnw test
+```
+
+Frontend (Jasmine/Karma, si está configurado):
+
+```bash
+cd Frontend
+npm test
+```
+
+## Estructura de carpetas (resumen)
+
+- `Backend/src/main/java/` - Código fuente Java (paquetes como `wealthguard.*`).
+- `Backend/src/main/resources/` - Configuración y recursos.
+- `Frontend/src/` - Código fuente Angular (components, services, models).
+
+## Notas y recomendaciones
+
+- Asegura que las credenciales y variables sensibles no se suban al repositorio (usa archivos `.env` o secretos de CI).

@@ -1,0 +1,92 @@
+<table class="tabla">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Categoría</th>
+      <th>Descripción</th>
+      <th>Monto</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let m of movimientosPaginados">
+      <td> {{ m.fecha | date: 'dd/MM/yyyy' }} | {{ m.fecha | date: ' HH:mm' }} </td>
+
+      <td>{{ m.nombreCategoria }}</td>
+
+      <td>{{ m.descripcion }}</td>
+
+      <td [class.ingreso]="m.tipoTransaccion === true" [class.gasto]="m.tipoTransaccion === false">
+        {{ m.tipoTransaccion ? '+ ' : '- ' }}{{ m.cantidad | number: '1.2-2' }} €
+      </td>
+
+      <td class="acciones">
+        <button *ngIf="esEditable(m.fecha)" class="btn-icon" (click)="abrirEditar.emit(m)">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+
+        <button *ngIf="esEditable(m.fecha)" class="btn-icon delete" (click)="eliminar.emit(m.id)">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+
+        <span *ngIf="!esEditable(m.fecha)" class="material-symbols-outlined icon-candado"
+          title="No se puede modificar transacciones&#10; de más de 3 meses de antigüedad">
+          lock
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="paginacion">
+  <button (click)="anterior()" [disabled]="pagina === 1">Anterior</button>
+
+  <button *ngFor="let p of paginas" (click)="irAPagina(p)" [class.activa]="pagina === p">
+    {{ p }}
+  </button>
+
+  <button (click)="siguiente()" [disabled]="pagina === totalPaginas">Siguiente</button>
+</div>
+
+<div class="insights">
+
+  <div class="card">
+    <p class="label">TENDENCIA MENSUAL</p>
+    <h4>{{ tendencia > 0 ? '+ ' : '' }}{{ tendencia |number: '1.0-0'}}%</h4>
+    <p class="sub">{{ tendencia >= 0 ? '📈' : '📉' }} vs. mes anterior</p>
+  </div>
+
+  <div class="card">
+    <p class="label">CATEGORÍA PRINCIPAL</p>
+    <h4>{{categoriaPrincipal[0]}}</h4>
+    <p class="sub">{{categoriaPrincipal[1]}}% de los gastos totales</p>
+  </div>
+
+  <div class="card primary" (click)="abrirModalMeta.emit()" style="cursor: pointer;">
+
+    <button class="btn-editar-meta" (click)="$event.stopPropagation(); abrirModalMeta.emit()">
+      <span class="material-symbols-outlined" style="font-size: 1.2vw;">edit</span>
+    </button>
+
+    <p class="label">META DE AHORRO: {{ (meta[1] < 0 ? meta[1] * -1 : meta[1]) | number: '1.2-2' }} €</p>
+
+        <h4>{{ meta[0] | number:'1.2-2' }} €</h4>
+
+        <div class="progress">
+          <div class="bar" [style.width.%]="totalMeta"></div>
+        </div>
+
+        <p class="sub">{{ totalMeta | number: '1.0-1' }}% de la meta alcanzada</p>
+  </div>
+
+  <div *ngIf="metaPasada" class="meta-pasada-banner">
+    <div class="banner-content">
+      <span class="material-symbols-outlined icon-lamp">lightbulb</span>
+      <p class="banner-text">
+        ¿Quieres mantener tu ritmo? Tu meta de ahorro del mes anterior fue de <strong>{{ metaPasada.cantidadObjetivo |
+          number: '1.2-2' }} €</strong>
+      </p>
+    </div>
+
+  </div>

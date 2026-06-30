@@ -1,0 +1,355 @@
+.contenedor-presupuestos {
+    margin-top: var(--page-content-top);
+    margin-left: var(--page-content-left);
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 0;
+    color: var(--texto-principal);
+}
+
+.cabecera-presupuestos {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+}
+
+.titulos-cabecera h1 {
+    margin: 0 0 0.5rem 0;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.btn-lineas {
+    border-color: var(--borde-color);
+    background: var(--tarjeta-bg);
+    color: var(--texto-principal);
+}
+
+.btn-lineas:hover {
+    background: var(--fondo-color);
+}
+
+.btn-oscuro {
+    background: #0f172a;
+    color: white;
+}
+
+.btn-oscuro:hover {
+    background: #1e293b;
+}
+
+.btn-peligro {
+    background: var(--peligro-claro);
+    color: var(--peligro);
+    border: 1px solid var(--peligro);
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-peligro:hover {
+    background: var(--peligro);
+    color: red;
+}
+
+.cuadricula-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.tarjeta-presupuesto {
+    background: var(--tarjeta-bg);
+    border: 1px solid var(--borde-color);
+    border-radius: var(--borde-radio);
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-presupuesto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-peligro {
+    border-color: #fca5a5;
+    background-color: #fef2f2;
+}
+
+.tarjeta-advertencia {
+    border-color: #fde047;
+    background-color: #fffdf2;
+}
+
+.tarjeta-bueno {
+    border-color: #bbf7d0;
+    background-color: #f0fdf4;
+}
+
+.icono-peligro {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.icono-advertencia {
+    background-color: #fef08a;
+    color: #b45309;
+}
+
+.icono-bueno {
+    background-color: #dcfce7;
+    color: #16803d;
+}
+
+.texto-peligro {
+    color: #b91c1c;
+}
+
+.texto-advertencia {
+    color: #d97706;
+}
+
+.texto-bueno {
+    color: #16803d;
+}
+
+.relleno-peligro {
+    background-color: #b91c1c;
+}
+
+.relleno-advertencia {
+    background-color: #f59e0b;
+}
+
+.relleno-bueno {
+    background-color: #16803d;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-edicion {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.cabecera-tarjeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+}
+
+.caja-icono {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+}
+
+.insignia {
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.cuerpo-tarjeta h3 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.pie-tarjeta {
+    margin-top: auto;
+}
+
+.montos {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.montos strong {
+    font-size: 1.1rem;
+}
+
+.porcentaje {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.barra-progreso {
+    background: #f1f5f9;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.8rem;
+}
+
+.relleno-progreso {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
+
+.texto-excedido {
+    color: var(--peligro);
+    font-size: 0.8rem;
+    margin: 0.8rem 0 0 0;
+    font-weight: 500;
+}
+
+.tarjeta-presupuesto.crear-nuevo {
+    border: 2px dashed var(--borde-color);
+    background: transparent;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    box-shadow: none;
+}
+
+.tarjeta-presupuesto.crear-nuevo:hover {
+    border-color: var(--texto-atenuado);
+}
+
+.icono-agregar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--borde-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: var(--texto-atenuado);
+    margin-bottom: 1rem;
+}
+
+.paneles-inferiores {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .paneles-inferiores {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    background: var(--tarjeta-bg);
+    border: 1px solid var(--borde-color);
+    border-radius: var(--borde-radio);
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cabecera-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cabecera-panel h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.cabecera-panel span {
+    color: var(--texto-atenuado);
+    font-size: 0.85rem;
+}
+
+.fila-analisis {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.info-fila h4 {
+    margin: 0 0 0.2rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.info-fila p {
+    margin: 0;
+    color: var(--texto-atenuado);
+    font-size: 0.85rem;
+}
+
+.panel-analisis .monto {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.error {
+     font-weight: 600;
+   background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.exito {
+     font-weight: 600;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}

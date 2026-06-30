@@ -1,0 +1,20 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>{{ metaEditar ? 'Editar Meta de Ahorro' : 'Nueva Meta de Ahorro' }}</h2>
+    <p>Define la cantidad total que quieres alcanzar este mes.</p>
+
+    <div class="form-group">
+      <label>Cantidad objetivo (€)</label>
+      <input 
+        type="number" 
+        [(ngModel)]="cantidad" 
+        placeholder="Ej: 1500" 
+        class="input-meta">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
+      <button class="btn-guardar" (click)="onGuardar()" [disabled]="!cantidad">Guardar</button>
+    </div>
+  </div>
+</div>

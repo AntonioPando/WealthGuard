@@ -1,0 +1,35 @@
+<div class="modal-overlay" (click)="cancelar.emit()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+
+    <h3>{{ esEdicion ? 'Editar Presupuesto' : 'Nuevo Presupuesto' }}</h3>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Categoría</label>
+        <select formControlName="idCategoria" class="form-control">
+          <option value="" disabled>Selecciona una categoría</option>
+          <option *ngFor="let cat of categoriasLista" [ngValue]="cat.id"> {{ cat.nombre }}
+          </option>
+        </select>
+
+        <div *ngIf="form.get('idCategoria')?.hasError('categoriaDuplicada') && form.get('idCategoria')?.touched"
+style="color: var(--peligro); font-size: 0.85rem; margin-top: 0.4rem; display: flex; align-items: center; gap: 4px;">          Ya tienes un presupuesto asignado a esta categoría en este mes.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Límite Mensual (€)</label>
+        <input type="number" formControlName="limite" placeholder="0.00" class="form-control">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
+        <button type="submit" class="btn-guardar" [disabled]="form.invalid">
+          {{ esEdicion ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

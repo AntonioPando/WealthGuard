@@ -1,0 +1,143 @@
+Login
+    
+    public Usuario iniciarSesion (String usuario, String pass) throws UsuarioException {
+        Mira si esta bloqueado
+        Si falla contador_intentos +1
+        Si acierta y contador_intentos != 0 -> contador_intentos = 0
+    }
+
+    public String obtenerPregunta(String usuario){
+        Busca el usuario y devuelve su pregunta
+    }
+
+    public boolean verificarRespuesta (String usuario, String respuesta){
+        Busca el usuario y comprueba la respuesta
+    }
+
+    public boolean resetearContraseña (String usuario, String contraseña){
+        Busca el usuario y cambia la contraseña
+        Contador_intentos = 0
+    }
+
+
+
+Registro
+
+    (parametro Usuario NO tiene ID)
+    public Usuario registrarUsuario (Usuario usuario) thows UsuarioException{
+
+    }
+
+Perfil
+
+    (parametro Usuario SI tiene ID)
+    public Usuario actualizarUsuario (Usuario usuario) thows UsuarioException{
+
+    }
+
+    public boolean eliminarCuenta (int idUsuario){
+        
+    }
+
+    public byte[] exportarDatos (int idUsuario){
+        
+    }
+
+Para el botón "Actualizar >" en la sección de contraseña
+public boolean cambiarPassword(int idUsuario, String passwordAntigua, String passwordNueva) throws UsuarioException {
+    1. Verificar passwordAntigua
+     2. Hashear passwordNueva
+     3. Actualizar fechaUltimoCambioPassword
+}
+
+para cargar el usuario
+public Usuario obtenerPerfil(int idUsuario) {
+    // Retorna la entidad o un DTO con la info de la imagen
+}
+
+Para el icono de edición sobre el círculo del avatar:
+public String actualizarFotoPerfil(int idUsuario, byte[] imagen) {
+    // Guardar imagen en servidor/S3 y devolver la URL
+}
+
+Movimientos
+
+    public List<Transaccion> listarTransacciones (int idUsuario, Date fechaInicio, Date fechaFin, Integer idCategoria, Boolean tipo, Double cantidad, String descripcion){
+        Carga inicial: 
+            fechaInicio: fechafin - 7 dias
+            fechaFin: hoy
+            categoria: null
+            tipo: null
+            cantidad: null
+            descripcion: null
+    }
+
+    public double obtenerTendencia (int idUsuario){
+
+    }
+
+    public String[] obtenerCategoriaPrincipal(int idUsuario){
+        devuelve en pos 0 la categoria y en pos 1 el porcentaje
+    }
+
+    public double[] obtenerMeta (int idUsuario){
+        devuelve en pos 0 la meta y en pos 1 el porcentaje
+    }
+
+    public Transaccion editarTransaccion (int idTransaccion){
+        
+    }
+
+    public Transaccion crearTransaccion (double cantidad, LocalDateTime fecha, String descripcion, Integer idCategoria, Integer idUsuario, Boolean tipoTransaccion){
+
+    }
+
+    public
+
+Dashboard
+
+    public double saldoTotal(int idUsuario){
+
+    }
+
+    public double gastosMensuales(int idUsuario){
+
+    }
+
+    public double ingresosMensuales (int idUsuario){
+
+    }
+
+    public List<Transaccion> listarTransaccionesRecientes (int idUsuario){
+
+    }
+
+    public double[] evolucionGastos(int idUsuario){
+        devuelve en pos 0 el dia y en pos 1 el gasto
+    }
+
+    (
+        public double porcentajeGastoCategoria(int idUsuario){
+            
+        }
+        public String categoria(int idUsuario){
+
+        }
+    )
+
+Presupuestos
+
+    public List<Categoria> listarCategorias(int idUsuario, LocalDateTime fechaInicio,
+            LocalDateTime fechaFin, Integer idCategoria, Double limite){
+        
+    }
+
+    public String[] obtenerCategoria(int idUsuario){
+        devuelve en pos 0 la categoria, en pos 1 el porcentaje, en pos 2 cantidad gastada, pos 3 limite
+    }
+
+    public Double[] obtenerResumen (int idUsuario){
+        devuelve en pos 0 el total gastado y en pos 1 el porcentaje
+    }
+
+    public void crearPresupuesto

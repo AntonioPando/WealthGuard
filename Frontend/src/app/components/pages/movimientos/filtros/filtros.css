@@ -1,0 +1,58 @@
+.filtros {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+mat-form-field {
+  min-width: 220px;
+}
+
+.mat-mdc-text-field-wrapper {
+  border-radius: 10px !important;
+}
+
+.filtros select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  outline: none;
+  min-width: 160px;
+}
+
+.filtros select:focus {
+  border-color: #999;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.filtros button {
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+.filtros button:hover {
+  background: #f8fafc;
+}
+
+.tipo {
+  display: flex;
+  gap: 5px;
+}
+
+
+
+
+
+

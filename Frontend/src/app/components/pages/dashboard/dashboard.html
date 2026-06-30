@@ -1,0 +1,185 @@
+<app-header></app-header>
+
+<div class="pagina-dashboard">
+  <app-menu-lateral></app-menu-lateral>
+
+
+
+  <!-- Área de Contenido Principal -->
+  <main class="contenedor-principal">
+      @if (mensajeError) {
+  <div class="alerta alerta-error">{{ mensajeError }}</div>
+  }
+ 
+    <!-- Sección: Indicadores Clave de Rendimiento (KPIs) -->
+    <section class="rejilla-kpi" aria-label="Resumen financiero rápido">
+      <!-- Tarjeta KPI: Saldo -->
+      <article class="tarjeta-kpi">
+        <header class="tarjeta-kpi__encabezado">
+          <div class="tarjeta-kpi__icono-contenedor tarjeta-kpi__icono-contenedor--primario">
+            <span class="material-symbols-outlined">account_balance</span>
+          </div>
+
+        </header>
+        <div class="tarjeta-kpi__contenido">
+          <h3 class="tarjeta-kpi__titulo">Saldo Total</h3>
+          <p class="tarjeta-kpi__valor">{{ cargandoSaldo ? 'Cargando...' : obtenerSaldo() }}</p>
+          <footer class="tarjeta-kpi__metadatos">{{ cargandoSaldo ? 'Actualizando...' : 'Actualizado hace unos segundos'
+            }}</footer>
+        </div>
+      </article>
+
+      <!-- Tarjeta KPI: Gastos -->
+      <article class="tarjeta-kpi">
+        <header class="tarjeta-kpi__encabezado">
+          <div class="tarjeta-kpi__icono-contenedor tarjeta-kpi__icono-contenedor--alerta">
+            <span class="material-symbols-outlined">shopping_cart</span>
+          </div>
+
+        </header>
+        <div class="tarjeta-kpi__contenido">
+          <h3 class="tarjeta-kpi__titulo">Gastos Mensuales</h3>
+          <p class="tarjeta-kpi__valor">{{ cargandoGasto ? 'Cargando...' : obtenerGastoMensual() }}</p>
+        </div>
+      </article>
+
+      <!-- Tarjeta KPI: Ingresos -->
+      <article class="tarjeta-kpi">
+        <header class="tarjeta-kpi__encabezado">
+          <div class="tarjeta-kpi__icono-contenedor tarjeta-kpi__icono-contenedor--exito">
+            <span class="material-symbols-outlined">payments</span>
+          </div>
+
+        </header>
+        <div class="tarjeta-kpi__contenido">
+          <h3 class="tarjeta-kpi__titulo">Ingresos Mensuales</h3>
+          <p class="tarjeta-kpi__valor">{{ cargandoIngreso ? 'Cargando...' : obtenerIngresoMensual() }}</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección: Análisis Visual -->
+    <section class="rejilla-analisis">
+      <!-- Gráfico de Evolución -->
+      <div class="panel-grafico panel-grafico--principal">
+        <header class="panel-grafico__encabezado">
+          <div class="panel-grafico__info">
+            <h3 class="panel-grafico__titulo">Evolución de Gastos</h3>
+            <p class="panel-grafico__subtitulo">Vista general de gastos diarios en {{ mesActual }}</p>
+          </div>
+          <p class="selector-periodo">{{ mesActual }}</p>
+        </header>
+        <div class="visualizacion-barras">
+          <div class="visualizacion-barras__contenedor">
+            <ng-container *ngIf="dailyExpenses && dailyExpenses.length > 0; else sinDatosEvo">
+              <div *ngFor="let d of dailyExpenses" class="barra" [ngClass]="d.colorClass"
+                [style.height.%]="d.heightPercent"
+                [attr.title]="'Dia ' + d.label + ' : ' + (d.value | number:'1.2-2') + ' €'"></div>
+            </ng-container>
+            <ng-template #sinDatosEvo>
+              <div class="barra barra--secundaria" style="height: 20%"></div>
+            </ng-template>
+          </div>
+          <footer class="visualizacion-barras__eje-x">
+            <span>01 {{ mesActual }}</span><span>10 {{ mesActual }}</span><span>20 {{ mesActual }}</span><span>30 {{
+              mesActual }}</span>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Gráfico de Distribución (Doughnut) -->
+      <div class="panel-grafico panel-grafico--secundario">
+        <header class="panel-grafico__encabezado">
+          <div class="panel-grafico__info">
+            <h3 class="panel-grafico__titulo">Distribución de Gastos</h3>
+            <p class="panel-grafico__subtitulo">Por categoría — Porcentaje del gasto mensual</p>
+          </div>
+        </header>
+
+        <div class="grafico-circular" role="img" aria-label="Distribución de gastos por categoría">
+          <svg class="grafico-circular__svg" viewBox="0 0 36 36" role="presentation">
+            <circle class="grafico-circular__fondo" cx="18" cy="18" r="16"></circle>
+            <ng-container *ngFor="let s of distribucionSegments">
+              <path [attr.d]="s.path" class="grafico-circular__slice grafico-color--{{s.colorKey}}"
+                [attr.role]="'presentation'" [attr.aria-label]="s.nombre + ' ' + (s.porcentaje | number:'1.0-1') + '%'">
+              </path>
+            </ng-container>
+            <circle cx="18" cy="18" r="8" fill="#fff"></circle>
+          </svg>
+
+          <div class="grafico-circular__leyenda-central">
+            <span class="leyenda-titulo">Gastos</span>
+            <span class="leyenda-valor">{{ cargandoGasto ? 'Cargando...' : obtenerGastoMensual() }}</span>
+          </div>
+        </div>
+
+        <ul class="lista-leyendas"
+          *ngIf="distribucionSegments && distribucionSegments.length > 0; else sinDatosDistrib">
+          <li *ngFor="let s of distribucionSegments" class="lista-leyendas__item">
+            <div class="lista-leyendas__item-left">
+              <span class="punto-color punto-color--{{s.colorKey}}" aria-hidden="true"></span>
+              <span>{{ s.nombre }}</span>
+            </div>
+            <div>
+              <span>{{ s.porcentaje | number:'1.0-1' }}%</span>
+              <small style="color:var(--muted); margin-left:8px">{{ s.valor | number:'1.2-2' }} €</small>
+            </div>
+          </li>
+        </ul>
+
+        <ng-template #sinDatosDistrib>
+          <div class="transaccion-item">
+            <div class="transaccion-item__perfil">
+              <div class="transaccion-item__detalles">
+                <h4 class="transaccion-item__nombre">No hay gastos en este mes</h4>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </section>
+
+    <!-- Sección: Historial Operativo -->
+    <section class="tabla-actividad">
+      <header class="tabla-actividad__encabezado">
+        <h3 class="tabla-actividad__titulo">Transacciones Recientes</h3>
+        <button class="boton-enlace" routerLink="/movimientos">Ver todas</button>
+      </header>
+      <div class="tabla-actividad__cuerpo">
+        <!-- Últimas 5 transacciones del usuario -->
+        <ng-container *ngIf="recentTransactions && recentTransactions.length > 0; else sinTransacciones">
+          <article class="transaccion-item" *ngFor="let t of recentTransactions">
+            <div class="transaccion-item__perfil">
+              <div class="transaccion-item__icono">
+                <span class="material-symbols-outlined">shopping_bag</span>
+              </div>
+              <div class="transaccion-item__detalles">
+                <h4 class="transaccion-item__nombre">{{ t.descripcion || (t.nombreCategoria || 'Transacción') }}</h4>
+                <p class="transaccion-item__categoria">{{ t.nombreCategoria || 'Sin categoría' }} • {{ t.fecha |
+                  date:'short' }}</p>
+              </div>
+            </div>
+            <div class="transaccion-item__monto">
+              <span class="monto-valor"
+                [ngClass]="{ 'monto-valor--positivo': t.tipoTransaccion, 'monto-valor--negativo': !t.tipoTransaccion }">
+                {{ t.tipoTransaccion ? (t.cantidad | number:'1.2-2') + ' €' : '-' + (t.cantidad | number:'1.2-2') + ' €'
+                }}
+              </span>
+              <span class="etiqueta-estado" [class.etiqueta-estado--completado]="t.tipoTransaccion">{{ t.tipoTransaccion
+                ? 'Ingreso' : 'Gasto' }}</span>
+            </div>
+          </article>
+        </ng-container>
+        <ng-template #sinTransacciones>
+          <div class="transaccion-item">
+            <div class="transaccion-item__perfil">
+              <div class="transaccion-item__detalles">
+                <h4 class="transaccion-item__nombre">Sin transacciones recientes</h4>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </section>
+  </main>
+</div>

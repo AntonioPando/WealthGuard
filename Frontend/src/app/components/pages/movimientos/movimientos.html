@@ -1,0 +1,52 @@
+
+<app-header></app-header>
+<app-menu-lateral (nuevaTransaccion)="abrirFormulario()"></app-menu-lateral>
+<div class="container">
+    @if (mensajeExito) {
+  <div class="alerta alerta-exito">{{ mensajeExito }}</div>
+  }
+  @if (mensajeError) {
+  <div class="alerta alerta-error">{{ mensajeError }}</div>
+  }
+
+<app-header-movimientos (abrirCrearTransaccion)="abrirFormulario()"></app-header-movimientos>
+
+
+<app-filtros (rangoSeleccionado)="aplicarFiltroFechas($event)" 
+(limpiar)="limpiarFiltros()" 
+(tipoSeleccionado)="filtrarPorTipo($event)"
+(categoriaSeleccionada)="filtrarPorCategoria($event)"
+[categorias]="categorias"
+[categoriaSeleccionadaVisual]="filtroCategoria"
+>
+</app-filtros>
+
+<app-tabla 
+[movimientos]="movimientosFiltrados"
+[tendencia]="tendencia"
+[categoriaPrincipal]="categoriaPrincipal"
+[meta]="meta"
+[metaPasada]="metaPasada" 
+(abrirEditar)="abrirFormulario($event)"
+(eliminar)="eliminarMovimiento($event)"
+(abrirModalMeta)="abrirFormularioMeta()">
+</app-tabla>
+
+@if(mostrarPopup) {
+  <app-transaccion-form 
+    [transaccionEditar]="transaccionSeleccionada"
+    [categoriasLista]="categoriasDesdeBackend"
+    (cancelar)="mostrarPopup = false"
+    (guardar)="guardarTransaccion($event)">
+  </app-transaccion-form>
+}
+
+@if(mostrarModalMeta) {
+  <app-meta-form 
+    [metaEditar]="metaActivaEditar"
+    (cancelar)="mostrarModalMeta = false"
+    (guardar)="guardarMeta($event)">
+  </app-meta-form>
+}
+
+</div>

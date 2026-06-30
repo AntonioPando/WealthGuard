@@ -1,0 +1,267 @@
+:host {
+    display: block;
+    min-height: 100dvh;
+}
+
+.nf-shell {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 1.875vw;
+    background:
+        radial-gradient(circle at 12% 10%, rgb(16 185 129 / 10%), transparent 34%),
+        radial-gradient(circle at 88% 90%, rgb(15 23 42 / 8%), transparent 36%),
+        linear-gradient(140deg, #eaf0f8, var(--color-bg-page));
+}
+
+.nf-card {
+    width: min(76.5vw, 100%);
+    min-height: min(48.4375vw, calc(100dvh - 3.75vw));
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    border-radius: 1.5625vw;
+    overflow: hidden;
+    box-shadow: 0 2.1875vw 4.6875vw rgb(9 23 46 / 28%);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-white);
+}
+
+.nf-brand {
+    padding: 4.21875vw 3.4375vw;
+    color: #f4f8ff;
+    background:
+        linear-gradient(170deg, rgb(255 255 255 / 8%), transparent 55%),
+        linear-gradient(160deg, #0b1222, #0f172a 60%, #17223c);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25vw;
+}
+
+.brand-pill {
+    margin: 0;
+    width: fit-content;
+    font-size: 0.9375vw;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.546875vw 0.9375vw;
+    border-radius: 999px;
+    background-color: rgb(16 185 129 / 20%);
+    color: #d1fae5;
+}
+
+.logo {
+    margin: 0;
+    font-size: clamp(1.875vw, 4.2vw, 3.4375vw);
+    line-height: 1.1;
+}
+
+.descripcion {
+    margin: 0;
+    color: rgb(219 234 252 / 92%);
+    line-height: 1.55;
+    font-size: 1.09375vw;
+}
+
+.caracteristicas {
+    margin: 0.78125vw 0 0;
+    padding: 0 0 0 1.40625vw;
+    display: grid;
+    gap: 0.625vw;
+    color: rgb(199 217 240 / 92%);
+    font-size: 1.09375vw;
+}
+
+.nf-panel {
+    padding: 4.21875vw 3.4375vw;
+    background-color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.numero-404 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.875vw;
+    line-height: 1;
+}
+
+.fondo-404 {
+    font-size: clamp(5vw, 9.375vw, 10vw);
+    font-weight: 800;
+    color: #e2e8f0;
+    user-select: none;
+    letter-spacing: -0.04em;
+}
+
+.icono-error {
+    position: absolute;
+    font-size: clamp(2.5vw, 4.375vw, 5vw);
+    color: var(--color-text-main);
+    opacity: 0.75;
+}
+
+.nf-panel h2 {
+    margin: 0 0 0.9375vw;
+    color: var(--color-text-main);
+    font-size: 2.1875vw;
+    line-height: 1.2;
+}
+
+.nf-descripcion {
+    margin: 0 0 2.5vw;
+    color: var(--color-text-muted);
+    max-width: 25vw;
+    line-height: 1.55;
+    font-size: 1.09375vw;
+}
+
+.acciones {
+    display: grid;
+    gap: 0.9375vw;
+    width: 100%;
+    max-width: 25vw;
+}
+
+.btn-primario {
+    min-height: 3.75vw;
+    border: 0;
+    border-radius: 0.859375vw;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.171875vw;
+    cursor: pointer;
+    transition: transform 0.18s ease, filter 0.18s ease;
+    font-family: inherit;
+}
+
+.btn-primario:hover {
+    filter: brightness(0.97);
+    transform: translateY(-1px);
+}
+
+.btn-secundario {
+    min-height: 3.75vw;
+    border: 1px solid var(--color-border);
+    border-radius: 0.859375vw;
+    background: transparent;
+    color: var(--color-text-main);
+    font-weight: 600;
+    font-size: 1.171875vw;
+    cursor: pointer;
+    transition: background-color 0.18s ease;
+    font-family: inherit;
+}
+
+.btn-secundario:hover {
+    background-color: #f8fafc;
+}
+
+.btn-primario:focus-visible,
+.btn-secundario:focus-visible {
+    outline: 0.234375vw solid rgb(16 185 129 / 35%);
+    outline-offset: 0.234375vw;
+}
+
+.soporte {
+    margin: 2.1875vw 0 0;
+    font-size: 1.09375vw;
+    color: var(--color-text-muted);
+}
+
+.soporte-link {
+    border: 0;
+    background: none;
+    color: #0f766e;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    font-size: 1.09375vw;
+}
+
+.soporte-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 920px) {
+    .nf-shell {
+        padding: 3.73vw;
+    }
+
+    .nf-card {
+        grid-template-columns: 1fr;
+        width: 100%;
+        min-height: auto;
+        border-radius: 4vw;
+    }
+
+    .nf-brand,
+    .nf-panel {
+        padding: 9vw 6.4vw;
+    }
+
+    .brand-pill {
+        font-size: 3vw;
+        padding: 1.5vw 3.2vw;
+    }
+
+    .logo {
+        font-size: 8vw;
+    }
+
+    .descripcion {
+        font-size: 3.7vw;
+    }
+
+    .caracteristicas {
+        font-size: 3.5vw;
+        gap: 2vw;
+    }
+
+    .fondo-404 {
+        font-size: 28vw;
+    }
+
+    .icono-error {
+        font-size: 11vw;
+    }
+
+    .nf-panel h2 {
+        font-size: 7vw;
+    }
+
+    .nf-descripcion {
+        font-size: 3.7vw;
+        max-width: 100%;
+        margin-bottom: 7vw;
+    }
+
+    .acciones {
+        max-width: 100%;
+        gap: 3vw;
+    }
+
+    .btn-primario,
+    .btn-secundario {
+        min-height: 13vw;
+        font-size: 4.5vw;
+        border-radius: 3vw;
+    }
+
+    .soporte {
+        font-size: 3.5vw;
+        margin-top: 7vw;
+    }
+
+    .soporte-link {
+        font-size: 3.5vw;
+    }
+}

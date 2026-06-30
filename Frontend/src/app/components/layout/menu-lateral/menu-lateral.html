@@ -1,0 +1,59 @@
+<aside class="barra-lateral">
+  <header class="barra-lateral__identidad">
+    <div class="logo-contenedor">
+      <img src="/logo_grande.png" alt="Logo de WealthGuard" class="logo-contenedor__logo">
+    </div>
+    
+  </header>
+
+  <nav class="barra-lateral__navegacion" aria-label="Navegación principal">
+    <ul class="lista-navegacion">
+      <li class="lista-navegacion__item">
+        <a routerLink="/dashboard" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_dashboard.svg" alt="Icono de Panel de Control" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Panel de Control</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/movimientos" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_transaccion.svg" alt="Icono de Transacciones" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Transacciones</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/presupuestos" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_presupuestos.svg" alt="Icono de Presupuestos" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Presupuestos</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/recomendaciones" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/bombilla.png" alt="Icono de Recomendaciones" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Recomendaciones</p>
+        </a>
+      </li>
+      <li class="lista-navegacion__item">
+        <a routerLink="/perfil" routerLinkActive="enlace-menu--activo" [routerLinkActiveOptions]="{exact:true}"
+          class="enlace-menu">
+          <img src="/icono_perfil.svg" alt="Icono de Perfil" class="enlace-menu__icono">
+          <p class="enlace-menu__texto">Perfil</p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <footer class="barra-lateral__acciones">
+    <button class="boton-primario-accion" (click)="onNuevaTransaccion()">
+      <p class="material-symbols-outlined">+</p>
+      <p class="boton-primario-accion__texto">Agregar movimiento</p>
+    </button>
+    <button type="button" class="boton-secundario-accion" (click)="onCerrarSesion()">
+      <p class="material-symbols-outlined">logout</p>
+      <p class="boton-secundario-accion__texto">Cerrar sesión</p>
+    </button>
+  </footer>
+</aside>

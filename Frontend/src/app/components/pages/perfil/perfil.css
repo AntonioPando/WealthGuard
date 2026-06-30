@@ -1,0 +1,456 @@
+.container {
+  margin-top: var(--page-content-top);
+  margin-left: var(--page-content-left);
+}
+
+
+.contenedor-principal {
+  display: grid;
+  grid-template-columns: 1fr 22.222rem;
+  grid-template-areas:
+    "perfil perfil"
+    "config ads";
+  gap: 1.667rem;
+  margin: 0;
+}
+
+.tarjeta-perfil {
+  grid-area: perfil;
+  background: var(--white);
+  padding: 2.222rem;
+  border-radius: 1.111rem;
+  border: 0.069rem solid var(--border);
+  box-shadow: 0 0.278rem 0.417rem -0.069rem rgba(0, 0, 0, 0.05);
+}
+
+.contenido-perfil {
+  display: flex;
+  align-items: center;
+  gap: 2.222rem;
+}
+
+.contenedor-avatar {
+  position: relative;
+  width: 8.333rem;
+  height: 8.333rem;
+}
+
+.imagen-perfil {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 0.278rem solid var(--white);
+  box-shadow: 0 0 0 0.069rem var(--border);
+}
+
+.boton-editar-avatar {
+  position: absolute;
+  bottom: 0.347rem;
+  right: 0.347rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--primary);
+  color: white;
+  border: 0.208rem solid var(--white);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.boton-editar-avatar:hover {
+  transform: scale(1.1);
+}
+
+.input-archivo-oculto {
+  display: none;
+}
+
+.datos-usuario h2 {
+  font-size: 1.667rem;
+  margin: 0 0 0.278rem 0;
+  color: var(--primary);
+}
+
+.datos-usuario p {
+  color: var(--text-muted);
+  margin: 0 0 1.111vw 0;
+}
+
+.etiqueta-fecha-registro {
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 0.417rem 0.833rem;
+  border-radius: 0.556rem;
+  font-size: 0.833rem;
+  font-weight: 700;
+  border: 0.069rem solid #d1fae5;
+}
+
+.acciones-usuario {
+  margin-left: auto;
+  display: flex;
+  gap: 0.833rem;
+}
+
+.boton-editar-perfil,
+.boton-exportar-datos {
+  padding: 0.694rem 1.389rem;
+  border-radius: 0.556rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.boton-editar-perfil {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.boton-exportar-datos {
+  background: white;
+  border: 0.069rem solid var(--border);
+  color: var(--text-main);
+}
+
+.boton-editar-perfil:disabled,
+.boton-exportar-datos:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tarjeta-plan {
+  grid-area: ads;
+  background: var(--primary);
+  color: white;
+  padding: 1.667rem;
+  border-radius: 1.111rem;
+  align-self: stretch;
+  position: sticky;
+  top: 10rem;
+}
+
+.badge-nuevo {
+  background: var(--accent);
+  display: inline-block;
+  padding: 0.278rem 0.556rem;
+  border-radius: 0.278rem;
+  font-size: 0.694rem;
+  font-weight: 800;
+  margin-bottom: 1.111rem;
+}
+
+.boton-proximamente {
+  width: 100%;
+  margin-top: 2.222rem;
+  padding: 0.833rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 0.069rem dashed rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 0.556rem;
+  font-size: 0.833rem;
+}
+
+.grid-configuracion {
+  grid-area: config;
+  display: flex;
+  flex-direction: column;
+  gap: 1.667rem;
+}
+
+.seccion-ajustes,
+.seccion-desactivar-cuenta {
+  background: var(--white);
+  padding: 1.667rem;
+  border-radius: 1.111rem;
+  border: 0.069rem solid var(--border);
+}
+
+.item-ajuste {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.111rem;
+  border: 0.069rem solid var(--border);
+  border-radius: 0.833rem;
+  margin-top: 1.111rem;
+}
+
+.texto-item strong {
+  display: block;
+  margin-bottom: 0.278rem;
+}
+
+.texto-item p {
+  margin: 0;
+  font-size: 0.903rem;
+  color: var(--text-muted);
+}
+
+.boton-flecha {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton-flecha:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.seccion-desactivar-cuenta {
+  border-color: #fee2e2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.389rem;
+}
+
+.texto-desactivar-cuenta h3 {
+  color: var(--danger);
+  margin: 0;
+}
+
+.texto-desactivar-cuenta p {
+  font-size: 0.903rem;
+  color: var(--text-muted);
+  margin: 0.278rem 0 0 0;
+}
+
+.boton-eliminar-cuenta {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 0.069rem solid #fecaca;
+  padding: 0.694rem 1.389rem;
+  border-radius: 0.556rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.boton-eliminar-cuenta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.overlay-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+.modal-perfil {
+  width: min(90vw, 34.722rem);
+  background: var(--white);
+  border-radius: 1.111rem;
+  border: 0.069rem solid var(--border);
+  box-shadow: 0 0.972rem 2.083rem -1.042rem rgba(15, 23, 42, 0.35);
+  padding: 1.667rem;
+  box-sizing: border-box;
+  max-height: 90rem;
+  overflow-y: auto;
+}
+
+.modal-perfil h3 {
+  margin: 0 0 1.111rem 0;
+  color: var(--primary);
+}
+
+.campo-form {
+  margin-bottom: 0.833rem;
+}
+
+.campo-form label {
+  display: block;
+  margin-bottom: 0.347rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.campo-form input {
+  width: 100%;
+  border: 0.069rem solid var(--border);
+  border-radius: 0.556rem;
+  padding: 0.625rem 0.833rem;
+  box-sizing: border-box;
+  font-size: 0.972rem;
+}
+
+.campo-doble {
+  display: grid;
+  gap: 0.833rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.modal-perfil .entrada {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-perfil .entrada input {
+  width: 100%;
+  border: 0.069rem solid var(--border);
+  border-radius: 0.556rem;
+  padding: 0.625rem 2.5rem 0.625rem 0.833rem;
+  box-sizing: border-box;
+  font-size: 0.972rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-perfil .entrada input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.208rem rgb(16 185 129 / 22%);
+}
+
+.modal-perfil .icono {
+  position: absolute;
+  right: 0.694rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 0.972rem;
+  pointer-events: none;
+}
+
+.modal-perfil .icono-click {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.requisitos-password {
+  display: grid;
+  gap: 0.278rem;
+  margin-top: 0.347rem;
+  font-size: 0.833rem;
+}
+
+.requisitos-password .cumplido {
+  color: var(--accent);
+}
+
+.requisitos-password .pendiente {
+  color: #94a3b8;
+}
+
+.campo-error {
+  font-size: 0.833rem;
+  color: #b91c1c;
+}
+
+.campo-exito {
+  font-size: 0.833rem;
+  color: #15803d;
+}
+
+.acciones-modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.694rem;
+  margin-top: 1.111rem;
+}
+
+.boton-primario,
+.boton-secundario {
+  border-radius: 0.556vw;
+  padding: 0.625vw 1.111vw;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton-primario {
+  border: none;
+  color: white;
+  background: var(--primary);
+}
+
+.boton-primario:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.boton-secundario {
+  border: 0.069vw solid var(--border);
+  color: var(--text-main);
+  background: white;
+}
+
+@media (max-width: 1024px) {
+  .contenedor-principal {
+    grid-template-columns: 1fr;
+    grid-template-areas: "perfil" "config" "ads";
+  }
+
+  .container {
+    margin-left: 0;
+    width: 100%;
+    padding: 2.222vw;
+  }
+
+  .contenido-perfil {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .acciones-usuario {
+    margin: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .seccion-desactivar-cuenta {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .modal-perfil {
+    width: min(92vw, 35.417vw);
+    border-radius: 2.222vw;
+    padding: 4.444vw;
+  }
+
+  .campo-doble {
+    grid-template-columns: 1fr;
+  }
+
+  .alerta {
+    margin-bottom: 2.222vw;
+    padding: 2.222vw;
+    border-radius: 1.111vw;
+  }
+
+  .requisitos-password {
+    font-size: 2.8vw;
+    gap: 1vw;
+  }
+
+  .campo-error,
+  .campo-exito {
+    font-size: 2.8vw;
+  }
+
+  .modal-perfil .entrada input {
+    font-size: 3.5vw;
+    padding: 2.5vw 8vw 2.5vw 3vw;
+    border-radius: 2vw;
+  }
+
+  .modal-perfil .icono {
+    font-size: 4vw;
+    right: 2.5vw;
+  }
+
+}

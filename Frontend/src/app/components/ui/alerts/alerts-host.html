@@ -1,0 +1,36 @@
+@if (dialog(); as currentDialog) {
+<div class="overlay-modal" (click)="cerrar()">
+  <section
+     [class]="'modal-alerta modal-alerta--' + currentDialog.severity"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'titulo-alerta-' + currentDialog.kind"
+    [attr.aria-describedby]="'descripcion-alerta-' + currentDialog.kind"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="icono-alerta" aria-hidden="true">
+      @if (currentDialog.severity === 'success') {
+      <span>✓</span>
+      } @else if (currentDialog.severity === 'warning') {
+      <span>!</span>
+      } @else if (currentDialog.severity === 'danger') {
+      <span>!</span>
+      } @else {
+      <span>i</span>
+      }
+    </div>
+
+    <h3 [id]="'titulo-alerta-' + currentDialog.kind">{{ currentDialog.title }}</h3>
+    <p [id]="'descripcion-alerta-' + currentDialog.kind">{{ currentDialog.message }}</p>
+
+    <div class="acciones-modal-alerta">
+      @if (currentDialog.kind === 'confirm') {
+      <button class="boton-secundario" (click)="cancelar()">{{ currentDialog.cancelText }}</button>
+      }
+      <button [class]="'boton-principal boton-principal--' + currentDialog.severity" (click)="aceptar()">
+        {{ currentDialog.confirmText }}
+      </button>
+    </div>
+  </section>
+</div>
+}

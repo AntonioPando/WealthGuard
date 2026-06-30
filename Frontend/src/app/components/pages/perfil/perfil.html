@@ -1,0 +1,232 @@
+<app-header></app-header>
+<app-menu-lateral></app-menu-lateral>
+
+<div class="container">
+  @if (mensajeExito) {
+  <div class="alerta alerta-exito">{{ mensajeExito }}</div>
+  }
+  @if (mensajeError) {
+  <div class="alerta alerta-error">{{ mensajeError }}</div>
+  }
+
+  <main class="contenedor-principal">
+
+    <section class="tarjeta-perfil">
+      <div class="contenido-perfil">
+        <div class="contenedor-avatar">
+          <img [src]="obtenerFotoPerfil()" class="imagen-perfil" alt="Foto de perfil">
+          <label class="boton-editar-avatar" title="Editar foto" for="input-foto">✎</label>
+          <input id="input-foto" type="file" accept="image/*" (change)="subirFoto($event)" class="input-archivo-oculto">
+        </div>
+
+        <div class="datos-usuario">
+          <h2>{{ obtenerNombreCompleto() || 'Sin nombre' }}</h2>
+          <p>{{ usuario?.email || 'Sin email' }}</p>
+          <div class="etiquetas-usuario">
+            <span class="etiqueta-fecha-registro">{{ formatearFechaRegistro() }}</span>
+          </div>
+        </div>
+
+        <div class="acciones-usuario">
+          <button class="boton-exportar-datos" [disabled]="cargandoPerfil || !usuario"
+            (click)="exportarDatosPerfil()">Exportar Datos</button>
+          <button class="boton-editar-perfil" [disabled]="cargandoPerfil || !usuario"
+            (click)="abrirEditarPerfil()">Editar Perfil</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="tarjeta-plan tarjeta-proximamente">
+      <div class="cabecera-plan">
+        <div class="badge-nuevo">NUEVO</div>
+        <h3>Nuevas Funciones</h3>
+        <p>Estamos preparando herramientas de análisis predictivo para tu cartera.</p>
+      </div>
+      <button class="boton-proximamente">PRÓXIMAMENTE</button>
+    </aside>
+
+    <div class="grid-configuracion">
+
+      <section class="seccion-ajustes">
+        <div class="cabecera-seccion">
+          <h3>Seguridad de la cuenta</h3>
+        </div>
+        <div class="item-ajuste">
+          <div class="texto-item">
+            <strong>Contraseña</strong>
+            <p>{{ formatearFechaPassword() }}</p>
+          </div>
+          <button class="boton-flecha" [disabled]="!idUsuario" (click)="abrirCambiarPassword()">Actualizar ›</button>
+        </div>
+      </section>
+
+      <section class="seccion-desactivar-cuenta">
+        <div class="texto-desactivar-cuenta">
+          <h3>Eliminar Cuenta</h3>
+          <p>La eliminación de la cuenta es permanente y borrará todo tu historial financiero.</p>
+        </div>
+        <button class="boton-eliminar-cuenta" [disabled]="cargandoPerfil || !usuario" (click)="eliminarCuenta()">
+          Eliminar Cuenta
+        </button>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+@if (mostrarPopupEditarPerfil) {
+<div class="overlay-modal" (click)="cerrarEditarPerfil()">
+  <section class="modal-perfil" (click)="$event.stopPropagation()">
+    <h3>Editar Perfil</h3>
+
+    <div class="campo-form">
+      <label>Usuario</label>
+      <input [(ngModel)]="formularioEditar.nickUsuario" type="text" (ngModelChange)="onNickEditarChange()" maxlength="50" />
+      <span class="campo-error" *ngIf="nickRepetidoEditar">
+        Este nombre de usuario ya está en uso.
+      </span>
+    </div>
+
+    <div class="campo-form">
+      <label>Nombre</label>
+      <input [(ngModel)]="formularioEditar.nombre" type="text" maxlength="50">
+    </div>
+
+    <div class="campo-form campo-doble">
+      <div>
+        <label>Primer Apellido</label>
+        <input [(ngModel)]="formularioEditar.primerApellido" type="text" maxlength="50">
+      </div>
+      <div>
+        <label>Segundo Apellido</label>
+        <input [(ngModel)]="formularioEditar.segundoApellido" type="text" maxlength="50">
+      </div>
+    </div>
+
+    <div class="campo-form">
+      <label>Email</label>
+      <input [(ngModel)]="formularioEditar.email" type="email" (ngModelChange)="onEmailEditarChange()" maxlength="100"/>
+      <span class="campo-error" *ngIf="emailRepetidoEditar">
+        Este correo electrónico ya está en uso.
+      </span>
+    </div>
+
+    <div class="campo-form">
+      <label>Pregunta de Seguridad</label>
+      <input [value]="formularioEditar.preguntaSeguridad" type="text" readonly
+        style="opacity: 0.6; cursor: not-allowed;" />
+    </div>
+
+    <div class="campo-form">
+      <label>Respuesta de Seguridad</label>
+      <div class="entrada">
+        <input [type]="mostrarRespuestaSeguridad ? 'text' : 'password'"
+          [(ngModel)]="formularioEditar.respuestaSeguridad"
+          placeholder="••••••••" maxlength="100" />
+        <span class="icono icono-click" (click)="toggleRespuestaSeguridad()"
+          aria-label="Mostrar respuesta de seguridad">
+          {{ mostrarRespuestaSeguridad ? '👁' : '*' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="campo-form">
+      <label>Contraseña (obligatoria para guardar)</label>
+      <div class="entrada">
+        <input [type]="mostrarPasswordEditar ? 'text' : 'password'" [(ngModel)]="formularioEditar.password"
+          placeholder="••••••••" (ngModelChange)="mensajeErrorEditarPerfil = ''" maxlength="100" />
+        <span class="icono icono-click" (click)="togglePasswordEditar()" aria-label="Mostrar contraseña">
+          {{ mostrarPasswordEditar ? '👁' : '*' }}
+        </span>
+      </div>
+      @if (passwordEditarIncorrecta) {
+      <span class="campo-error">La contraseña introducida es incorrecta.</span>
+      }
+      @if (mensajeErrorEditarPerfil) {
+      <span class="campo-error">{{ mensajeErrorEditarPerfil }}</span>
+      }
+    </div>
+
+    <div class="acciones-modal">
+      <button class="boton-secundario" (click)="cerrarEditarPerfil()">Cancelar</button>
+      <button class="boton-primario" [disabled]="guardandoPerfil || nickRepetidoEditar || emailRepetidoEditar"
+        (click)="guardarPerfil()">
+        {{ guardandoPerfil ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </section>
+</div>
+}
+
+@if (mostrarPopupPassword) {
+<div class="overlay-modal" (click)="cerrarCambiarPassword()">
+  <section class="modal-perfil" (click)="$event.stopPropagation()">
+    <h3>Actualizar Contraseña</h3>
+
+    <div class="campo-form">
+      <label>Contraseña actual</label>
+      <div class="entrada">
+        <input [type]="mostrarPasswordAntigua ? 'text' : 'password'" [(ngModel)]="passwordAntigua"
+          placeholder="••••••••" (ngModelChange)="mensajeErrorPassword = ''" maxlength="100" />
+        <span class="icono icono-click" (click)="togglePasswordAntigua()" aria-label="Mostrar contraseña">
+          {{ mostrarPasswordAntigua ? '👁' : '*' }}
+        </span>
+      </div>
+      @if (mensajeErrorPassword) {
+      <span class="campo-error">{{ mensajeErrorPassword }}</span>
+      }
+    </div>
+
+    <div class="campo-form">
+      <label>Nueva contraseña</label>
+      <div class="entrada">
+        <input [type]="mostrarNuevaPassword ? 'text' : 'password'" [(ngModel)]="passwordNueva" placeholder="••••••••" maxlength="100" />
+        <span class="icono icono-click" (click)="toggleNuevaPassword()" aria-label="Mostrar contraseña">
+          {{ mostrarNuevaPassword ? '👁' : '*' }}
+        </span>
+      </div>
+      @if (passwordIgualAAntigua) {
+      <span class="campo-error">La nueva contraseña no puede ser igual a la anterior.</span>
+      }
+      <div class="requisitos-password">
+        <span [class.cumplido]="nuevaPasswordTieneMinCaracteres" [class.pendiente]="!nuevaPasswordTieneMinCaracteres">
+          {{ nuevaPasswordTieneMinCaracteres ? '✓' : '○' }} Mínimo 6 caracteres
+        </span>
+        <span [class.cumplido]="nuevaPasswordTieneMayuscula" [class.pendiente]="!nuevaPasswordTieneMayuscula">
+          {{ nuevaPasswordTieneMayuscula ? '✓' : '○' }} Al menos una mayúscula
+        </span>
+        <span [class.cumplido]="nuevaPasswordTieneMinuscula" [class.pendiente]="!nuevaPasswordTieneMinuscula">
+          {{ nuevaPasswordTieneMinuscula ? '✓' : '○' }} Al menos una minúscula
+        </span>
+        <span [class.cumplido]="nuevaPasswordTieneNumero" [class.pendiente]="!nuevaPasswordTieneNumero">
+          {{ nuevaPasswordTieneNumero ? '✓' : '○' }} Al menos un número
+        </span>
+      </div>
+    </div>
+
+    <div class="campo-form">
+      <label>Confirmar nueva contraseña</label>
+      <div class="entrada">
+        <input [type]="mostrarConfirmarPassword ? 'text' : 'password'" [(ngModel)]="confirmarPasswordNueva"
+          placeholder="••••••••" maxlength="100" />
+        <span class="icono icono-click" (click)="toggleConfirmarPassword()" aria-label="Mostrar contraseña">
+          {{ mostrarConfirmarPassword ? '👁' : '*' }}
+        </span>
+      </div>
+      @if (confirmarPasswordNueva.length > 0 && !nuevasPasswordsCoinciden) {
+      <span class="campo-error">Las contraseñas no coinciden.</span>
+      }
+      @if (confirmarPasswordNueva.length > 0 && nuevasPasswordsCoinciden) {
+      <span class="campo-exito">✓ Las contraseñas coinciden.</span>
+      }
+    </div>
+
+    <div class="acciones-modal">
+      <button class="boton-secundario" (click)="cerrarCambiarPassword()">Cancelar</button>
+      <button class="boton-primario" [disabled]="actualizandoPassword" (click)="guardarPassword()">
+        {{ actualizandoPassword ? 'Actualizando...' : 'Actualizar' }}
+      </button>
+    </div>
+  </section>
+</div>
+}

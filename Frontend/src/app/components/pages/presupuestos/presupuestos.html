@@ -1,0 +1,141 @@
+<app-header></app-header>
+<app-menu-lateral></app-menu-lateral>
+
+<div class="contenedor-presupuestos">
+
+    @if (mensajeError) {
+    <div class="alerta alerta-error" role="alert" aria-live="assertive">{{ mensajeError }}</div>
+    }
+
+    @if (mensajeExito) {
+    <div class="alerta alerta-exito" role="status" aria-live="polite">{{ mensajeExito }}</div>
+    }
+
+    <header class="cabecera-presupuestos page-header">
+        <div class="titulos-cabecera">
+            <h1>Presupuestos Mensuales</h1>
+        </div>
+    </header>
+
+    <section class="cuadricula-tarjetas">
+        @for (p of listaPresupuestos; track p.id) {
+        @let estado = obtenerEstado(p.gastado, p.limite);
+        @let porcentaje = calcularPorcentaje(p.gastado, p.limite);
+
+        <article class="tarjeta-presupuesto" (click)="abrirEdicion(p)" [class.tarjeta-peligro]="estado === 'peligro'"
+            [class.tarjeta-advertencia]="estado === 'advertencia'" [class.tarjeta-bueno]="estado === 'bueno'">
+
+            <div class="cabecera-tarjeta">
+                <div class="caja-icono" [class.icono-peligro]="estado === 'peligro'"
+                    [class.icono-advertencia]="estado === 'advertencia'" [class.icono-bueno]="estado === 'bueno'">
+                    <span class="material-symbols-outlined">{{ p.icono || 'category' }}</span>
+                </div>
+
+                @if (estado === 'advertencia') { <span class="insignia"
+                    style="background-color: #fef08a; color: #b45309;">⚠️ PRÓXIMO AL LÍMITE</span> }
+                @else if (estado === 'peligro') { <span class="insignia"
+                    style="background-color: #b91c1c; color: white;">🚨 PRESUPUESTO EXCEDIDO</span> }
+                @else { <span class="insignia" style="background-color: #dcfce7; color: #16803d;">✅ CONTROLADO</span> }
+            </div>
+
+            <div class="cuerpo-tarjeta">
+                <h3>{{ p.categoria }}</h3>
+            </div>
+
+            <div class="pie-tarjeta">
+                <div class="montos">
+                    <strong [class.texto-peligro]="estado === 'peligro'"
+                        [class.texto-advertencia]="estado === 'advertencia'" [class.texto-bueno]="estado === 'bueno'">
+                        {{ p.gastado | number:'1.2-2' }} €
+                    </strong>
+                    <span style="color: var(--texto-atenuado); margin-left: 4px;">/ {{ p.limite | number:'1.2-2' }}
+                        €</span>
+
+                    <span class="porcentaje" [class.texto-peligro]="estado === 'peligro'"
+                        [class.texto-advertencia]="estado === 'advertencia'" [class.texto-bueno]="estado === 'bueno'">
+                        {{ porcentaje }}% UTILIZADO
+                    </span>
+                </div>
+
+                <div class="barra-progreso"
+                    style="background-color: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 0.8rem; width: 100%;">
+                    <div class="relleno-progreso" [style.width.%]="porcentaje > 100 ? 100 : porcentaje"
+                        [class.relleno-peligro]="estado === 'peligro'"
+                        [class.relleno-advertencia]="estado === 'advertencia'"
+                        [class.relleno-bueno]="estado === 'bueno'"
+                        style="height: 100%; border-radius: 4px; transition: width 0.4s ease;">
+                    </div>
+                </div>
+            </div>
+        </article>
+        }
+
+        <article class="tarjeta-presupuesto crear-nuevo" (click)="abrirCrear()">
+            <div class="icono-agregar">+</div>
+            <h3 style="color: var(--texto-atenuado); margin-bottom: 0.25rem;">Crear Nuevo Presupuesto</h3>
+            <p style="color: var(--texto-atenuado); font-size: 0.85rem; margin: 0;">
+                Define una meta de gasto por categoría
+            </p>
+        </article>
+    </section>
+
+    <section class="paneles-inferiores">
+        <div class="panel panel-analisis">
+            <div class="cabecera-panel">
+                <h2>Análisis de Gastos</h2>
+                <span>{{ nombreMesActual }}</span>
+            </div>
+
+            <div class="fila-analisis"
+                style="margin-bottom: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                <div class="caja-icono"
+                    style="width: 32px; height: 32px; font-size: 1rem; background-color: #fee2e2; color: #b91c1c; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                    📈</div>
+                <div class="info-fila">
+                    <h4>Más gasto: {{ categoriaMasGasto?.categoria }}</h4>
+                </div>
+                <div class="monto" style="font-weight: 600; margin-left: auto;">{{ categoriaMasGasto?.gastado |
+                    number:'1.2-2' }} €</div>
+            </div>
+
+            <div class="fila-analisis" style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                <div class="caja-icono"
+                    style="width: 32px; height: 32px; font-size: 1rem; background-color: #dcfce7; color: #16803d; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                    📉</div>
+                <div class="info-fila">
+                    <h4>Menos gasto: {{ categoriaMenosGasto?.categoria }}</h4>
+                </div>
+                <div class="monto" style="font-weight: 600; margin-left: auto;">{{ categoriaMenosGasto?.gastado |
+                    number:'1.2-2' }} €</div>
+            </div>
+        </div>
+    </section>
+
+    @if (mostrarFormulario) {
+    <app-presupuesto-form [categoriasLista]="listaCategorias" [categoriasOcupadas]="categoriaExiste" (guardar)="guardarNuevoPresupuesto($event)"
+        (cancelar)="mostrarFormulario = false">
+    </app-presupuesto-form>
+    }
+
+    @if (presupuestoEditando) {
+    <div class="overlay" (click)="cerrarEdicion()">
+        <div class="modal-edicion" (click)="$event.stopPropagation()">
+            <h2>Editar {{ presupuestoEditando.categoria }}</h2>
+
+            <div style="margin-bottom: 1rem;">
+                <label>Límite (€)</label>
+                <input type="number" [(ngModel)]="presupuestoEditando.limite" class="form-control">
+            </div>
+
+            <div
+                style="display: flex; justify-content: space-between; margin-top: 2rem; border-top: 1px solid var(--borde-color); padding-top: 1rem;">
+                <button (click)="eliminarPresupuesto()" class="btn btn-peligro">Eliminar</button>
+                <div style="display: flex; gap: 1rem;">
+                    <button (click)="cerrarEdicion()" class="btn btn-lineas">Cancelar</button>
+                    <button (click)="guardarCambios()" class="btn btn-oscuro">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
