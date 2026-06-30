@@ -59,12 +59,11 @@ export class Presupuestos implements OnInit {
 
     this.mensajeError = '';
     this.mensajeExito = mensaje;
-    this.cdr.detectChanges();
-
+    this.cdr.markForCheck();
     this.feedbackTimeout = setTimeout(() => {
       this.mensajeExito = '';
       this.feedbackTimeout = null;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }, 3000);
   }
 
@@ -76,7 +75,7 @@ export class Presupuestos implements OnInit {
 
     this.mensajeExito = '';
     this.mensajeError = mensaje;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   ngOnInit(): void {
@@ -125,7 +124,7 @@ export class Presupuestos implements OnInit {
           limite: p.limite
         }));
         this.cargandoDatos = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err: unknown) => {
         this.cargandoDatos = false;
@@ -136,7 +135,7 @@ export class Presupuestos implements OnInit {
     this.categoriaService.obtenerCategorias().subscribe({
       next: (data) => {
         this.listaCategorias = data.map(cat => ({ id: cat.id, nombre: cat.nombre }));
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err: unknown) => {
         this.mostrarError(this.utilsService.manejarError(err, 'No se pudieron cargar las categorías. Inténtalo de nuevo.'));
@@ -216,8 +215,9 @@ export class Presupuestos implements OnInit {
       next: async (eliminado) => {
         if (eliminado) {
           this.mostrarExito('Presupuesto eliminado correctamente.');
-          this.cargarDatos();
-          this.cerrarEdicion();
+          setTimeout(() => {
+            this.cargarDatos();
+          }, 0); this.cerrarEdicion();
           return;
         }
         await this.uiAlertsService.alert({
